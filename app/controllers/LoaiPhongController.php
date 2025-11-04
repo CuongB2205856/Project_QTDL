@@ -3,7 +3,6 @@
 namespace App\Controllers;
 // Nhúng Controller cơ sở
 require_once __DIR__ . '/Controller.php';
-// Nhúng Model (Sử dụng ROOT_PATH để đảm bảo đường dẫn tuyệt đối)
 use App\Models\LoaiPhong; 
 
 class LoaiPhongController extends Controller {
@@ -31,7 +30,7 @@ class LoaiPhongController extends Controller {
         $data['loai_phong_list'] = $this->model->all(); 
         
         // SỬ DỤNG: $this->loadView()
-        $this->loadView('loaiphong/create', $data); 
+        $this->loadView('LoaiPhong\Create', $data); 
     }
 }
 ?>

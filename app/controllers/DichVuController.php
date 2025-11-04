@@ -31,7 +31,7 @@ class DichVuController extends Controller {
         $data['dv_list'] = $this->model->all(); 
         
         // SỬ DỤNG: $this->loadView()
-        $this->loadView('dichvu/create', $data);
+        $this->loadView('DichVu\Create', $data);
     }
 }
 ?>

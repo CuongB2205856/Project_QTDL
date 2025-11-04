@@ -62,7 +62,7 @@ class HopDongController extends Controller {
         $data['phong_list'] = $this->phongModel->all(); 
         
         // SỬ DỤNG: $this->loadView()
-        $this->loadView('hopdong\create', $data);
+        $this->loadView('HopDong\Create', $data);
     }
 }
 ?>

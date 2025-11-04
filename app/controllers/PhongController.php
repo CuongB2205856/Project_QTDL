@@ -38,7 +38,7 @@ class PhongController extends Controller {
         $data['loai_phong_list'] = $this->loaiPhongModel->all(); 
         
         // SỬ DỤNG: $this->loadView()
-        $this->loadView('phong\create', $data);
+        $this->loadView('Phong\Create', $data);
     }
 }
 ?>
