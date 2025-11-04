@@ -1,7 +1,6 @@
 <?php
 // models/HoaDon.php
-
-use PDO;
+namespace App\Models; 
 
 class HoaDon
 {
@@ -13,7 +12,7 @@ class HoaDon
     
     protected $db; 
 
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->db = $pdo;
     }

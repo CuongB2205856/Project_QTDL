@@ -1,0 +1,12 @@
+# E:\QTDL\Project_QTDL\public\.htaccess
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Kiểm tra xem yêu cầu có phải là file hoặc thư mục có sẵn không
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    
+    # Nếu không phải, chuyển hướng tất cả yêu cầu đến index.php
+    RewriteRule ^ index.php [L]
+</IfModule>

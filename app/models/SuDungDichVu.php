@@ -1,7 +1,6 @@
 <?php
 // models/SuDungDichVu.php
-
-use PDO;
+namespace App\Models; 
 
 class SuDungDichVu
 {
@@ -14,7 +13,7 @@ class SuDungDichVu
     
     protected $db; 
 
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->db = $pdo;
     }

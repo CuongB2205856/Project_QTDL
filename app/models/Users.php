@@ -1,9 +1,8 @@
 <?php
 // models/User.php
+namespace App\Models;
 
-use PDO;
-
-class User
+class Users
 {
     // Thuộc tính Entity Object
     public $UserID;
@@ -14,7 +13,7 @@ class User
     
     protected $db; // Đối tượng PDO
 
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->db = $pdo;
     }

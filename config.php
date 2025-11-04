@@ -4,14 +4,12 @@
 // Cấu hình CSDL
 const DB_CONFIG = [
     'dbhost' => 'localhost',
-    'dbname' => 'QuanLyKyTucXa',
+    'dbname' => 'QuanLyKTX',
     'dbuser' => 'root', // Kiểm tra lại username MySQL của bạn
-    'dbpass' => 'your_password' // THAY THẾ MẬT KHẨU MySQL CHÍNH XÁC CỦA BẠN
+    'dbpass' => 'Cuong2004@**#' // THAY THẾ MẬT KHẨU MySQL CHÍNH XÁC CỦA BẠN
 ];
 
 // Cấu hình Base URL (quan trọng cho routing)
-define('BASE_URL', 'http://localhost/QLKTX/'); 
+define('BASE_URL', 'http://QuanLyKTX.com/'); 
 
-// Tải file Database ngay khi ứng dụng khởi động (cần thiết cho Models)
-require_once 'models/Database.php'; 
 ?>

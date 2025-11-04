@@ -1,10 +1,10 @@
 <?php
 // app/core/PDOFactory.php
-
+namespace App\Models; 
 class PDOFactory
 {
     // Tạo đối tượng PDO và trả về
-    public function create(array $config): PDO
+    public function create(array $config): \PDO
     {
         [
             'dbhost' => $dbhost,
@@ -15,9 +15,9 @@ class PDOFactory
 
         $dsn = "mysql:host={$dbhost};dbname={$dbname};charset=utf8mb4";
 
-        return new PDO($dsn, $dbuser, $dbpass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        return new \PDO($dsn, $dbuser, $dbpass, [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
         ]);
     }
 }
