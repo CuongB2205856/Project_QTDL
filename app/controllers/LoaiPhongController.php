@@ -9,28 +9,92 @@ class LoaiPhongController extends Controller {
     private $model;
 
     public function __construct(\PDO $pdo) {
-        parent::__construct(); // Gọi constructor của Controller cơ sở
+        parent::__construct(); 
         $this->model = new LoaiPhong($pdo);
+        // Đảm bảo session đã khởi động để dùng cho thông báo (nếu cần)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
-    public function create() {
+    // Trả về header JSON
+    private function json_response($data) {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
+
+    // *** 1. HIỂN THỊ TRANG INDEX VÀ MODAL ***
+    public function index() {
         $data = [];
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            try {
-                $result = $this->model->create($_POST);
-                if ($result) {
-                    $data['success'] = "Thêm loại phòng thành công!";
-                } else {
-                    $data['error'] = "Lỗi khi thêm loại phòng.";
-                }
-            } catch (Exception $e) {
-                $data['error'] = "Lỗi CSDL: " . $e->getMessage();
-            }
+        $data['loai_phong_list'] = $this->model->all();
+        // Tải view 'Index' (trang danh sách)
+        $this->loadView('LoaiPhong\Index', $data); 
+    }
+
+    // *** 2. (AJAX) LẤY CHI TIẾT 1 LOẠI PHÒNG ĐỂ SỬA ***
+    public function ajax_get_details($id) {
+        $data = $this->model->find($id);
+        if ($data) {
+            $this->json_response(['success' => true, 'data' => $data]);
+        } else {
+            $this->json_response(['success' => false, 'message' => 'Không tìm thấy loại phòng.']);
         }
-        $data['loai_phong_list'] = $this->model->all(); 
-        
-        // SỬ DỤNG: $this->loadView()
-        $this->loadView('LoaiPhong\Create', $data); 
+    }
+
+    // *** 3. (AJAX) XỬ LÝ THÊM MỚI ***
+    public function ajax_create() {
+        try {
+            // Lấy ID của loại phòng vừa thêm
+            $newId = $this->model->create($_POST);
+            if ($newId) {
+                // Lấy lại thông tin đầy đủ của loại phòng vừa thêm
+                $newRow = $this->model->find($newId);
+                $this->json_response([
+                    'success' => true, 
+                    'message' => 'Thêm loại phòng thành công!',
+                    'newRow' => $newRow // Gửi dữ liệu hàng mới về JS
+                ]);
+            } else {
+                $this->json_response(['success' => false, 'message' => 'Lỗi khi thêm loại phòng.']);
+            }
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
+        }
+    }
+
+    // *** 4. (AJAX) XỬ LÝ CẬP NHẬT ***
+    public function ajax_update($id) {
+         try {
+            $result = $this->model->update($id, $_POST);
+            if ($result) {
+                // Lấy lại thông tin đã cập nhật
+                $updatedRow = $this->model->find($id);
+                $this->json_response([
+                    'success' => true, 
+                    'message' => 'Cập nhật thành công!',
+                    'updatedRow' => $updatedRow // Gửi dữ liệu đã sửa về JS
+                ]);
+            } else {
+                $this->json_response(['success' => false, 'message' => 'Lỗi khi cập nhật.']);
+            }
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
+        }
+    }
+
+    // *** 5. (AJAX) XỬ LÝ XÓA ***
+    public function ajax_delete($id)
+    {
+        try {
+            $this->model->delete($id);
+            $this->json_response(['success' => true, 'message' => 'Xóa thành công!']);
+        } catch (\PDOException $e) {
+            $this->json_response([
+                'success' => false, 
+                'message' => 'Không thể xóa (có thể do đang được sử dụng).'
+            ]);
+        }
     }
 }
 ?>

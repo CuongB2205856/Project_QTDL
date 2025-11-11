@@ -61,11 +61,40 @@ $router->match('GET|POST', '/phong/create', function() use ($pdoInstance) {
     $controller->create();
 });
 
-// Route cho TẠO MỚI LOẠI PHÒNG
-$router->match('GET|POST', '/loaiphong/create', function() use ($pdoInstance) {
+// === QUẢN LÝ LOẠI PHÒNG (CRUD) ===
+// 1. TRANG DANH SÁCH CHÍNH (GET)
+$router->get('/loaiphong', function() use ($pdoInstance) {
     $controller = new App\Controllers\LoaiPhongController($pdoInstance); 
-    $controller->create();
+    $controller->index();
 });
+
+// 2. LẤY CHI TIẾT ĐỂ SỬA (GET - AJAX)
+$router->get('/loaiphong/get/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\LoaiPhongController($pdoInstance); 
+    $controller->ajax_get_details($id);
+});
+
+// 3. XỬ LÝ THÊM MỚI (POST - AJAX)
+$router->post('/loaiphong/ajax_create', function() use ($pdoInstance) {
+    $controller = new App\Controllers\LoaiPhongController($pdoInstance); 
+    $controller->ajax_create();
+});
+
+// 4. XỬ LÝ CẬP NHẬT (POST - AJAX)
+$router->post('/loaiphong/ajax_update/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\LoaiPhongController($pdoInstance); 
+    $controller->ajax_update($id);
+});
+
+// 5. XỬ LÝ XÓA (GET/POST - AJAX) - Dùng POST sẽ an toàn hơn
+$router->post('/loaiphong/ajax_delete/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\LoaiPhongController($pdoInstance); 
+    $controller->ajax_delete($id);
+});
+
+// === KẾT THÚC QUẢN LÝ LOẠI PHÒNG ===
+
+
 
 // Route cho TẠO MỚI DỊCH VỤ
 $router->match('GET|POST', '/dichvu/create', function() use ($pdoInstance) {
