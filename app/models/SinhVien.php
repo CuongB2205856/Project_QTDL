@@ -34,5 +34,9 @@ class SinhVien
             'sdt' => $data['sdt'] ?? null
         ]);
     }
+    public function count() {
+        $stmt = $this->db->query("SELECT COUNT(MaSV) as total FROM SinhVien");
+        return $stmt->fetchColumn();
+    }
 }
 ?>

@@ -47,7 +47,10 @@ $router = new Bramus\Router\Router();
 $router->get('/', function() {
     echo "<h1>Trang Chủ QLKTX</h1><p>Vui lòng đăng nhập hoặc xem các module CRUD.</p>";
 });
-
+$router->get('/dashboard', function() use ($pdoInstance) {
+    $controller = new App\Controllers\DashboardController($pdoInstance); 
+    $controller->index();
+});
 // ********** TẤT CẢ CÁC ROUTES ĐỀU SỬ DỤNG NAMESPACE **********
 
 // Route cho TẠO MỚI PHÒNG

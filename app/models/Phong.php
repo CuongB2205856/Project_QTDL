@@ -28,5 +28,21 @@ class Phong
             'slmax' => $data['slmax']
         ]);
     }
+    public function all()
+    {
+        // Truy vấn này lấy cả thông tin loại phòng
+        return $this->db->query("
+            SELECT p.*, lp.TenLoaiPhong 
+            FROM Phong p
+            JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
+            ORDER BY p.SoPhong ASC
+        ")->fetchAll(\PDO::FETCH_OBJ); // Dùng FETCH_OBJ như HopDong/Create.php
+    }
+
+    // *** THÊM HÀM MỚI CHO DASHBOARD ***
+    public function count() {
+        $stmt = $this->db->query("SELECT COUNT(MaPhong) as total FROM Phong");
+        return $stmt->fetchColumn();
+    }
 }
 ?>
