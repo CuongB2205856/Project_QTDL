@@ -66,6 +66,7 @@
     <li><a href="/loaiphong">Quản lý Loại Phòng</a></li>
     <li><a href="/phong/">Quản lý Phòng</a></li>
     <li><a href="/dichvu/">Quản lý Dịch vụ</a></li>
+    <li><a href="/users">Quản lý nhân viên</a></li>
     <li><a href="/sinhvien">Quản lý sinh viên</a></li>
     <li><a href="/hopdong/create">Tạo hợp đồng mới</a></li>
 </ul>

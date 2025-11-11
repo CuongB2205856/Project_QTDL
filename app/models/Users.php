@@ -33,6 +33,42 @@ class Users
             'username' => $username
         ]);
     }
+    public function all()
+    {
+        // Sử dụng tên cột UserID, Username, Role
+        $stmt = $this->db->query('SELECT UserID, Username, Role FROM Users');
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Tạo người dùng mới (SỬA LẠI TÊN BẢNG VÀ CỘT)
+     */
+    public function create(array $data)
+    {
+        // Băm mật khẩu trước khi lưu
+        $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
+
+        // Sử dụng tên bảng Users và các cột Username, Password, Role
+        $sql = "INSERT INTO Users (Username, Password, Role) VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            $data['username'],
+            $hashedPassword,
+            $data['role'] // 'Quản lý'
+        ]);
+    }
+
+    /**
+     * Xóa người dùng bằng ID (SỬA LẠI TÊN BẢNG VÀ CỘT)
+     */
+    public function delete($id)
+    {
+        // Sử dụng tên bảng Users và cột UserID
+        $sql = "DELETE FROM Users WHERE UserID = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$id]);
+    }
     public function changePassword($username, $oldPassword, $newPassword)
     {
         // 1. Lấy mật khẩu hash hiện tại
