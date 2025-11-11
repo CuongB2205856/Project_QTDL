@@ -106,5 +106,40 @@ class SinhVien
         $stmt = $this->db->query("SELECT COUNT(MaSV) as total FROM SinhVien");
         return $stmt->fetchColumn();
     }
+    public function getStudentDashboardDetails($maSV)
+    {
+        $stmt = $this->db->prepare("
+            SELECT 
+                sv.HoTen, sv.MaSV,
+                p.SoPhong, 
+                lp.TenLoaiPhong,
+                lp.GiaThue AS GiaTienThuePhong, 
+
+                h.TongTienThanhToan AS GiaTienPhaiDong,
+                h.NgayHetHan AS NgayDenHanDongTien
+
+            FROM 
+                SinhVien sv
+            
+            LEFT JOIN HopDong hd ON sv.MaSV = hd.MaSV AND hd.NgayKetThuc >= CURDATE()
+            LEFT JOIN Phong p ON hd.MaPhong = p.MaPhong
+            LEFT JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
+            
+            -- SỬA LỖI JOIN TẠI ĐÂY --
+            LEFT JOIN SuDungDichVu sddv ON hd.MaHD = sddv.MaHD
+            LEFT JOIN HoaDon h ON sddv.MaSDDV = h.MaSDDV AND h.TrangThaiThanhToan = 'Chưa thanh toán'
+            -- KẾT THÚC SỬA LỖI --
+            
+            WHERE 
+                sv.MaSV = :masv
+                
+            ORDER BY 
+                h.NgayHetHan ASC 
+            LIMIT 1
+        ");
+        
+        $stmt->execute(['masv' => $maSV]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
 }
 ?>

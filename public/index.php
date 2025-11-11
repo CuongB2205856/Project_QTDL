@@ -203,7 +203,21 @@ $router->set404(function() {
     header('HTTP/1.1 404 Not Found');
     echo "<h1>404 - Không tìm thấy trang!</h1><p>Vui lòng kiểm tra lại URL.</p>";
 });
+// === BẢNG ĐIỀU KHIỂN SINH VIÊN (STUDENT PANEL) ===
 
+// 1. TRANG PROFILE CHÍNH (GET)
+$router->get('/student/profile', function() use ($pdoInstance) {
+    $controller = new App\Controllers\StudentPanelController($pdoInstance); 
+    $controller->index();
+});
+
+// 2. XỬ LÝ ĐỔI MẬT KHẨU (POST - AJAX)
+$router->post('/student/ajax_change_password', function() use ($pdoInstance) {
+    $controller = new App\Controllers\StudentPanelController($pdoInstance); 
+    $controller->ajax_change_password();
+});
+
+// === KẾT THÚC STUDENT PANEL ===
 // =================================================================
 // BƯỚC 5: CHẠY ROUTER
 // =================================================================
