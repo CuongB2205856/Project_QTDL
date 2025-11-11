@@ -159,7 +159,45 @@ $router->match('GET|POST', '/hopdong/create', function() use ($pdoInstance) {
     $controller = new App\Controllers\HopDongController($pdoInstance); 
     $controller->create();
 });
+// === QUẢN LÝ SINH VIÊN (CRUD - AJAX) ===
 
+// 1. TRANG DANH SÁCH CHÍNH (GET)
+$router->get('/sinhvien', function() use ($pdoInstance) {
+    $controller = new App\Controllers\SinhVienController($pdoInstance); 
+    $controller->index();
+});
+
+// 2. LẤY CHI TIẾT ĐỂ SỬA (GET - AJAX)
+// Mã SV có thể chứa chữ (vd: 'SV001'), dùng regex [\w\-]+
+$router->get('/sinhvien/get/([\w\-]+)', function($maSV) use ($pdoInstance) {
+    $controller = new App\Controllers\SinhVienController($pdoInstance); 
+    $controller->ajax_get_details($maSV);
+});
+
+// 3. LẤY CHI TIẾT PHÒNG Ở (GET - AJAX)
+$router->get('/sinhvien/ajax_get_room_details/([\w\-]+)', function($maSV) use ($pdoInstance) {
+    $controller = new App\Controllers\SinhVienController($pdoInstance); 
+    $controller->ajax_get_room_details($maSV);
+});
+
+// 4. XỬ LÝ CẬP NHẬT (POST - AJAX)
+$router->post('/sinhvien/ajax_update/([\w\-]+)', function($maSV) use ($pdoInstance) {
+    $controller = new App\Controllers\SinhVienController($pdoInstance); 
+    $controller->ajax_update($maSV);
+});
+
+// 5. XỬ LÝ XÓA (POST - AJAX)
+$router->post('/sinhvien/ajax_delete/([\w\-]+)', function($maSV) use ($pdoInstance) {
+    $controller = new App\Controllers\SinhVienController($pdoInstance); 
+    $controller->ajax_delete($maSV);
+});
+
+// 6. XỬ LÝ RESET MẬT KHẨU (POST - AJAX)
+$router->post('/sinhvien/ajax_reset_password/([\w\-]+)', function($maSV) use ($pdoInstance) {
+    $controller = new App\Controllers\SinhVienController($pdoInstance); 
+    $controller->ajax_reset_password($maSV);
+});
+// === KẾT THÚC QUẢN LÝ SINH VIÊN ===
 // 4. Xử lý 404
 $router->set404(function() {
     header('HTTP/1.1 404 Not Found');
