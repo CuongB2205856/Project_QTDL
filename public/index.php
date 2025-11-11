@@ -53,13 +53,38 @@ $router->get('/dashboard', function() use ($pdoInstance) {
 });
 // ********** TẤT CẢ CÁC ROUTES ĐỀU SỬ DỤNG NAMESPACE **********
 
-// Route cho TẠO MỚI PHÒNG
-$router->match('GET|POST', '/phong/create', function() use ($pdoInstance) {
-    
-    // TẠO CONTROLLER SỬ DỤNG NAMESPACE ĐẦY ĐỦ (Autoloading)
+// === QUẢN LÝ PHÒNG (CRUD - AJAX) ===
+
+// 1. TRANG DANH SÁCH CHÍNH (GET)
+$router->get('/phong', function() use ($pdoInstance) {
     $controller = new App\Controllers\PhongController($pdoInstance); 
-    $controller->create();
+    $controller->index();
 });
+
+// 2. LẤY CHI TIẾT ĐỂ SỬA (GET - AJAX)
+$router->get('/phong/get/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\PhongController($pdoInstance); 
+    $controller->ajax_get_details($id);
+});
+
+// 3. XỬ LÝ THÊM MỚI (POST - AJAX)
+$router->post('/phong/ajax_create', function() use ($pdoInstance) {
+    $controller = new App\Controllers\PhongController($pdoInstance); 
+    $controller->ajax_create();
+});
+
+// 4. XỬ LÝ CẬP NHẬT (POST - AJAX)
+$router->post('/phong/ajax_update/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\PhongController($pdoInstance); 
+    $controller->ajax_update($id);
+});
+
+// 5. XỬ LÝ XÓA (POST - AJAX)
+$router->post('/phong/ajax_delete/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\PhongController($pdoInstance); 
+    $controller->ajax_delete($id);
+});
+// === KẾT THÚC QUẢN LÝ PHÒNG ===
 
 // === QUẢN LÝ LOẠI PHÒNG (CRUD) ===
 // 1. TRANG DANH SÁCH CHÍNH (GET)
