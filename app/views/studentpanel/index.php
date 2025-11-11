@@ -135,3 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<?php
+// 3. Gọi Footer (Đóng <main>, <footer>, <script>, </body>, </html>)
+require_once __DIR__ . '/../components/footer.php';
+?>

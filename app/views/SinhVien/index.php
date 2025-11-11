@@ -1,334 +1,363 @@
 <?php
-// app/views/SinhVien/Index.php
-// $data['sinhvien_list']
+// 1. Set các biến cho header
+$title = 'Quản Lý Sinh Viên'; 
+$currentRoute = '/sinhvien'; // Quan trọng: để active link sidebar
+
+// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
+require_once __DIR__ . '/../components/header.php'; 
 ?>
 
-<h2>Quản Lý Sinh Viên</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3">Quản lý Sinh Viên</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Quản lý Sinh Viên</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        <button id="btn-add-sinhvien" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Thêm Sinh Viên
+        </button>
+    </div>
+</div>
 
 <div id="main-message"></div>
 
-<h3>Danh Sách Sinh Viên</h3>
-<table border="1" style="width: 100%;">
-    <thead>
-        <tr>
-            <th>Mã SV</th>
-            <th>Họ Tên</th>
-            <th>Giới Tính</th>
-            <th>Số Điện Thoại</th>
-            <th>Phòng Đang Ở</th>
-            <th>Tình Trạng Tiền</th>
-            <th style="width: 250px;">Hành động</th>
-        </tr>
-    </thead>
-    <tbody id="sv-table-body">
-        <?php if (empty($sinhvien_list)): ?>
-            <tr id="row-empty">
-                <td colspan="7">Chưa có sinh viên nào.</td>
-            </tr>
-        <?php else: ?>
-            <?php foreach ($sinhvien_list as $sv): ?>
-                <?php $maSV_html = htmlspecialchars($sv['MaSV']); ?>
-                <tr id="row-<?php echo $maSV_html; ?>">
-                    <td><?php echo $maSV_html; ?></td>
-                    <td><?php echo htmlspecialchars($sv['HoTen']); ?></td>
-                    <td><?php echo htmlspecialchars($sv['GioiTinh']); ?></td>
-                    <td><?php echo htmlspecialchars($sv['SoDienThoai']); ?></td>
-                    <td><?php echo htmlspecialchars($sv['SoPhong'] ?? 'Chưa có'); ?></td>
-                    <td>
-                        <?php 
-                            $status = htmlspecialchars($sv['TinhTrangDongTien']);
-                            $color = ($status == 'Quá hạn') ? 'red' : 'inherit';
-                            echo "<span style='color: $color;'>$status</span>";
-                        ?>
-                    </td>
-                    <td>
-                        <button class="btn-details" data-id="<?php echo $maSV_html; ?>">Chi Tiết</button>
-                        |
-                        <button class="btn-edit" data-id="<?php echo $maSV_html; ?>">Sửa</button>
-                        |
-                        <button class="btn-delete" data-id="<?php echo $maSV_html; ?>">Xóa</button>
-                        |
-                        <button class="btn-reset-pass" data-id="<?php echo $maSV_html; ?>">Reset MK</button>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </tbody>
-</table>
-
-<div id="sv-modal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close-btn">&times;</span>
-        
-        <h3 id="modal-title">Sửa Thông Tin Sinh Viên</h3>
-        
-        <form id="sv-form">
-            <label>Mã SV:</label><br>
-            <input type="text" id="form-sv-masv" name="masv" readonly style="width: 95%; background: #eee;"><br><br>
-
-            <label for="form-hoten">Họ Tên:</label><br>
-            <input type="text" id="form-hoten" name="hoten" required style="width: 95%;"><br><br>
-
-            <label for="form-gioitinh">Giới Tính:</label><br>
-            <select id="form-gioitinh" name="gioitinh" style="width: 95%;">
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-                <option value="Khác">Khác</option>
-            </select><br><br>
-
-            <label for="form-sdt">Số Điện Thoại:</label><br>
-            <input type="text" id="form-sdt" name="sdt" style="width: 95%;"><br><br>
-
-            <button type="submit">Lưu Lại</button>
-        </form>
-        
-        <div id="modal-message" style="margin-top: 10px;"></div>
+<div class="card">
+    <div class="card-header">
+        Danh sách Sinh Viên
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Mã SV</th>
+                        <th scope="col">Họ Tên</th>
+                        <th scope="col">Giới Tính</th>
+                        <th scope="col">Số Điện Thoại</th>
+                        <th scope="col">Phòng Hiện Tại</th> 
+                        <th scope="col">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="sinhvien-table-body">
+                    <?php if (empty($sinhvien_list)): ?>
+                        <tr id="row-empty">
+                            <td colspan="6" class="text-center">Chưa có sinh viên nào.</td> 
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($sinhvien_list as $sv): ?>
+                            <tr id="row-<?php echo htmlspecialchars($sv['MaSV']); ?>">
+                                <td><?php echo htmlspecialchars($sv['MaSV']); ?></td>
+                                <td><?php echo htmlspecialchars($sv['HoTen']); ?></td>
+                                <td><?php echo htmlspecialchars($sv['GioiTinh']); ?></td>
+                                <td><?php echo htmlspecialchars($sv['SoDienThoai']); ?></td>
+                                <td><?php echo htmlspecialchars($sv['SoPhong'] ?? 'Chưa có'); ?></td>
+                                <td>
+                                    <button class="btn btn-info btn-sm btn-edit" 
+                                            data-id="<?php echo htmlspecialchars($sv['MaSV']); ?>">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-delete" 
+                                            data-id="<?php echo htmlspecialchars($sv['MaSV']); ?>">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<div id="details-modal" class="modal">
-     <div class="modal-content">
-        <span class="modal-close-btn details-close-btn">&times;</span>
-        <h3>Chi Tiết Phòng Ở</h3>
-        <div id="details-content">
+
+<div class="modal fade" id="sinhVienModal" tabindex="-1" 
+     aria-labelledby="sinhVienModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sinhVienModalLabel">Thêm Sinh Viên Mới</h5>
+                <button type="button" class="btn-close" 
+                        data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
+            <form id="sinhVienForm">
+                <div class="modal-body">
+                    <div id="modal-message"></div>
+                    
+                    <input type="hidden" name="MaSV" id="MaSV">
+                    
+                    <div class="mb-3">
+                        <label for="HoTen" class="form-label">Họ Tên:</label>
+                        <input type="text" class="form-control" 
+                               id="HoTen" name="HoTen" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="GioiTinh" class="form-label">Giới Tính:</label>
+                        <select class="form-select" id="GioiTinh" name="GioiTinh" required>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="NgaySinh" class="form-label">Ngày Sinh:</label>
+                        <input type="date" class="form-control" 
+                               id="NgaySinh" name="NgaySinh" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="DiaChi" class="form-label">Địa Chỉ:</label>
+                        <input type="text" class="form-control" 
+                               id="DiaChi" name="DiaChi" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="SoDienThoai" class="form-label">Số Điện Thoại:</label>
+                        <input type="tel" class="form-control" 
+                               id="SoDienThoai" name="SoDienThoai">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" 
+                               id="Email" name="Email">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" 
+                            data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" 
+                            id="btn-submit">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-
-<style>
-    /* */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
-    .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; position: relative; }
-    .modal-close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; position: absolute; top: 5px; right: 15px; }
-    .modal-close-btn:hover, .modal-close-btn:focus { color: black; text-decoration: none; cursor: pointer; }
-    .message-success { color: green; font-weight: bold; }
-    .message-error { color: red; font-weight: bold; }
-</style>
 
 <script>
-    // Toàn bộ JS này dựa trên logic của app/views/Phong/index.php
     document.addEventListener('DOMContentLoaded', function() {
-
-        // --- Lấy các đối tượng DOM ---
-        const modal = document.getElementById('sv-modal');
-        const btnCloseModal = modal.querySelector('.modal-close-btn');
-        const form = document.getElementById('sv-form');
-        const modalTitle = document.getElementById('modal-title');
+        // --- Khai báo biến ---
+        const tableBody = document.getElementById('sinhvien-table-body');
+        const form = document.getElementById('sinhVienForm');
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
-        const tableBody = document.getElementById('sv-table-body');
+        const modalTitle = document.getElementById('sinhVienModalLabel');
+        const btnAddSinhVien = document.getElementById('btn-add-sinhvien');
         
-        // Modal Chi tiết
-        const detailsModal = document.getElementById('details-modal');
-        const btnCloseDetailsModal = detailsModal.querySelector('.details-close-btn');
-        const detailsContent = document.getElementById('details-content');
+        // *ĐIỀU KHIỂN BOOTSTRAP MODAL*
+        // Thay thế cho code (getElementById) và (.style.display) của bạn
+        const modalElement = document.getElementById('sinhVienModal');
+        const bootstrapModal = new bootstrap.Modal(modalElement);
 
-        // Form fields
-        const formMaSV = document.getElementById('form-sv-masv');
-        const formHoTen = document.getElementById('form-hoten');
-        const formGioiTinh = document.getElementById('form-gioitinh');
-        const formSdt = document.getElementById('form-sdt');
+        let currentAction = 'create'; // 'create' hoặc 'update'
 
-        // --- Hàm hiển thị thông báo ---
-        function showModalMessage(message, isError = false) {
-            modalMessage.textContent = message;
-            modalMessage.className = isError ? 'message-error' : 'message-success';
-        }
-        function showMainMessage(message, isError = false) {
-            mainMessage.textContent = message;
-            mainMessage.className = isError ? 'message-error' : 'message-success';
-            setTimeout(() => { mainMessage.textContent = ''; }, 3000);
-        }
+        // --- Hàm xử lý ---
 
-        // --- Hàm lấy dữ liệu và mở modal cho 'Update' ---
-        async function openUpdateModal(maSV) {
-            try {
-                const response = await fetch(`/sinhvien/get/${maSV}`);
-                const result = await response.json();
-
-                if (result.success) {
-                    form.reset();
-                    // Điền dữ liệu vào form
-                    formMaSV.value = result.data.MaSV;
-                    formHoTen.value = result.data.HoTen;
-                    formGioiTinh.value = result.data.GioiTinh;
-                    formSdt.value = result.data.SoDienThoai;
-                    
-                    modalTitle.textContent = 'Sửa Thông Tin Sinh Viên';
-                    showModalMessage('');
-                    modal.style.display = 'block';
-                } else {
-                    showMainMessage(result.message, true);
-                }
-            } catch (error) {
-                showMainMessage('Lỗi kết nối: ' + error.message, true);
-            }
-        }
-        
-        // --- Hàm lấy và hiển thị chi tiết phòng ở ---
-        async function showRoomDetails(maSV) {
-             try {
-                const response = await fetch(`/sinhvien/ajax_get_room_details/${maSV}`);
-                const result = await response.json();
-                
-                let content = '';
-                if (result.success) {
-                    const d = result.data;
-                    content = `
-                        <p><strong>Họ Tên:</strong> ${escapeHTML(d.HoTen)}</p>
-                        <p><strong>Mã SV:</strong> ${escapeHTML(d.MaSV)}</p>
-                        <hr>
-                        <p><strong>Số Phòng:</strong> ${escapeHTML(d.SoPhong)}</p>
-                        <p><strong>Loại Phòng:</strong> ${escapeHTML(d.TenLoaiPhong)}</p>
-                        <p><strong>Giá Thuê:</strong> ${new Intl.NumberFormat('vi-VN').format(d.GiaThue)} VND/tháng</p>
-                        <p><strong>Ngày Bắt Đầu:</strong> ${d.NgayBatDau}</p>
-                        <p><strong>Ngày Kết Thúc:</strong> ${d.NgayKetThuc}</p>
-                    `;
-                } else {
-                    content = `<p class="message-error">${result.message}</p>`;
-                }
-                detailsContent.innerHTML = content;
-                detailsModal.style.display = 'block';
-                
-            } catch (error) {
-                detailsContent.innerHTML = `<p class="message-error">Lỗi kết nối: ${error.message}</p>`;
-                detailsModal.style.display = 'block';
-            }
-        }
-
-        // --- Hàm xử lý Submit (Chỉ Update) ---
-        async function handleFormSubmit(event) {
-            event.preventDefault(); 
+        // Hàm mở Modal để TẠO MỚI (Trigger bởi nút "Thêm Sinh Viên")
+        function openCreateModal() {
+            currentAction = 'create';
+            form.reset(); // Xóa trắng form
+            document.getElementById('MaSV').value = ''; // Đảm bảo MaSV rỗng
+            modalTitle.textContent = 'Thêm Sinh Viên Mới';
+            modalMessage.innerHTML = '';
             
-            const maSV = formMaSV.value;
-            const formData = new FormData(form);
-            let url = `/sinhvien/ajax_update/${maSV}`;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    showModalMessage(result.message, false);
-                    // Cập nhật dữ liệu trên bảng
-                    updateRowInTable(result.updatedRowData);
-                } else {
-                    showModalMessage(result.message, true);
-                }
-            } catch (error) {
-                showModalMessage('Lỗi kết nối: ' + error.message, true);
-            }
+            // Dùng hàm của Bootstrap để MỞ dialog
+            bootstrapModal.show();
         }
-        
-        // --- Hàm xử lý Xóa (Delete) ---
-        async function handleDelete(maSV) {
-            if (!confirm(`Bạn có chắc chắn muốn xóa sinh viên [${maSV}]? Thao tác này KHÔNG thể hoàn tác.`)) {
-                return;
-            }
 
-            try {
-                const response = await fetch(`/sinhvien/ajax_delete/${maSV}`, {
-                    method: 'POST' 
+        // Hàm mở Modal để CẬP NHẬT (Trigger bởi nút "Sửa")
+        function openUpdateModal(id) {
+            currentAction = 'update';
+            form.reset();
+            modalMessage.innerHTML = '';
+            modalTitle.textContent = 'Cập nhật Thông tin Sinh Viên';
+
+            fetch(`/api/sinhvien/get/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.sinhvien) {
+                        const sv = data.sinhvien;
+                        // Điền dữ liệu vào form
+                        document.getElementById('MaSV').value = sv.MaSV;
+                        document.getElementById('HoTen').value = sv.HoTen;
+                        document.getElementById('GioiTinh').value = sv.GioiTinh;
+                        // Cần định dạng lại ngày tháng (YYYY-MM-DD)
+                        document.getElementById('NgaySinh').value = sv.NgaySinh.split(' ')[0]; 
+                        document.getElementById('DiaChi').value = sv.DiaChi;
+                        document.getElementById('SoDienThoai').value = sv.SoDienThoai;
+                        document.getElementById('Email').value = sv.Email;
+
+                        // Dùng hàm của Bootstrap để MỞ dialog
+                        bootstrapModal.show();
+                    } else {
+                        showMessage(mainMessage, data.message || 'Không tìm thấy sinh viên.', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    showMessage(mainMessage, 'Lỗi khi tải dữ liệu. Vui lòng thử lại.', 'danger');
                 });
-                const result = await response.json();
+        }
 
-                if (result.success) {
-                    showMainMessage(result.message, false);
-                    document.getElementById(`row-${maSV}`)?.remove();
-                    if (tableBody.rows.length === 0) {
-                        showEmptyRow();
+        // Hàm xử lý SUBMIT (Dùng cho cả Create và Update)
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const url = (currentAction === 'create') ? '/api/sinhvien/create' : '/api/sinhvien/update';
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Dùng hàm của Bootstrap để ĐÓNG dialog
+                    bootstrapModal.hide();
+                    showMessage(mainMessage, data.message, 'success');
+                    
+                    // Cập nhật lại bảng
+                    if (currentAction === 'create') {
+                        appendSinhVienToTable(data.sinhvien);
+                    } else {
+                        updateSinhVienInTable(data.sinhvien);
                     }
                 } else {
-                    showMainMessage(result.message, true);
+                    // Hiển thị lỗi bên TRONG modal
+                    showMessage(modalMessage, data.message || 'Đã xảy ra lỗi. Vui lòng kiểm tra lại.', 'danger');
                 }
-            } catch (error) {
-                showMainMessage('Lỗi kết nối: ' + error.message, true);
-            }
-        }
-        
-        // --- Hàm xử lý Reset Mật Khẩu ---
-        async function handleResetPass(maSV) {
-            if (!confirm(`Bạn có chắc chắn muốn ĐẶT LẠI MẬT KHẨU cho sinh viên [${maSV}]?`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`/sinhvien/ajax_reset_password/${maSV}`, {
-                    method: 'POST' 
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    showMainMessage(result.message, false);
-                } else {
-                    showMainMessage(result.message, true);
-                }
-            } catch (error) {
-                showMainMessage('Lỗi kết nối: ' + error.message, true);
-            }
-        }
-
-
-        // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
-        function updateRowInTable(sv) {
-            const row = document.getElementById(`row-${sv.MaSV}`);
-            if (row) {
-                // Cập nhật các cell
-                row.cells[1].textContent = escapeHTML(sv.HoTen);
-                row.cells[2].textContent = escapeHTML(sv.GioiTinh);
-                row.cells[3].textContent = escapeHTML(sv.SoDienThoai);
-                // (Không cập nhật phòng ở, tình trạng tiền vì findById không có)
-            }
-        }
-        
-        function showEmptyRow() {
-            tableBody.innerHTML = '<tr id="row-empty"><td colspan="7">Chưa có sinh viên nào.</td></tr>';
-        }
-        
-        function escapeHTML(str) {
-            if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, function(m) {
-                return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[m];
+            })
+            .catch(error => {
+                console.error('Submit error:', error);
+                showMessage(modalMessage, 'Lỗi kết nối. Vui lòng thử lại.', 'danger');
             });
         }
 
+        // Hàm XÓA (Trigger bởi nút "Xóa")
+        function deleteSinhVien(id) {
+            if (!confirm(`Bạn có chắc chắn muốn xóa sinh viên mã ${id}?`)) {
+                return;
+            }
+
+            fetch(`/api/sinhvien/delete/${id}`, {
+                method: 'POST' // Hoặc 'DELETE' tùy vào router của bạn
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(mainMessage, data.message, 'success');
+                    const row = document.getElementById(`row-${id}`);
+                    if (row) {
+                        row.remove();
+                    }
+                    // Kiểm tra nếu bảng rỗng
+                    if (tableBody.getElementsByTagName('tr').length === 0) {
+                        showEmptyRow();
+                    }
+                } else {
+                    showMessage(mainMessage, data.message || 'Lỗi khi xóa.', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Delete error:', error);
+                showMessage(mainMessage, 'Lỗi kết nối. Vui lòng thử lại.', 'danger');
+            });
+        }
+
+
+        // --- Hàm hiển thị & Cập nhật Giao diện (Giữ nguyên) ---
+
+        function showMessage(element, message, type = 'success') {
+            element.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
+        }
+
+        function appendSinhVienToTable(sv) {
+            // Xóa dòng "chưa có" nếu nó tồn tại
+            const emptyRow = document.getElementById('row-empty');
+            if (emptyRow) {
+                emptyRow.remove();
+            }
+            
+            tableBody.insertAdjacentHTML('beforeend', createTableRow(sv));
+        }
+
+        function updateSinhVienInTable(sv) {
+            const row = document.getElementById(`row-${sv.MaSV}`);
+            if (row) {
+                row.innerHTML = createTableRow(sv, false); // Chỉ cập nhật nội dung bên trong
+            }
+        }
+
+        function createTableRow(sv, includeRowTag = true) {
+            const soPhong = sv.SoPhong ? escapeHTML(sv.SoPhong) : 'Chưa có';
+            const content = `
+                <td>${escapeHTML(sv.MaSV)}</td>
+                <td>${escapeHTML(sv.HoTen)}</td>
+                <td>${escapeHTML(sv.GioiTinh)}</td>
+                <td>${escapeHTML(sv.SoDienThoai)}</td>
+                <td>${soPhong}</td>
+                <td>
+                    <button class="btn btn-info btn-sm btn-edit" data-id="${escapeHTML(sv.MaSV)}">
+                        <i class="bi bi-pencil-square"></i> Sửa
+                    </button>
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="${escapeHTML(sv.MaSV)}">
+                        <i class="bi bi-trash"></i> Xóa
+                    </button>
+                </td>
+            `;
+            return includeRowTag ? `<tr id="row-${escapeHTML(sv.MaSV)}">${content}</tr>` : content;
+        }
+
+        function showEmptyRow() {
+            tableBody.innerHTML = '<tr id="row-empty"><td colspan="6" class="text-center">Chưa có sinh viên nào.</td></tr>';
+        }
+        
+        function escapeHTML(str) { 
+             if (str === null || str === undefined) return '';
+             return str.toString().replace(/[&<>\"']/g, function(m) {
+                 return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m];
+             });
+        }
+
+
         // --- GÁN SỰ KIỆN (Event Listeners) ---
-        btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
-        btnCloseDetailsModal.addEventListener('click', () => detailsModal.style.display = 'none');
-        
-        window.addEventListener('click', (event) => {
-            if (event.target == modal) modal.style.display = 'none';
-            if (event.target == detailsModal) detailsModal.style.display = 'none';
-        });
-        
+
+        // Nút Thêm Sinh Viên
+        btnAddSinhVien.addEventListener('click', openCreateModal);
+
+        // Submit Form
         form.addEventListener('submit', handleFormSubmit);
 
+        // Các nút Sửa/Xóa (dùng event delegation)
         tableBody.addEventListener('click', function(event) {
-            const target = event.target;
-            // Dùng .closest() để lấy data-id ngay cả khi click vào icon bên trong
-            const button = target.closest('button'); 
-            if (!button) return;
+            const target = event.target.closest('button'); // Tìm nút gần nhất
+            if (!target) return;
 
-            const maSV = button.dataset.id;
-            if (!maSV) return;
-
-            if (button.classList.contains('btn-edit')) {
-                openUpdateModal(maSV);
+            const id = target.dataset.id;
+            
+            if (target.classList.contains('btn-edit')) {
+                openUpdateModal(id);
             }
-            if (button.classList.contains('btn-delete')) {
-                handleDelete(maSV);
-            }
-            if (button.classList.contains('btn-details')) {
-                showRoomDetails(maSV);
-            }
-            if (button.classList.contains('btn-reset-pass')) {
-                handleResetPass(maSV);
+            if (target.classList.contains('btn-delete')) {
+                deleteSinhVien(id);
             }
         });
-
-    });
+        
+    }); // Hết DOMContentLoaded
 </script>
+
+<?php
+// 3. GỌI FOOTER (Đây là dòng quan trọng nhất bạn đã quên)
+// Nó sẽ đóng <main>, <footer>, và tải BOOTSTRAP JS
+require_once __DIR__ . '/../components/footer.php'; 
+?>

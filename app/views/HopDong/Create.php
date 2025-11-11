@@ -1,8 +1,10 @@
 <?php
-// app/views/HopDong/Create.php
-// $data['sinhvien_list']
-// $data['phong_list']
-// $data['message'], $data['message_type']
+// 1. Set các biến cho header
+$title = 'Dashboard Trang Chủ'; 
+$currentRoute = '/hopdong'; // Quan trọng: để active link sidebar
+
+// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
+require_once __DIR__ . '/../components/header.php'; 
 ?>
 
 <style>
@@ -77,3 +79,7 @@
     <button type="submit" class="btn-submit">Lưu Hợp Đồng</button>
 
 </form>
+<?php
+// 3. Gọi Footer (Đóng <main>, <footer>, <script>, </body>, </html>)
+require_once __DIR__ . '/../components/footer.php'; 
+?>

@@ -155,10 +155,15 @@ $router->post('/dichvu/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
 // === KẾT THÚC QUẢN LÝ DỊCH VỤ ===
 
 // Route cho THÊM SINH VIÊN VÀO PHÒNG (Tạo Hợp đồng)
-$router->match('GET|POST', '/hopdong/create', function () use ($pdoInstance) {
-    $controller = new App\Controllers\HopDongController($pdoInstance);
-    $controller->create();
-});
+// --- HopDong Routes ---
+$router->get('/hopdong', '\App\Controllers\HopDongController@index');
+$router->post('/api/hopdong/create', '\App\Controllers\HopDongController@create');
+
+// V THÊM DÒNG MỚI NÀY
+$router->post('/api/hopdong/update', '\App\Controllers\HopDongController@update');
+
+$router->get('/api/hopdong/get/{id}', '\App\Controllers\HopDongController@getHopDongDetails');
+$router->post('/api/hopdong/delete/{id}', '\App\Controllers\HopDongController@delete');
 // === QUẢN LÝ SINH VIÊN (CRUD - AJAX) ===
 
 // 1. TRANG DANH SÁCH CHÍNH (GET)

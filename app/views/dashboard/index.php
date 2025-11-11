@@ -1,5 +1,10 @@
 <?php
-// app/views/dashboard/index.php
+// 1. Set các biến cho header
+$title = 'Dashboard Trang Chủ'; 
+$currentRoute = '/dashboard'; // Quan trọng: để active link sidebar
+
+// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
+require_once __DIR__ . '/../components/header.php'; 
 ?>
 
 <style>
@@ -61,12 +66,11 @@
 </div>
 
 <hr>
-<h3>Menu Chức năng</h3>
-<ul>
-    <li><a href="/loaiphong">Quản lý Loại Phòng</a></li>
-    <li><a href="/phong/">Quản lý Phòng</a></li>
-    <li><a href="/dichvu/">Quản lý Dịch vụ</a></li>
-    <li><a href="/users">Quản lý nhân viên</a></li>
-    <li><a href="/sinhvien">Quản lý sinh viên</a></li>
-    <li><a href="/hopdong/create">Tạo hợp đồng mới</a></li>
-</ul>
+<h2 class="mt-4">Nội dung dashboard của bạn...</h2>
+<p>Bây giờ nội dung đã hiển thị chính xác bên phải sidebar (trên PC) và bên dưới header (trên Mobile).</p>
+
+
+<?php
+// 3. Gọi Footer (Đóng <main>, <footer>, <script>, </body>, </html>)
+require_once __DIR__ . '/../components/footer.php'; 
+?>

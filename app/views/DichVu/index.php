@@ -1,6 +1,10 @@
 <?php
-// app/views/DichVu/Index.php
-// $data['dichvu_list']
+// 1. Set các biến cho header
+$title = 'Quản lý Dịch Vụ';
+$currentRoute = '/dichvu'; // Quan trọng: để active link sidebar
+
+// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
+require_once __DIR__ . '/../components/header.php';
 ?>
 
 <h2>Quản Lý Dịch Vụ</h2>
@@ -45,37 +49,79 @@
 <div id="dichvu-modal" class="modal">
     <div class="modal-content">
         <span class="modal-close-btn">&times;</span>
-        
+
         <h3 id="modal-title">Thêm Dịch Vụ Mới</h3>
-        
+
         <form id="dichvu-form">
             <input type="hidden" id="form-dichvu-id" name="id" value="0">
 
             <label for="tendv">Tên Dịch Vụ:</label><br>
-            <input type="text" id="form-tendv" name="tendv" required style="width: 95%;" 
-                   placeholder="Ví dụ: Điện (VND/kWh) hoặc Gửi xe (VND/tháng)"><br><br>
+            <input type="text" id="form-tendv" name="tendv" required style="width: 95%;"
+                placeholder="Ví dụ: Điện (VND/kWh) hoặc Gửi xe (VND/tháng)"><br><br>
 
             <label for="dongia">Đơn Giá (VND):</label><br>
             <input type="number" id="form-dongia" name="dongia" required style="width: 95%;"><br><br>
 
             <button type="submit">Lưu Lại</button>
         </form>
-        
+
         <div id="modal-message" style="margin-top: 10px;"></div>
     </div>
 </div>
 
 <style>
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
-    .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; position: relative; }
-    .modal-close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; position: absolute; top: 5px; right: 15px; }
-    .modal-close-btn:hover, .modal-close-btn:focus { color: black; text-decoration: none; cursor: pointer; }
-    .message-success { color: green; font-weight: bold; }
-    .message-error { color: red; font-weight: bold; }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .modal-close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        top: 5px;
+        right: 15px;
+    }
+
+    .modal-close-btn:hover,
+    .modal-close-btn:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .message-success {
+        color: green;
+        font-weight: bold;
+    }
+
+    .message-error {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         // --- Lấy các đối tượng DOM ---
         const modal = document.getElementById('dichvu-modal');
@@ -86,7 +132,7 @@
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
         const tableBody = document.getElementById('dichvu-table-body');
-        
+
         // Form fields
         const formId = document.getElementById('form-dichvu-id');
         const formTenDV = document.getElementById('form-tendv');
@@ -105,11 +151,11 @@
 
         // --- Hàm reset form và mở modal cho 'Create' ---
         function openCreateModal() {
-            form.reset(); 
-            formId.value = '0'; 
+            form.reset();
+            formId.value = '0';
             modalTitle.textContent = 'Thêm Dịch Vụ Mới';
-            showModalMessage(''); 
-            modal.style.display = 'block'; 
+            showModalMessage('');
+            modal.style.display = 'block';
         }
 
         // --- Hàm lấy dữ liệu và mở modal cho 'Update' ---
@@ -124,7 +170,7 @@
                     formId.value = result.data.MaDV;
                     formTenDV.value = result.data.TenDichVu;
                     formDonGia.value = result.data.DonGiaDichVu;
-                    
+
                     modalTitle.textContent = 'Sửa Dịch Vụ';
                     showModalMessage('');
                     modal.style.display = 'block';
@@ -138,14 +184,14 @@
 
         // --- Hàm xử lý Submit (Cả Create và Update) ---
         async function handleFormSubmit(event) {
-            event.preventDefault(); 
-            
+            event.preventDefault();
+
             const id = formId.value;
             const formData = new FormData(form);
-            
-            let url = (id === '0' || id === '') 
-                      ? '/dichvu/ajax_create' 
-                      : `/dichvu/ajax_update/${id}`;
+
+            let url = (id === '0' || id === '')
+                ? '/dichvu/ajax_create'
+                : `/dichvu/ajax_update/${id}`;
 
             try {
                 const response = await fetch(url, {
@@ -156,7 +202,7 @@
 
                 if (result.success) {
                     showModalMessage(result.message, false);
-                    
+
                     if (id === '0' || id === '') {
                         // --- Xử lý THÊM MỚI (Create) ---
                         appendRowToTable(result.newRow);
@@ -173,7 +219,7 @@
                 showModalMessage('Lỗi kết nối: ' + error.message, true);
             }
         }
-        
+
         // --- Hàm xử lý Xóa (Delete) ---
         async function handleDelete(id) {
             if (!confirm('Bạn có chắc chắn muốn xóa dịch vụ này?')) {
@@ -182,7 +228,7 @@
 
             try {
                 const response = await fetch(`/dichvu/ajax_delete/${id}`, {
-                    method: 'POST' 
+                    method: 'POST'
                 });
                 const result = await response.json();
 
@@ -203,7 +249,7 @@
         // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
         function createTableRow(dv) { // dv = rowData (dichvu)
             document.getElementById('row-empty')?.remove();
-            
+
             return `
                 <tr id="row-${dv.MaDV}">
                     <td>${dv.MaDV}</td>
@@ -221,22 +267,22 @@
         function appendRowToTable(rowData) {
             tableBody.insertAdjacentHTML('beforeend', createTableRow(rowData));
         }
-        
+
         function updateRowInTable(rowData) {
             const row = document.getElementById(`row-${rowData.MaDV}`);
             if (row) {
                 row.outerHTML = createTableRow(rowData);
             }
         }
-        
+
         function showEmptyRow() {
             tableBody.innerHTML = '<tr id="row-empty"><td colspan="4">Chưa có dịch vụ nào.</td></tr>';
         }
-        
+
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, function(m) {
-                return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[m];
+            return str.toString().replace(/[&<>"']/g, function (m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
             });
         }
 
@@ -248,7 +294,7 @@
         });
         form.addEventListener('submit', handleFormSubmit);
 
-        tableBody.addEventListener('click', function(event) {
+        tableBody.addEventListener('click', function (event) {
             const target = event.target;
             if (target.classList.contains('btn-edit')) {
                 openUpdateModal(target.dataset.id);
@@ -260,3 +306,8 @@
 
     });
 </script>
+
+<?php
+// 3. Gọi Footer (Đóng <main>, <footer>, <script>, </body>, </html>)
+require_once __DIR__ . '/../components/footer.php';
+?>
