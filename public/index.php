@@ -121,11 +121,38 @@ $router->post('/loaiphong/ajax_delete/(\d+)', function($id) use ($pdoInstance) {
 
 
 
-// Route cho TẠO MỚI DỊCH VỤ
-$router->match('GET|POST', '/dichvu/create', function() use ($pdoInstance) {
+// === QUẢN LÝ DỊCH VỤ (CRUD - AJAX) ===
+
+// 1. TRANG DANH SÁCH CHÍNH (GET)
+$router->get('/dichvu', function() use ($pdoInstance) {
     $controller = new App\Controllers\DichVuController($pdoInstance); 
-    $controller->create();
+    $controller->index();
 });
+
+// 2. LẤY CHI TIẾT ĐỂ SỬA (GET - AJAX)
+$router->get('/dichvu/get/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\DichVuController($pdoInstance); 
+    $controller->ajax_get_details($id);
+});
+
+// 3. XỬ LÝ THÊM MỚI (POST - AJAX)
+$router->post('/dichvu/ajax_create', function() use ($pdoInstance) {
+    $controller = new App\Controllers\DichVuController($pdoInstance); 
+    $controller->ajax_create();
+});
+
+// 4. XỬ LÝ CẬP NHẬT (POST - AJAX)
+$router->post('/dichvu/ajax_update/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\DichVuController($pdoInstance); 
+    $controller->ajax_update($id);
+});
+
+// 5. XỬ LÝ XÓA (POST - AJAX)
+$router->post('/dichvu/ajax_delete/(\d+)', function($id) use ($pdoInstance) {
+    $controller = new App\Controllers\DichVuController($pdoInstance); 
+    $controller->ajax_delete($id);
+});
+// === KẾT THÚC QUẢN LÝ DỊCH VỤ ===
 
 // Route cho THÊM SINH VIÊN VÀO PHÒNG (Tạo Hợp đồng)
 $router->match('GET|POST', '/hopdong/create', function() use ($pdoInstance) {
