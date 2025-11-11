@@ -1,44 +1,79 @@
-<h2>Thêm Sinh Viên Mới vào Phòng</h2>
+<?php
+// app/views/HopDong/Create.php
+// $data['sinhvien_list']
+// $data['phong_list']
+// $data['message'], $data['message_type']
+?>
 
-<?php if (isset($success)): ?>
-    <p style="color: green;"><?php echo $success; ?></p>
-<?php endif; ?>
-<?php if (isset($error)): ?>
-    <p style="color: red;"><?php echo $error; ?></p>
-<?php endif; ?>
-
-<form method="POST" action="">
-    <h3>Thông tin Sinh viên (SV đã có sẽ tự động cập nhật HĐ)</h3>
-    <label for="masv">Mã Sinh Viên:</label><br>
-    <input type="text" id="masv" name="masv" required><br><br>
-
-    <label for="hoten">Họ Tên:</label><br>
-    <input type="text" id="hoten" name="hoten" required><br><br>
-
-    <label for="sdt">Số Điện Thoại:</label><br>
-    <input type="text" id="sdt" name="sdt"><br><br>
+<style>
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-control { width: 100%; max-width: 500px; padding: 8px; font-size: 1em; }
+    .btn-submit { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
     
-    <label for="gioitinh">Giới Tính:</label><br>
-    <select id="gioitinh" name="gioitinh">
-        <option value="Nam">Nam</option>
-        <option value="Nữ">Nữ</option>
-    </select><br><br>
+    .message-box {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+    .message-success { background-color: #d4edda; color: #155724; }
+    .message-danger { background-color: #f8d7da; color: #721c24; }
+    .message-info { background-color: #cce5ff; color: #004085; }
+</style>
 
-    <h3>Thông tin Hợp đồng</h3>
-    <label for="maphong">Chọn Phòng:</label><br>
-    <select id="maphong" name="maphong" required>
-        <?php foreach ($phong_list as $phong): ?>
-            <option value="<?php echo $phong->MaPhong; ?>">
-                <?php echo $phong->SoPhong; ?> (<?php echo $phong->TinhTrangPhong; ?>)
-            </option>
-        <?php endforeach; ?>
-    </select><br><br>
+<h2>Tạo Hợp Đồng Mới (Thêm Sinh Viên Vào Phòng)</h2>
+<hr>
+
+<?php if ($data['message']): ?>
+    <div class="message-box message-<?php echo $data['message_type']; ?>">
+        <?php echo htmlspecialchars($data['message']); ?>
+    </div>
+<?php endif; ?>
+
+
+<form action="<?php echo url('hopdong/create'); ?>" method="POST">
     
-    <label for="ngaybd">Ngày Bắt Đầu:</label><br>
-    <input type="date" id="ngaybd" name="ngaybd" value="<?php echo date('Y-m-d'); ?>" required><br><br>
+    <div class="form-group">
+        <label for="masv">Chọn Sinh Viên (Chưa có phòng):</label>
+        <select id="masv" name="masv" class="form-control" required>
+            <option value="">-- Vui lòng chọn --</option>
+            <?php if (empty($data['sinhvien_list'])): ?>
+                 <option value="" disabled>Không có sinh viên nào chưa có phòng.</option>
+            <?php else: ?>
+                <?php foreach ($data['sinhvien_list'] as $sv): ?>
+                    <option value="<?php echo htmlspecialchars($sv['MaSV']); ?>">
+                        <?php echo htmlspecialchars($sv['HoTen'] . ' (Mã: ' . $sv['MaSV'] . ')'); ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
+    </div>
 
-    <label for="ngaykt">Ngày Kết Thúc:</label><br>
-    <input type="date" id="ngaykt" name="ngaykt" required><br><br>
+    <div class="form-group">
+        <label for="maphong">Chọn Phòng:</label>
+        <select id="maphong" name="maphong" class="form-control" required>
+            <option value="">-- Vui lòng chọn --</option>
+             <?php foreach ($data['phong_list'] as $p): ?>
+                <option value="<?php echo htmlspecialchars($p['MaPhong']); ?>">
+                    <?php 
+                        // Giả sử $p có các cột này từ hàm all() của PhongModel
+                        echo htmlspecialchars('Phòng ' . $p['SoPhong'] . ' - ' . $p['TenLoaiPhong']); 
+                    ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
 
-    <button type="submit">Tạo Hợp Đồng</button>
+    <div class="form-group">
+        <label for="ngaybd">Ngày Bắt Đầu:</label>
+        <input type="date" id="ngaybd" name="ngaybd" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="ngaykt">Ngày Kết Thúc:</label>
+        <input type="date" id="ngaykt" name="ngaykt" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn-submit">Lưu Hợp Đồng</button>
+
 </form>

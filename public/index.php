@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 
 // Nhúng Autoloader của Composer (Tải tất cả classes có namespace App\)
 require_once __DIR__ . '/../vendor/autoload.php';
-
+require_once __DIR__ . '/../app/functions.php';
 // Nhúng file cấu hình (nơi định nghĩa DB_CONFIG, BASE_URL)
 require_once __DIR__ . '/../config.php';
 

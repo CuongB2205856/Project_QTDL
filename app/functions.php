@@ -1,4 +1,15 @@
 <?php
+function url($path = '')
+{
+    // Giả định bạn có hằng số BASE_URL hoặc biết cách tạo URL gốc
+    $base_url = 'http://localhost:8000'; // Thay thế bằng logic lấy BASE_URL của bạn
+
+    // Loại bỏ dấu '/' ở đầu và cuối đường dẫn nếu có để tránh trùng lặp
+    $path = trim($path, '/');
+    
+    // Trả về URL hoàn chỉnh
+    return $base_url . ($path ? '/' . $path : '');
+}
 
 if (!function_exists('PDO')) {
   function PDO(): PDO

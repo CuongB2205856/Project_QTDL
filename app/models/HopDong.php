@@ -29,5 +29,14 @@ class HopDong
             'ngaykt' => $data['ngaykt']
         ]);
     }
+    public function countCurrentOccupants($maPhong) {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(MaHD) 
+            FROM HopDong 
+            WHERE MaPhong = :maphong AND NgayKetThuc >= CURDATE()
+        ");
+        $stmt->execute(['maphong' => $maPhong]);
+        return $stmt->fetchColumn();
+    }
 }
 ?>

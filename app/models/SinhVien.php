@@ -137,9 +137,35 @@ class SinhVien
                 h.NgayHetHan ASC 
             LIMIT 1
         ");
-        
+
         $stmt->execute(['masv' => $maSV]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+    public function allWithoutContract()
+    {
+        $stmt = $this->db->query("
+            SELECT * FROM SinhVien 
+            WHERE MaSV NOT IN (
+                SELECT MaSV FROM HopDong WHERE NgayKetThuc >= CURDATE()
+            )
+            ORDER BY HoTen
+        ");
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * MỚI: Kiểm tra 1 SV cụ thể có hợp đồng CÒN HẠN hay không
+     * (Để validate khi POST form)
+     */
+    public function checkActiveContract($maSV)
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(MaHD) 
+            FROM HopDong 
+            WHERE MaSV = :masv AND NgayKetThuc >= CURDATE()
+        ");
+        $stmt->execute(['masv' => $maSV]);
+        return $stmt->fetchColumn();
     }
 }
 ?>
