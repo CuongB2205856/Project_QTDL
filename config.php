@@ -10,6 +10,5 @@ const DB_CONFIG = [
 ];
 
 // Cấu hình Base URL (quan trọng cho routing)
-define('BASE_URL', 'http://QuanLyKTX.com/'); 
-
+define('BASE_URL', 'http://quanlyktx_dev.com');
 ?>
