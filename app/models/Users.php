@@ -40,31 +40,55 @@ class Users
         return $stmt->fetchAll();
     }
 
+
     /**
-     * Tạo người dùng mới (SỬA LẠI TÊN BẢNG VÀ CỘT)
+     * SỬA LẠI: Tạo người dùng mới và trả về ID
      */
     public function create(array $data)
     {
         // Băm mật khẩu trước khi lưu
         $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
 
-        // Sử dụng tên bảng Users và các cột Username, Password, Role
-        $sql = "INSERT INTO Users (Username, Password, Role) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO Users (Username, Password, Role, MaLienKet) VALUES (:username, :password, :role, :malienket)";
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            'username' => $data['username'],
+            'password' => $hashedPassword,
+            'role' => $data['role'],
+            'malienket' => $data['malienket'] // Có thể là null
+        ]);
+
+        // Trả về ID của user vừa tạo
+        return $this->db->lastInsertId();
+    }
+    /**
+     * MỚI: Cập nhật thông tin User (không bao gồm mật khẩu)
+     */
+    public function update($id, array $data)
+    {
+        $sql = "UPDATE Users SET Username = :username, Role = :role, MaLienKet = :malienket WHERE UserID = :id";
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
-            $data['username'],
-            $hashedPassword,
-            $data['role'] // 'Quản lý'
+            'username' => $data['username'],
+            'role' => $data['role'],
+            'malienket' => $data['malienket'],
+            'id' => $id
         ]);
     }
-
+    public function find($id)
+    {
+        // Không lấy mật khẩu
+        $stmt = $this->db->prepare("SELECT UserID, Username, Role, MaLienKet FROM Users WHERE UserID = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
     /**
      * Xóa người dùng bằng ID (SỬA LẠI TÊN BẢNG VÀ CỘT)
      */
     public function delete($id)
     {
-        // Sử dụng tên bảng Users và cột UserID
         $sql = "DELETE FROM Users WHERE UserID = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$id]);

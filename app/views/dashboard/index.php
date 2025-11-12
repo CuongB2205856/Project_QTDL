@@ -37,7 +37,7 @@ require_once __DIR__ . '/../components/header.php';
     .card-red { background-color: #dc3545; }
 </style>
 
-<h2>Bảng điều khiển (Dashboard)</h2>
+<h2 class="mt-4">Bảng điều khiển (Dashboard)</h2>
 
 <?php if (isset($error)): ?>
     <p style="color: red;"><?php echo $error; ?></p>

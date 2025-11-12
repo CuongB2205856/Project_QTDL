@@ -1,152 +1,137 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Dashboard Trang Chủ';
+$title = 'Quản Lý Phòng';
 $currentRoute = '/phong'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
 require_once __DIR__ . '/../components/header.php';
 ?>
 
-<h2>Quản Lý Phòng</h2>
-
-<button id="btn-show-create-modal">Thêm Phòng Mới</button>
-<hr>
-
-<div id="main-message"></div>
-
-<h3>Danh Sách Phòng Hiện Có</h3>
-<table border="1" style="width: 100%;">
-    <thead>
-        <tr>
-            <th>Số Phòng</th>
-            <th>Loại Phòng</th>
-            <th>Giá Thuê (VND/tháng)</th>
-            <th>SL Tối Đa</th>
-            <th>Tình Trạng</th>
-            <th style="width: 150px;">Hành động</th>
-        </tr>
-    </thead>
-    <tbody id="phong-table-body">
-        <?php if (empty($phong_list)): ?>
-            <tr id="row-empty">
-                <td colspan="6">Chưa có phòng nào.</td>
-            </tr>
-        <?php else: ?>
-            <?php foreach ($phong_list as $p): ?>
-                <tr id="row-<?php echo $p['MaPhong']; ?>">
-                    <td><?php echo htmlspecialchars($p['SoPhong']); ?></td>
-                    <td><?php echo htmlspecialchars($p['TenLoaiPhong']); ?></td>
-                    <td><?php echo number_format($p['GiaThue']); ?></td>
-                    <td><?php echo $p['SoLuongToiDa']; ?></td>
-                    <td><?php echo htmlspecialchars($p['TinhTrangPhong']); ?></td>
-                    <td>
-                        <button class="btn-edit" data-id="<?php echo $p['MaPhong']; ?>">Sửa</button>
-                        |
-                        <button class="btn-delete" data-id="<?php echo $p['MaPhong']; ?>">Xóa</button>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </tbody>
-</table>
-
-<div id="phong-modal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close-btn">&times;</span>
-
-        <h3 id="modal-title">Thêm Phòng Mới</h3>
-
-        <form id="phong-form">
-            <input type="hidden" id="form-phong-id" name="id" value="0">
-
-            <label for="maloai">Loại Phòng:</label><br>
-            <select id="form-maloai" name="maloai" required style="width: 95%;">
-                <option value="">-- Chọn loại phòng --</option>
-                <?php foreach ($loai_phong_list as $lp): ?>
-                    <option value="<?php echo $lp['MaLoaiPhong']; ?>">
-                        <?php echo htmlspecialchars($lp['TenLoaiPhong']); ?>
-                        (<?php echo number_format($lp['GiaThue']); ?> VND)
-                    </option>
-                <?php endforeach; ?>
-            </select><br><br>
-
-            <label for="sophong">Số Phòng:</label><br>
-            <input type="text" id="form-sophong" name="sophong" required style="width: 95%;"><br><br>
-
-            <label for="slmax">Số Lượng Tối Đa:</label><br>
-            <input type="number" id="form-slmax" name="slmax" required style="width: 95%;"><br><br>
-
-            <button type="submit">Lưu Lại</button>
-        </form>
-
-        <div id="modal-message" style="margin-top: 10px;"></div>
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <div>
+        <h1 class="h3">Quản Lý Phòng</h1>
+      
+    </div>
+    <div>
+        <button id="btn-show-create-modal" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Thêm Phòng Mới
+        </button>
     </div>
 </div>
 
+<div id="main-message"></div>
 
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
+<div class="card">
+    <div class="card-header">
+        Danh Sách Phòng Hiện Có
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Số Phòng</th>
+                        <th scope="col">Loại Phòng</th>
+                        <th scope="col">Giá Thuê (VND/tháng)</th>
+                        <th scope="col">SL Tối Đa</th>
+                        <th scope="col">Tình Trạng</th>
+                        <th scope="col" style="min-width: 150px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="phong-table-body">
+                    <?php if (empty($phong_list)): ?>
+                        <tr id="row-empty">
+                            <td colspan="6" class="text-center">Chưa có phòng nào.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($phong_list as $p): ?>
+                            <tr id="row-<?php echo $p['MaPhong']; ?>">
+                                <td><?php echo htmlspecialchars($p['SoPhong']); ?></td>
+                                <td><?php echo htmlspecialchars($p['TenLoaiPhong']); ?></td>
+                                <td><?php echo number_format($p['GiaThue']); ?></td>
+                                <td><?php echo $p['SoLuongToiDa']; ?></td>
+                                <td><?php echo htmlspecialchars($p['TinhTrangPhong']); ?></td>
+                                <td>
+                                    <button class="btn btn-info btn-sm btn-edit" data-id="<?php echo $p['MaPhong']; ?>">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="<?php echo $p['MaPhong']; ?>">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 500px;
-        position: relative;
-    }
+<div class="modal fade" id="phong-modal" tabindex="-1" 
+     aria-labelledby="phongModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Thêm Phòng Mới</h5>
+                <button type="button" class="btn-close" 
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form id="phong-form">
+                <div class="modal-body">
+                    <div id="modal-message"></div>
+                    
+                    <input type="hidden" id="form-phong-id" name="id" value="0">
 
-    .modal-close-btn {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        position: absolute;
-        top: 5px;
-        right: 15px;
-    }
+                    <div class="mb-3">
+                        <label for="form-maloai" class="form-label">Loại Phòng:</label>
+                        <select class="form-select" id="form-maloai" name="maloai" required>
+                            <option value="">-- Chọn loại phòng --</option>
+                            <?php foreach ($loai_phong_list as $lp): ?>
+                                <option value="<?php echo $lp['MaLoaiPhong']; ?>">
+                                    <?php echo htmlspecialchars($lp['TenLoaiPhong']); ?>
+                                    (<?php echo number_format($lp['GiaThue']); ?> VND)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-    .modal-close-btn:hover,
-    .modal-close-btn:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
+                    <div class="mb-3">
+                        <label for="form-sophong" class="form-label">Số Phòng:</label>
+                        <input type="text" class="form-control" id="form-sophong" name="sophong" required>
+                    </div>
 
-    .message-success {
-        color: green;
-        font-weight: bold;
-    }
+                    <div class="mb-3">
+                        <label for="form-slmax" class="form-label">Số Lượng Tối Đa:</label>
+                        <input type="number" class="form-control" id="form-slmax" name="slmax" required>
+                    </div>
 
-    .message-error {
-        color: red;
-        font-weight: bold;
-    }
-</style>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" 
+                            data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu Lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
         // --- Lấy các đối tượng DOM ---
-        const modal = document.getElementById('phong-modal');
         const btnShowCreate = document.getElementById('btn-show-create-modal');
-        const btnCloseModal = modal.querySelector('.modal-close-btn');
         const form = document.getElementById('phong-form');
         const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
         const tableBody = document.getElementById('phong-table-body');
+
+        // (QUAN TRỌNG) Khởi tạo Bootstrap Modal
+        const modalElement = document.getElementById('phong-modal');
+        const bootstrapModal = new bootstrap.Modal(modalElement);
 
         // Form fields
         const formId = document.getElementById('form-phong-id');
@@ -154,27 +139,30 @@ require_once __DIR__ . '/../components/header.php';
         const formSoPhong = document.getElementById('form-sophong');
         const formSlMax = document.getElementById('form-slmax');
 
-        // --- Hàm hiển thị thông báo ---
+        // --- Hàm hiển thị thông báo (Bootstrap Alert) ---
         function showModalMessage(message, isError = false) {
-            modalMessage.textContent = message;
-            modalMessage.className = isError ? 'message-error' : 'message-success';
+            const type = isError ? 'danger' : 'success';
+            modalMessage.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
         }
+        
         function showMainMessage(message, isError = false) {
-            mainMessage.textContent = message;
-            mainMessage.className = isError ? 'message-error' : 'message-success';
-            setTimeout(() => { mainMessage.textContent = ''; }, 3000);
+            const type = isError ? 'danger' : 'success';
+            mainMessage.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${escapeHTML(message)}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
         }
 
-        // --- Hàm reset form và mở modal cho 'Create' ---
+        // --- Hàm mở modal cho 'Create' ---
         function openCreateModal() {
             form.reset();
             formId.value = '0';
             modalTitle.textContent = 'Thêm Phòng Mới';
             showModalMessage('');
-            modal.style.display = 'block';
+            bootstrapModal.show();
         }
 
-        // --- Hàm lấy dữ liệu và mở modal cho 'Update' ---
+        // --- Hàm mở modal cho 'Update' ---
         async function openUpdateModal(id) {
             try {
                 const response = await fetch(`/phong/get/${id}`);
@@ -182,15 +170,14 @@ require_once __DIR__ . '/../components/header.php';
 
                 if (result.success) {
                     form.reset();
-                    // Điền dữ liệu vào form
                     formId.value = result.data.MaPhong;
-                    formMaLoai.value = result.data.MaLoaiPhong; // Set giá trị cho <select>
+                    formMaLoai.value = result.data.MaLoaiPhong;
                     formSoPhong.value = result.data.SoPhong;
                     formSlMax.value = result.data.SoLuongToiDa;
 
                     modalTitle.textContent = 'Sửa Phòng';
                     showModalMessage('');
-                    modal.style.display = 'block';
+                    bootstrapModal.show();
                 } else {
                     showMainMessage(result.message, true);
                 }
@@ -218,19 +205,16 @@ require_once __DIR__ . '/../components/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    showModalMessage(result.message, false);
+                    bootstrapModal.hide(); 
+                    showMainMessage(result.message, false); 
 
                     if (id === '0' || id === '') {
-                        // --- Xử lý THÊM MỚI (Create) ---
                         appendRowToTable(result.newRow);
-                        form.reset();
-                        formId.value = '0';
                     } else {
-                        // --- Xử lý CẬP NHẬT (Update) ---
                         updateRowInTable(result.updatedRow);
                     }
                 } else {
-                    showModalMessage(result.message, true);
+                    showModalMessage(result.message, true); 
                 }
             } catch (error) {
                 showModalMessage('Lỗi kết nối: ' + error.message, true);
@@ -252,7 +236,7 @@ require_once __DIR__ . '/../components/header.php';
                 if (result.success) {
                     showMainMessage(result.message, false);
                     document.getElementById(`row-${id}`)?.remove();
-                    if (tableBody.rows.length === 0) {
+                    if (tableBody.getElementsByTagName('tr').length === 0) { 
                         showEmptyRow();
                     }
                 } else {
@@ -264,10 +248,9 @@ require_once __DIR__ . '/../components/header.php';
         }
 
         // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
-        function createTableRow(p) { // p = rowData (phong)
+        function createTableRow(p) { 
             document.getElementById('row-empty')?.remove();
 
-            // Hàm escapeHTML (định nghĩa ở dưới)
             return `
                 <tr id="row-${p.MaPhong}">
                     <td>${escapeHTML(p.SoPhong)}</td>
@@ -276,9 +259,12 @@ require_once __DIR__ . '/../components/header.php';
                     <td>${p.SoLuongToiDa}</td>
                     <td>${escapeHTML(p.TinhTrangPhong)}</td>
                     <td>
-                        <button class="btn-edit" data-id="${p.MaPhong}">Sửa</button>
-                        |
-                        <button class="btn-delete" data-id="${p.MaPhong}">Xóa</button>
+                        <button class="btn btn-info btn-sm btn-edit" data-id="${p.MaPhong}">
+                            <i class="bi bi-pencil-square"></i> Sửa
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-delete" data-id="${p.MaPhong}">
+                            <i class="bi bi-trash"></i> Xóa
+                        </button>
                     </td>
                 </tr>
             `;
@@ -296,31 +282,37 @@ require_once __DIR__ . '/../components/header.php';
         }
 
         function showEmptyRow() {
-            tableBody.innerHTML = '<tr id="row-empty"><td colspan="6">Chưa có phòng nào.</td></tr>';
+            tableBody.innerHTML = '<tr id="row-empty"><td colspan="6" class="text-center">Chưa có phòng nào.</td></tr>';
         }
 
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, function (m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-            });
+            return str.toString().replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
         }
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
         btnShowCreate.addEventListener('click', openCreateModal);
-        btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', (event) => {
-            if (event.target == modal) modal.style.display = 'none';
+        
+        // Đóng modal khi nhấn ra ngoài
+        modalElement.addEventListener('click', (event) => {
+            if (event.target == modalElement) {
+                bootstrapModal.hide();
+            }
         });
+
         form.addEventListener('submit', handleFormSubmit);
 
         tableBody.addEventListener('click', function (event) {
-            const target = event.target;
+            const target = event.target.closest('button'); 
+            if (!target) return; 
+
+            const id = target.dataset.id;
+            
             if (target.classList.contains('btn-edit')) {
-                openUpdateModal(target.dataset.id);
+                openUpdateModal(id);
             }
             if (target.classList.contains('btn-delete')) {
-                handleDelete(target.dataset.id);
+                handleDelete(id);
             }
         });
 

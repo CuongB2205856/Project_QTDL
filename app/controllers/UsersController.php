@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 // Sử dụng Model
 use App\Models\Users;
+use \PDOException;
 
 class UsersController extends Controller {
     
@@ -13,95 +14,193 @@ class UsersController extends Controller {
         parent::__construct(); 
         $this->model = new Users($pdo);
         
-        // Đảm bảo session đã được khởi tạo
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
     }
 
+    // Hàm helper trả về JSON
+    private function json_response($data) {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
+
     /**
-     * Hiển thị trang quản lý (GET) và xử lý tạo người dùng (POST)
+     * Hiển thị trang quản lý (GET)
      */
     public function index() {
-        // Xử lý khi người dùng SUBMIT FORM (POST)
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                $username = $_POST['username'];
-                $password = $_POST['password'];
-                $role = 'Quản lý'; // Gán cứng vai trò theo yêu cầu
-
-                if (empty($username) || empty($password)) {
-                    throw new \Exception('Tên đăng nhập và mật khẩu không được để trống.');
-                }
-
-                // (Bạn nên thêm logic kiểm tra tên đăng nhập đã tồn tại chưa)
-                
-                $result = $this->model->create([
-                    'username' => $username,
-                    'password' => $password,
-                    'role' => $role
-                ]);
-
-                if ($result) {
-                    $_SESSION['message'] = "Tạo người dùng '$username' thành công!";
-                    $_SESSION['message_type'] = 'success';
-                } else {
-                    throw new \Exception('Lỗi CSDL khi tạo người dùng.');
-                }
-
-            } catch (\Exception $e) {
-                $_SESSION['message'] = 'Lỗi: ' . $e->getMessage();
-                $_SESSION['message_type'] = 'danger';
-            }
-            
-            // Redirect về chính trang index (để tránh F5 submit lại)
-            header('Location: ' . url('users'));
-            exit;
-        }
-
-        // Xử lý khi vào trang (GET)
         $data = [
-            'users_list' => $this->model->all(),
-            'message' => $_SESSION['message'] ?? null,
-            'message_type' => $_SESSION['message_type'] ?? 'info'
+            'users_list' => $this->model->all()
         ];
-        
-        // Xóa session message sau khi đọc
-        unset($_SESSION['message']);
-        unset($_SESSION['message_type']);
-        
         $this->loadView('Users/index', $data);
     }
 
     /**
-     * Xử lý xóa người dùng (POST)
+     * (AJAX) Lấy chi tiết 1 User để sửa
      */
-    public function delete($id) {
+    public function ajax_get_details($id) {
+        $data = $this->model->find($id);
+        if ($data) {
+            $this->json_response(['success' => true, 'data' => $data]);
+        } else {
+            $this->json_response(['success' => false, 'message' => 'Không tìm thấy người dùng.']);
+        }
+    }
+
+    /**
+     * (AJAX) Xử lý tạo người dùng mới
+     */
+    public function ajax_create() {
+        try {
+            if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['role'])) {
+                throw new \Exception('Vui lòng nhập Tên đăng nhập, Mật khẩu và Quyền.');
+            }
+
+            // Xử lý MaLienKet
+            $malienket = ($_POST['role'] === 'SinhVien') ? ($_POST['malienket'] ?? null) : null;
+            
+            // (Nếu role là SinhVien, MaLienKet là bắt buộc)
+            if ($_POST['role'] === 'SinhVien' && empty($malienket)) {
+                 throw new \Exception('Vui lòng nhập Mã liên kết (Mã SV) cho tài khoản Sinh Viên.');
+            }
+
+            $data = [
+                'username' => $_POST['username'],
+                'password' => $_POST['password'],
+                'role' => $_POST['role'],
+                'malienket' => $malienket
+            ];
+
+            $newId = $this->model->create($data);
+            
+            if ($newId) {
+                $newRow = $this->model->find($newId); // Lấy lại data để hiển thị
+                $this->json_response([
+                    'success' => true, 
+                    'message' => 'Tạo người dùng thành công!',
+                    'newRow' => $newRow
+                ]);
+            } else {
+                throw new \Exception('Lỗi CSDL khi tạo người dùng.');
+            }
+
+        } catch (PDOException $e) {
+             // Lỗi trùng lặp (UNIQUE)
+             if ($e->getCode() == 23000) {
+                 if (strpos($e->getMessage(), 'Username')) {
+                     $this->json_response(['success' => false, 'message' => 'Lỗi: Tên đăng nhập này đã tồn tại.']);
+                 } elseif (strpos($e->getMessage(), 'MaLienKet')) {
+                     $this->json_response(['success' => false, 'message' => 'Lỗi: Mã liên kết (Mã SV) này đã được sử dụng.']);
+                 } else {
+                     $this->json_response(['success' => false, 'message' => 'Lỗi: Dữ liệu bị trùng lặp.']);
+                 }
+             } else {
+                 $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
+             }
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * (AJAX) Xử lý cập nhật người dùng
+     */
+    public function ajax_update($id) {
+         try {
+            if (empty($_POST['username']) || empty($_POST['role'])) {
+                throw new \Exception('Vui lòng nhập Tên đăng nhập và Quyền.');
+            }
+
+            // Xử lý MaLienKet
+            $malienket = ($_POST['role'] === 'SinhVien') ? ($_POST['malienket'] ?? null) : null;
+            
+            if ($_POST['role'] === 'SinhVien' && empty($malienket)) {
+                 throw new \Exception('Vui lòng nhập Mã liên kết (Mã SV) cho tài khoản Sinh Viên.');
+            }
+             
+            $data = [
+                'username' => $_POST['username'],
+                'role' => $_POST['role'],
+                'malienket' => $malienket
+            ];
+
+            $result = $this->model->update($id, $data);
+            
+            if ($result) {
+                $updatedRow = $this->model->find($id); // Lấy lại data
+                $this->json_response([
+                    'success' => true, 
+                    'message' => 'Cập nhật thành công!',
+                    'updatedRow' => $updatedRow
+                ]);
+            } else {
+                throw new \Exception('Lỗi CSDL khi cập nhật.');
+            }
+
+        } catch (PDOException $e) {
+             // Lỗi trùng lặp (UNIQUE)
+             if ($e->getCode() == 23000) {
+                 // Xử lý tương tự create
+                 $this->json_response(['success' => false, 'message' => 'Lỗi: Tên đăng nhập hoặc Mã liên kết bị trùng.']);
+             } else {
+                 $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
+             }
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
+        }
+    }
+
+
+    /**
+     * (AJAX) Xử lý xóa người dùng
+     */
+    public function ajax_delete($id) {
         try {
             // (Bạn có thể muốn thêm kiểm tra, ví dụ: không cho xóa chính mình)
             
             $result = $this->model->delete($id);
 
             if ($result) {
-                $_SESSION['message'] = "Xóa người dùng thành công!";
-                $_SESSION['message_type'] = 'success';
+                $this->json_response(['success' => true, 'message' => 'Xóa người dùng thành công!']);
             } else {
                 throw new \Exception('Lỗi CSDL khi xóa người dùng.');
             }
 
-        } catch (\Exception $e) {
+        } catch (PDOException $e) {
             // (Bắt lỗi khóa ngoại nếu không xóa được)
-            if (strpos($e->getMessage(), 'foreign key')) {
-                 $_SESSION['message'] = 'Lỗi: Không thể xóa người dùng này vì có dữ liệu liên quan (hợp đồng, hóa đơn...).';
+            if ($e->getCode() == 23000) {
+                 $this->json_response(['success' => false, 'message' => 'Lỗi: Không thể xóa người dùng này (đã có dữ liệu liên quan).']);
             } else {
-                 $_SESSION['message'] = 'Lỗi: ' . $e->getMessage();
+                 $this->json_response(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
             }
-            $_SESSION['message_type'] = 'danger';
         }
-        
-        // Redirect về trang danh sách
-        header('Location: ' . url('users'));
-        exit;
+    }
+    
+    /**
+     * (AJAX) RESET MẬT KHẨU
+     */
+    public function ajax_reset_password($id)
+    {
+        try {
+            // 1. Lấy thông tin user (đặc biệt là Username)
+            $user = $this->model->find($id);
+            if (!$user) {
+                 throw new \Exception('Không tìm thấy tài khoản để reset.');
+            }
+            
+            // 2. Gọi hàm resetPassword (hàm này dùng Username)
+            $defaultPassword = '123456';
+            $result = $this->model->resetPassword($user['Username'], $defaultPassword);
+            
+            if ($result) {
+                $this->json_response(['success' => true, 'message' => "Đặt lại mật khẩu cho '{$user['Username']}' thành công (MK mặc định là 123456)."]);
+            } else {
+                $this->json_response(['success' => false, 'message' => 'Lỗi khi cập nhật mật khẩu trong CSDL.']);
+            }
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
+        }
     }
 }
 ?>

@@ -7,15 +7,9 @@ $currentRoute = '/hopdong'; // Quan trọng: để active link sidebar
 require_once __DIR__ . '/../components/header.php'; 
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
         <h1 class="h3">Quản lý Hợp đồng</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Hợp đồng</li>
-            </ol>
-        </nav>
     </div>
     <div>
         <button id="btn-add-hopdong" class="btn btn-primary">

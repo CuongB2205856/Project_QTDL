@@ -242,18 +242,42 @@ $router->post('/student/ajax_change_password', function () use ($pdoInstance) {
 });
 
 // === KẾT THÚC STUDENT PANEL ===
-// === QUẢN LÝ NGƯỜI DÙNG (ADMIN) ===
+// === QUẢN LÝ NGƯỜI DÙNG (ADMIN) - ĐÃ SỬA AJAX ===
 
-// 1. TRANG DANH SÁCH (GET) VÀ TẠO MỚI (POST)
-$router->match('GET|POST', '/users', function () use ($pdoInstance) {
+// 1. TRANG DANH SÁCH (GET)
+$router->get('/users', function () use ($pdoInstance) {
     $controller = new App\Controllers\UsersController($pdoInstance);
     $controller->index();
 });
 
-// 2. XỬ LÝ XÓA (POST)
-$router->post('/users/delete/(\d+)', function ($id) use ($pdoInstance) {
+// 2. LẤY CHI TIẾT ĐỂ SỬA (GET - AJAX)
+$router->get('/users/get/(\d+)', function ($id) use ($pdoInstance) {
     $controller = new App\Controllers\UsersController($pdoInstance);
-    $controller->delete($id);
+    $controller->ajax_get_details($id);
+});
+
+// 3. XỬ LÝ THÊM MỚI (POST - AJAX)
+$router->post('/users/ajax_create', function () use ($pdoInstance) {
+    $controller = new App\Controllers\UsersController($pdoInstance);
+    $controller->ajax_create();
+});
+
+// 4. XỬ LÝ CẬP NHẬT (POST - AJAX)
+$router->post('/users/ajax_update/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\UsersController($pdoInstance);
+    $controller->ajax_update($id);
+});
+
+// 5. XỬ LÝ XÓA (POST - AJAX)
+$router->post('/users/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\UsersController($pdoInstance);
+    $controller->ajax_delete($id);
+});
+
+// 6. XỬ LÝ RESET MẬT KHẨU (POST - AJAX)
+$router->post('/users/ajax_reset_password/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\UsersController($pdoInstance);
+    $controller->ajax_reset_password($id);
 });
 
 // === KẾT THÚC QUẢN LÝ NGƯỜI DÙNG ===

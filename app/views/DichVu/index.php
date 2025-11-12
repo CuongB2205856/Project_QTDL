@@ -7,146 +7,134 @@ $currentRoute = '/dichvu'; // Quan trọng: để active link sidebar
 require_once __DIR__ . '/../components/header.php';
 ?>
 
-<h2>Quản Lý Dịch Vụ</h2>
-
-<button id="btn-show-create-modal">Thêm Dịch Vụ Mới</button>
-<hr>
-
-<div id="main-message"></div>
-
-<h3>Danh Sách Dịch Vụ Hiện Có</h3>
-<table border="1" style="width: 100%;">
-    <thead>
-        <tr>
-            <th>Mã DV</th>
-            <th>Tên Dịch Vụ</th>
-            <th>Đơn Giá</th>
-            <th style="width: 150px;">Hành động</th>
-        </tr>
-    </thead>
-    <tbody id="dichvu-table-body">
-        <?php if (empty($dichvu_list)): ?>
-            <tr id="row-empty">
-                <td colspan="4">Chưa có dịch vụ nào.</td>
-            </tr>
-        <?php else: ?>
-            <?php foreach ($dichvu_list as $dv): ?>
-                <tr id="row-<?php echo $dv['MaDV']; ?>">
-                    <td><?php echo $dv['MaDV']; ?></td>
-                    <td><?php echo htmlspecialchars($dv['TenDichVu']); ?></td>
-                    <td><?php echo number_format($dv['DonGiaDichVu']); ?> VND</td>
-                    <td>
-                        <button class="btn-edit" data-id="<?php echo $dv['MaDV']; ?>">Sửa</button>
-                        |
-                        <button class="btn-delete" data-id="<?php echo $dv['MaDV']; ?>">Xóa</button>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </tbody>
-</table>
-
-<div id="dichvu-modal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close-btn">&times;</span>
-
-        <h3 id="modal-title">Thêm Dịch Vụ Mới</h3>
-
-        <form id="dichvu-form">
-            <input type="hidden" id="form-dichvu-id" name="id" value="0">
-
-            <label for="tendv">Tên Dịch Vụ:</label><br>
-            <input type="text" id="form-tendv" name="tendv" required style="width: 95%;"
-                placeholder="Ví dụ: Điện (VND/kWh) hoặc Gửi xe (VND/tháng)"><br><br>
-
-            <label for="dongia">Đơn Giá (VND):</label><br>
-            <input type="number" id="form-dongia" name="dongia" required style="width: 95%;"><br><br>
-
-            <button type="submit">Lưu Lại</button>
-        </form>
-
-        <div id="modal-message" style="margin-top: 10px;"></div>
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <div>
+        <h1 class="h3">Quản Lý Dịch Vụ</h1>
+    </div>
+    <div>
+        <button id="btn-show-create-modal" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Thêm Dịch Vụ Mới
+        </button>
     </div>
 </div>
 
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
+<div id="main-message"></div>
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 500px;
-        position: relative;
-    }
+<div class="card">
+    <div class="card-header">
+        Danh Sách Dịch Vụ Hiện Có
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Mã DV</th>
+                        <th scope="col">Tên Dịch Vụ</th>
+                        <th scope="col">Đơn Giá</th>
+                        <th scope="col" style="min-width: 150px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="dichvu-table-body">
+                    <?php if (empty($dichvu_list)): ?>
+                        <tr id="row-empty">
+                            <td colspan="4" class="text-center">Chưa có dịch vụ nào.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($dichvu_list as $dv): ?>
+                            <tr id="row-<?php echo $dv['MaDV']; ?>">
+                                <td><?php echo $dv['MaDV']; ?></td>
+                                <td><?php echo htmlspecialchars($dv['TenDichVu']); ?></td>
+                                <td><?php echo number_format($dv['DonGiaDichVu']); ?> VND</td>
+                                <td>
+                                    <button class="btn btn-info btn-sm btn-edit" data-id="<?php echo $dv['MaDV']; ?>">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="<?php echo $dv['MaDV']; ?>">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-    .modal-close-btn {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        position: absolute;
-        top: 5px;
-        right: 15px;
-    }
+<div class="modal fade" id="dichvuModal" tabindex="-1" 
+     aria-labelledby="dichvuModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Thêm Dịch Vụ Mới</h5>
+                <button type="button" class="btn-close" 
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form id="dichvu-form">
+                <div class="modal-body">
+                    <div id="modal-message"></div>
+                    
+                    <input type="hidden" id="form-dichvu-id" name="id" value="0">
 
-    .modal-close-btn:hover,
-    .modal-close-btn:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
+                    <div class="mb-3">
+                        <label for="form-tendv" class="form-label">Tên Dịch Vụ:</label>
+                        <input type="text" class="form-control" id="form-tendv" name="tendv" required
+                               placeholder="Ví dụ: Điện (VND/kWh) hoặc Gửi xe (VND/tháng)">
+                    </div>
 
-    .message-success {
-        color: green;
-        font-weight: bold;
-    }
+                    <div class="mb-3">
+                        <label for="form-dongia" class="form-label">Đơn Giá (VND):</label>
+                        <input type="number" class="form-control" id="form-dongia" name="dongia" required>
+                    </div>
 
-    .message-error {
-        color: red;
-        font-weight: bold;
-    }
-</style>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" 
+                            data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu Lại</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
         // --- Lấy các đối tượng DOM ---
-        const modal = document.getElementById('dichvu-modal');
         const btnShowCreate = document.getElementById('btn-show-create-modal');
-        const btnCloseModal = modal.querySelector('.modal-close-btn');
         const form = document.getElementById('dichvu-form');
         const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
         const tableBody = document.getElementById('dichvu-table-body');
 
+        // (QUAN TRỌNG) Khởi tạo Bootstrap Modal
+        const modalElement = document.getElementById('dichvuModal');
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+
         // Form fields
         const formId = document.getElementById('form-dichvu-id');
         const formTenDV = document.getElementById('form-tendv');
         const formDonGia = document.getElementById('form-dongia');
 
-        // --- Hàm hiển thị thông báo ---
+        // --- Hàm hiển thị thông báo (Bootstrap Alert) ---
         function showModalMessage(message, isError = false) {
-            modalMessage.textContent = message;
-            modalMessage.className = isError ? 'message-error' : 'message-success';
+            const type = isError ? 'danger' : 'success';
+            modalMessage.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
         }
+        
         function showMainMessage(message, isError = false) {
-            mainMessage.textContent = message;
-            mainMessage.className = isError ? 'message-error' : 'message-success';
-            setTimeout(() => { mainMessage.textContent = ''; }, 3000);
+            const type = isError ? 'danger' : 'success';
+            // Dùng alert-dismissible cho phép đóng thông báo
+            mainMessage.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${escapeHTML(message)}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
         }
 
         // --- Hàm reset form và mở modal cho 'Create' ---
@@ -155,7 +143,7 @@ require_once __DIR__ . '/../components/header.php';
             formId.value = '0';
             modalTitle.textContent = 'Thêm Dịch Vụ Mới';
             showModalMessage('');
-            modal.style.display = 'block';
+            bootstrapModal.show(); // Dùng hàm của Bootstrap
         }
 
         // --- Hàm lấy dữ liệu và mở modal cho 'Update' ---
@@ -173,7 +161,7 @@ require_once __DIR__ . '/../components/header.php';
 
                     modalTitle.textContent = 'Sửa Dịch Vụ';
                     showModalMessage('');
-                    modal.style.display = 'block';
+                    bootstrapModal.show(); // Dùng hàm của Bootstrap
                 } else {
                     showMainMessage(result.message, true);
                 }
@@ -235,7 +223,7 @@ require_once __DIR__ . '/../components/header.php';
                 if (result.success) {
                     showMainMessage(result.message, false);
                     document.getElementById(`row-${id}`)?.remove();
-                    if (tableBody.rows.length === 0) {
+                    if (tableBody.getElementsByTagName('tr').length === 0) {
                         showEmptyRow();
                     }
                 } else {
@@ -256,9 +244,12 @@ require_once __DIR__ . '/../components/header.php';
                     <td>${escapeHTML(dv.TenDichVu)}</td>
                     <td>${new Intl.NumberFormat('vi-VN').format(dv.DonGiaDichVu)} VND</td>
                     <td>
-                        <button class="btn-edit" data-id="${dv.MaDV}">Sửa</button>
-                        |
-                        <button class="btn-delete" data-id="${dv.MaDV}">Xóa</button>
+                        <button class="btn btn-info btn-sm btn-edit" data-id="${dv.MaDV}">
+                            <i class="bi bi-pencil-square"></i> Sửa
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-delete" data-id="${dv.MaDV}">
+                            <i class="bi bi-trash"></i> Xóa
+                        </button>
                     </td>
                 </tr>
             `;
@@ -276,31 +267,37 @@ require_once __DIR__ . '/../components/header.php';
         }
 
         function showEmptyRow() {
-            tableBody.innerHTML = '<tr id="row-empty"><td colspan="4">Chưa có dịch vụ nào.</td></tr>';
+            tableBody.innerHTML = '<tr id="row-empty"><td colspan="4" class="text-center">Chưa có dịch vụ nào.</td></tr>';
         }
 
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, function (m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-            });
+            return str.toString().replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
         }
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
         btnShowCreate.addEventListener('click', openCreateModal);
-        btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', (event) => {
-            if (event.target == modal) modal.style.display = 'none';
+        
+        // Đóng modal khi nhấn ra ngoài
+        modalElement.addEventListener('click', (event) => {
+            if (event.target == modalElement) {
+                bootstrapModal.hide();
+            }
         });
+
         form.addEventListener('submit', handleFormSubmit);
 
         tableBody.addEventListener('click', function (event) {
-            const target = event.target;
+            const target = event.target.closest('button');
+            if (!target) return;
+            
+            const id = target.dataset.id;
+            
             if (target.classList.contains('btn-edit')) {
-                openUpdateModal(target.dataset.id);
+                openUpdateModal(id);
             }
             if (target.classList.contains('btn-delete')) {
-                handleDelete(target.dataset.id);
+                handleDelete(id);
             }
         });
 
