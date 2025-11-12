@@ -38,7 +38,6 @@ require_once __DIR__ . '/../components/header.php';
                         <th scope="col">Mã HĐ</th>
                         <th scope="col">Sinh Viên</th>
                         <th scope="col">Số Phòng</th>
-                        <th scope="col">Ngày Lập</th>
                         <th scope="col">Ngày Bắt Đầu</th>
                         <th scope="col">Ngày Kết Thúc</th>
                         <th scope="col">Trạng Thái</th>
@@ -65,7 +64,6 @@ require_once __DIR__ . '/../components/header.php';
 // Hàm PHP helper để render 1 dòng của bảng
 function renderHopDongRow($hd) {
     // Chuyển đổi ngày tháng sang d-m-Y cho dễ đọc
-    $ngayLap = date('d-m-Y', strtotime($hd['NgayLap']));
     $ngayBatDau = date('d-m-Y', strtotime($hd['NgayBatDau']));
     $ngayKetThuc = date('d-m-Y', strtotime($hd['NgayKetThuc']));
 
@@ -78,7 +76,6 @@ function renderHopDongRow($hd) {
             <td>' . htmlspecialchars($hd['MaHopDong']) . '</td>
             <td>' . htmlspecialchars($hd['TenSinhVien']) . '</td>
             <td>' . htmlspecialchars($hd['SoPhong']) . '</td>
-            <td>' . $ngayLap . '</td>
             <td>' . $ngayBatDau . '</td>
             <td>' . $ngayKetThuc . '</td>
             <td>' . $trangThaiBadge . '</td>
@@ -138,11 +135,7 @@ function renderHopDongRow($hd) {
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="NgayLap" class="form-label">Ngày Lập:</label>
-                        <input type="date" class="form-control" 
-                               id="NgayLap" name="NgayLap" value="<?php echo date('Y-m-d'); ?>" required>
-                    </div>
+                    
 
                     <div class="mb-3">
                         <label for="NgayBatDau" class="form-label">Ngày Bắt Đầu:</label>
@@ -197,7 +190,6 @@ function renderHopDongRow($hd) {
         const maHopDongInput = document.getElementById('MaHopDong');
         const maSVSelect = document.getElementById('MaSV');
         const maPhongSelect = document.getElementById('MaPhong');
-        const ngayLapInput = document.getElementById('NgayLap');
         const ngayBatDauInput = document.getElementById('NgayBatDau');
         const ngayKetThucInput = document.getElementById('NgayKetThuc');
         const trangThaiGroup = document.getElementById('trangthai-group');
@@ -208,7 +200,6 @@ function renderHopDongRow($hd) {
             currentAction = 'create';
             form.reset(); 
             maHopDongInput.value = '';
-            ngayLapInput.value = '<?php echo date('Y-m-d'); ?>'; // Set ngày lập hôm nay
             
             modalTitle.textContent = 'Thêm Hợp đồng Mới';
             modalMessage.innerHTML = '';
@@ -244,7 +235,6 @@ function renderHopDongRow($hd) {
                         maHopDongInput.value = hd.MaHopDong;
                         maSVSelect.value = hd.MaSV;
                         maPhongSelect.value = hd.MaPhong;
-                        ngayLapInput.value = hd.NgayLap;
                         ngayBatDauInput.value = hd.NgayBatDau;
                         ngayKetThucInput.value = hd.NgayKetThuc;
                         trangThaiSelect.value = hd.TrangThai;

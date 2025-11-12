@@ -87,5 +87,37 @@ class Phong
         $stmt = $this->db->query("SELECT COUNT(MaPhong) as total FROM Phong");
         return $stmt->fetchColumn();
     }
+    // --- THÊM HÀM MỚI NÀY VÀO CUỐI FILE (TRƯỚC DẤU }) ---
+
+    /**
+     * MỚI: Lấy danh sách phòng CÒN CHỖ TRỐNG
+     * (Cho modal Thêm Hợp Đồng)
+     */
+    public function allWithVacancy()
+    {
+        // Đếm số HĐ còn hạn của mỗi phòng
+        $subQuery = "
+            (SELECT COUNT(hd.MaHD) 
+             FROM HopDong hd 
+             WHERE hd.MaPhong = p.MaPhong AND hd.NgayKetThuc >= CURDATE())
+        ";
+
+        $stmt = $this->db->query("
+            SELECT 
+                p.*, 
+                lp.TenLoaiPhong, 
+                (p.SoLuongToiDa - {$subQuery}) AS SoChoTrong
+            FROM 
+                Phong p
+            JOIN 
+                LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
+            HAVING 
+                SoChoTrong > 0
+            ORDER BY 
+                p.SoPhong ASC
+        ");
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
 ?>

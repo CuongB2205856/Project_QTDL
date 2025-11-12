@@ -156,12 +156,31 @@ $router->post('/dichvu/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
 
 // Route cho THÊM SINH VIÊN VÀO PHÒNG (Tạo Hợp đồng)
 // --- HopDong Routes ---
-$router->get('/hopdong', '\App\Controllers\HopDongController@index');
-$router->post('/api/hopdong/create', '\App\Controllers\HopDongController@create');
+$router->get('/hopdong', function () use ($pdoInstance) {
+    $controller = new \App\Controllers\HopDongController($pdoInstance);
+    $controller->index();
+});
 
-// V THÊM DÒNG MỚI NÀY
-$router->post('/api/hopdong/update', '\App\Controllers\HopDongController@update');
+$router->post('/api/hopdong/create', function () use ($pdoInstance) {
+    $controller = new \App\Controllers\HopDongController($pdoInstance);
+    $controller->create();
+});
 
+$router->post('/api/hopdong/update', function () use ($pdoInstance) {
+    $controller = new \App\Controllers\HopDongController($pdoInstance);
+    $controller->update();
+});
+
+// Chú ý: Thay đổi {id} thành (\d+) để khớp với regex của router
+$router->get('/api/hopdong/get/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new \App\Controllers\HopDongController($pdoInstance);
+    $controller->getHopDongDetails($id);
+});
+
+$router->post('/api/hopdong/delete/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new \App\Controllers\HopDongController($pdoInstance);
+    $controller->delete($id);
+});
 $router->get('/api/hopdong/get/{id}', '\App\Controllers\HopDongController@getHopDongDetails');
 $router->post('/api/hopdong/delete/{id}', '\App\Controllers\HopDongController@delete');
 // === QUẢN LÝ SINH VIÊN (CRUD - AJAX) ===
