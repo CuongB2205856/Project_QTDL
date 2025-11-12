@@ -143,9 +143,21 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="/loaiphong" 
+               class="nav-link <?php echo ($currentRoute == '/loaiphong') ? 'active' : ''; ?>">
+                <i class="bi bi-stack"></i> Loại Phòng
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="/hopdong" 
-               class="nav-link <?php echo ($currentRoute == '/hopdong/create') ? 'active' : ''; ?>">
+               class="nav-link <?php echo ($currentRoute == '/hopdong') ? 'active' : ''; ?>">
                 <i class="bi bi-file-earmark-text"></i> Hợp đồng
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/dichvu" 
+               class="nav-link <?php echo ($currentRoute == '/dichvu') ? 'active' : ''; ?>">
+                <i class="bi bi-plug-fill"></i> Dịch Vụ
             </a>
         </li>
     </ul>
@@ -186,10 +198,22 @@
                     <i class="bi bi-door-open"></i> Phòng
                 </a>
             </li>
+             <li class="nav-item">
+                <a href="/loaiphong" 
+                   class="nav-link <?php echo ($currentRoute == '/loaiphong') ? 'active' : ''; ?>">
+                    <i class="bi bi-stack"></i> Loại Phòng
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="/hopdong" 
                    class="nav-link <?php echo ($currentRoute == '/hopdong') ? 'active' : ''; ?>">
                     <i class="bi bi-file-earmark-text"></i> Hợp đồng
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="/dichvu" 
+                   class="nav-link <?php echo ($currentRoute == '/dichvu') ? 'active' : ''; ?>">
+                    <i class="bi bi-plug-fill"></i> Dịch Vụ
                 </a>
             </li>
         </ul>

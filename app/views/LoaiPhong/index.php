@@ -1,4 +1,12 @@
-<h2>Quản Lý Loại Phong</h2>
+<?php
+// 1. Set các biến cho header
+$title = 'Quản lý Loại phòng'; 
+$currentRoute = '/loaiphong'; // Quan trọng: để active link sidebar
+
+// 2. Gọi Header
+require_once __DIR__ . '/../components/header.php'; 
+?>
+<h2>Quản Lý Loại Phòng</h2>
 
 <button id="btn-show-create-modal">Thêm Loại Phòng Mới</button>
 <hr>
@@ -354,3 +362,7 @@
 
     });
 </script>
+<?php
+// 3. GỌI FOOTER
+require_once __DIR__ . '/../components/footer.php'; 
+?>
