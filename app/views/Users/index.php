@@ -1,12 +1,119 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Quản lý Users'; 
+$title = 'Quản lý Users';
 $currentRoute = '/users'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
-require_once __DIR__ . '/../components/header.php'; 
+require_once __DIR__ . '/../components/header.php';
 ?>
+<style>
+    /* Áp dụng nền xám nhạt cho body giống dashboard */
+    body {
+        background-color: #f8f9fa;
+    }
 
+    /* Tùy chỉnh Card chính chứa bảng */
+    .card {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc giống dashboard */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        /* Đổ bóng nhẹ */
+        margin-bottom: 20px;
+    }
+
+    /* Tùy chỉnh Header của Card */
+    .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        /* Đường viền dưới giống chart-card */
+        padding: 20px 25px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+        /* Màu chữ tiêu đề */
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    /* Tùy chỉnh Body của Card */
+    .card-body {
+        padding: 25px;
+    }
+
+    /* Làm đẹp nút "Thêm User" */
+    #btn-add-user {
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    #btn-add-user:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    /* Tùy chỉnh Bảng (Table) */
+    .table thead th {
+        background-color: #f8f9fa;
+        /* Nền header bảng */
+        color: #6c757d;
+        /* Màu chữ header */
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-top: none;
+        border-bottom-width: 2px;
+        padding: 15px;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+        /* Đường kẻ mờ giữa các hàng */
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        padding: 15px;
+        color: #2d3142;
+    }
+
+    /* Tùy chỉnh Modal (Form Thêm/Sửa) */
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc modal */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        /* Đổ bóng mạnh hơn cho modal */
+    }
+
+    .modal-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding: 20px 25px;
+    }
+
+    .modal-header .modal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .modal-footer {
+        padding: 20px 25px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #f0f0f0;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+</style>
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
         <h1 class="h3">Quản lý Người Dùng</h1>
@@ -41,7 +148,7 @@ require_once __DIR__ . '/../components/header.php';
                 <tbody id="users-table-body">
                     <?php if (empty($users_list)): ?>
                         <tr id="row-empty">
-                            <td colspan="5" class="text-center">Chưa có người dùng nào.</td> 
+                            <td colspan="5" class="text-center">Chưa có người dùng nào.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($users_list as $user): ?>
@@ -51,17 +158,15 @@ require_once __DIR__ . '/../components/header.php';
                                 <td><?php echo htmlspecialchars($user['Role']); ?></td>
                                 <td><?php echo htmlspecialchars($user['MaLienKet'] ?? 'N/A'); ?></td>
                                 <td>
-                                    <button class="btn btn-info btn-sm btn-edit" 
-                                            data-id="<?php echo $user['UserID']; ?>">
+                                    <button class="btn btn-info btn-sm btn-edit" data-id="<?php echo $user['UserID']; ?>">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </button>
-                                    <button class="btn btn-danger btn-sm btn-delete" 
-                                            data-id="<?php echo $user['UserID']; ?>">
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="<?php echo $user['UserID']; ?>">
                                         <i class="bi bi-trash"></i> Xóa
                                     </button>
-                                    <button class="btn btn-warning btn-sm btn-reset-pass" 
-                                            data-id="<?php echo $user['UserID']; ?>"
-                                            data-username="<?php echo htmlspecialchars($user['Username']); ?>">
+                                    <button class="btn btn-warning btn-sm btn-reset-pass"
+                                        data-id="<?php echo $user['UserID']; ?>"
+                                        data-username="<?php echo htmlspecialchars($user['Username']); ?>">
                                         <i class="bi bi-key"></i> Reset MK
                                     </button>
                                 </td>
@@ -74,27 +179,25 @@ require_once __DIR__ . '/../components/header.php';
     </div>
 </div>
 
-<div class="modal fade" id="userModal" tabindex="-1" 
-     aria-labelledby="userModalLabel" aria-hidden="true">
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="userModalLabel">Thêm User Mới</h5>
-                <button type="button" class="btn-close" 
-                        data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <form id="userForm">
                 <div class="modal-body">
                     <div id="modal-message"></div>
-                    
+
                     <input type="hidden" id="form-user-id" name="id" value="0">
-                    
+
                     <div class="mb-3">
                         <label for="form-username" class="form-label">Tên Đăng Nhập:</label>
                         <input type="text" class="form-control" id="form-username" name="username" required>
                     </div>
-                    
+
                     <div class="mb-3" id="form-password-group">
                         <label for="form-password" class="form-label">Mật Khẩu:</label>
                         <input type="password" class="form-control" id="form-password" name="password" required>
@@ -111,16 +214,14 @@ require_once __DIR__ . '/../components/header.php';
 
                     <div class="mb-3" id="form-malienket-group" style="display: none;">
                         <label for="form-malienket" class="form-label">Mã Liên Kết (Mã SV):</label>
-                        <input type="text" class="form-control" id="form-malienket" name="malienket" 
-                               placeholder="Ví dụ: SV001">
+                        <input type="text" class="form-control" id="form-malienket" name="malienket"
+                            placeholder="Ví dụ: SV001">
                     </div>
                 </div>
-                
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" 
-                            data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary" 
-                            id="btn-submit">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit">Lưu</button>
                 </div>
             </form>
         </div>
@@ -129,7 +230,7 @@ require_once __DIR__ . '/../components/header.php';
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         // --- Lấy các đối tượng DOM ---
         const tableBody = document.getElementById('users-table-body');
@@ -138,7 +239,7 @@ require_once __DIR__ . '/../components/header.php';
         const mainMessage = document.getElementById('main-message');
         const modalTitle = document.getElementById('userModalLabel');
         const btnAddUser = document.getElementById('btn-add-user');
-        
+
         // (QUAN TRỌNG) Điều khiển Bootstrap Modal
         const modalElement = document.getElementById('userModal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
@@ -157,7 +258,7 @@ require_once __DIR__ . '/../components/header.php';
             const type = isError ? 'danger' : 'success';
             modalMessage.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
         }
-        
+
         function showMainMessage(message, isError = false) {
             const type = isError ? 'danger' : 'success';
             mainMessage.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -184,12 +285,12 @@ require_once __DIR__ . '/../components/header.php';
             formId.value = '0';
             modalTitle.textContent = 'Thêm User Mới';
             modalMessage.innerHTML = '';
-            
+
             // Khi tạo mới, hiện trường Mật khẩu và bật required
             formPasswordGroup.style.display = 'block';
-            formPassword.required = true; 
-            
-            toggleMaLienKetField(''); 
+            formPassword.required = true;
+
+            toggleMaLienKetField('');
             bootstrapModal.show(); // Dùng hàm của Bootstrap
         }
 
@@ -201,7 +302,7 @@ require_once __DIR__ . '/../components/header.php';
 
                 if (result.success) {
                     form.reset();
-                    
+
                     formId.value = result.data.UserID;
                     formUsername.value = result.data.Username;
                     formRole.value = result.data.Role;
@@ -209,7 +310,7 @@ require_once __DIR__ . '/../components/header.php';
 
                     // Khi cập nhật, ẩn trường Mật khẩu và tắt required
                     formPasswordGroup.style.display = 'none';
-                    formPassword.required = false; 
+                    formPassword.required = false;
 
                     toggleMaLienKetField(result.data.Role);
 
@@ -284,10 +385,10 @@ require_once __DIR__ . '/../components/header.php';
                 showMainMessage('Lỗi kết nối: ' + error.message, true);
             }
         }
-        
+
         // --- Hàm xử lý Reset Mật khẩu ---
         async function handleResetPassword(id, username) {
-             if (!confirm(`Bạn có chắc chắn muốn reset mật khẩu cho '${username}'? (Mật khẩu mới sẽ là '123456')`)) {
+            if (!confirm(`Bạn có chắc chắn muốn reset mật khẩu cho '${username}'? (Mật khẩu mới sẽ là '123456')`)) {
                 return;
             }
             try {
@@ -295,7 +396,7 @@ require_once __DIR__ . '/../components/header.php';
                     method: 'POST'
                 });
                 const result = await response.json();
-                showMainMessage(result.message, !result.success); 
+                showMainMessage(result.message, !result.success);
             } catch (error) {
                 showMainMessage('Lỗi kết nối: ' + error.message, true);
             }
@@ -304,7 +405,7 @@ require_once __DIR__ . '/../components/header.php';
         // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
         function createTableRow(user) {
             document.getElementById('row-empty')?.remove();
-            
+
             const maLienKetDisplay = user.MaLienKet ? escapeHTML(user.MaLienKet) : 'N/A';
             const username = escapeHTML(user.Username);
 
@@ -348,19 +449,19 @@ require_once __DIR__ . '/../components/header.php';
 
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
+            return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
         btnAddUser.addEventListener('click', openCreateModal);
-        
+
         // (SỬA) Đóng modal khi nhấn ra ngoài (chỉ khi modalElement đã khởi tạo)
         modalElement.addEventListener('click', (event) => {
             if (event.target == modalElement) {
                 bootstrapModal.hide();
             }
         });
-        
+
         form.addEventListener('submit', handleFormSubmit);
 
         formRole.addEventListener('change', () => {
@@ -369,11 +470,11 @@ require_once __DIR__ . '/../components/header.php';
 
         tableBody.addEventListener('click', function (event) {
             // (SỬA) Tìm button gần nhất (bao gồm cả icon)
-            const target = event.target.closest('button'); 
+            const target = event.target.closest('button');
             if (!target) return;
 
             const id = target.dataset.id;
-            
+
             if (target.classList.contains('btn-edit')) {
                 openUpdateModal(id);
             }
@@ -391,5 +492,5 @@ require_once __DIR__ . '/../components/header.php';
 
 <?php
 // 3. Gọi Footer
-require_once __DIR__ . '/../components/footer.php'; 
+require_once __DIR__ . '/../components/footer.php';
 ?>

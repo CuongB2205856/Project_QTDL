@@ -183,6 +183,7 @@ $router->post('/api/hopdong/delete/(\d+)', function ($id) use ($pdoInstance) {
 });
 $router->get('/api/hopdong/get/{id}', '\App\Controllers\HopDongController@getHopDongDetails');
 $router->post('/api/hopdong/delete/{id}', '\App\Controllers\HopDongController@delete');
+
 // === QUẢN LÝ SINH VIÊN (CRUD - AJAX) ===
 
 // 1. TRANG DANH SÁCH CHÍNH (GET)
@@ -203,7 +204,6 @@ $router->get('/sinhvien/ajax_get_room_details/([\w\-]+)', function ($maSV) use (
     $controller = new App\Controllers\SinhVienController($pdoInstance);
     $controller->ajax_get_room_details($maSV);
 });
-
 // 4. XỬ LÝ CẬP NHẬT (POST - AJAX)
 $router->post('/sinhvien/ajax_update/([\w\-]+)', function ($maSV) use ($pdoInstance) {
     $controller = new App\Controllers\SinhVienController($pdoInstance);
@@ -222,6 +222,8 @@ $router->post('/sinhvien/ajax_reset_password/([\w\-]+)', function ($maSV) use ($
     $controller->ajax_reset_password($maSV);
 });
 // === KẾT THÚC QUẢN LÝ SINH VIÊN ===
+
+
 // 4. Xử lý 404
 $router->set404(function () {
     header('HTTP/1.1 404 Not Found');

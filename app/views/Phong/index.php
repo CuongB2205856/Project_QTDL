@@ -6,11 +6,118 @@ $currentRoute = '/phong'; // Quan trọng: để active link sidebar
 // 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
 require_once __DIR__ . '/../components/header.php';
 ?>
+<style>
+    /* Áp dụng nền xám nhạt cho body giống dashboard */
+    body {
+        background-color: #f8f9fa;
+    }
 
+    /* Tùy chỉnh Card chính chứa bảng */
+    .card {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc giống dashboard */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        /* Đổ bóng nhẹ */
+        margin-bottom: 20px;
+    }
+
+    /* Tùy chỉnh Header của Card */
+    .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        /* Đường viền dưới giống chart-card */
+        padding: 20px 25px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+        /* Màu chữ tiêu đề */
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    /* Tùy chỉnh Body của Card */
+    .card-body {
+        padding: 25px;
+    }
+
+    /* Làm đẹp nút "Thêm User" */
+    #btn-add-user {
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    #btn-add-user:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    /* Tùy chỉnh Bảng (Table) */
+    .table thead th {
+        background-color: #f8f9fa;
+        /* Nền header bảng */
+        color: #6c757d;
+        /* Màu chữ header */
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-top: none;
+        border-bottom-width: 2px;
+        padding: 15px;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+        /* Đường kẻ mờ giữa các hàng */
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        padding: 15px;
+        color: #2d3142;
+    }
+
+    /* Tùy chỉnh Modal (Form Thêm/Sửa) */
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc modal */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        /* Đổ bóng mạnh hơn cho modal */
+    }
+
+    .modal-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding: 20px 25px;
+    }
+
+    .modal-header .modal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .modal-footer {
+        padding: 20px 25px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #f0f0f0;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+</style>
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
         <h1 class="h3">Quản Lý Phòng</h1>
-      
+
     </div>
     <div>
         <button id="btn-show-create-modal" class="btn btn-primary">
@@ -68,20 +175,18 @@ require_once __DIR__ . '/../components/header.php';
     </div>
 </div>
 
-<div class="modal fade" id="phong-modal" tabindex="-1" 
-     aria-labelledby="phongModalLabel" aria-hidden="true">
+<div class="modal fade" id="phong-modal" tabindex="-1" aria-labelledby="phongModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal-title">Thêm Phòng Mới</h5>
-                <button type="button" class="btn-close" 
-                        data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <form id="phong-form">
                 <div class="modal-body">
                     <div id="modal-message"></div>
-                    
+
                     <input type="hidden" id="form-phong-id" name="id" value="0">
 
                     <div class="mb-3">
@@ -109,8 +214,7 @@ require_once __DIR__ . '/../components/header.php';
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" 
-                            data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     <button type="submit" class="btn btn-primary">Lưu Lại</button>
                 </div>
             </form>
@@ -144,7 +248,7 @@ require_once __DIR__ . '/../components/header.php';
             const type = isError ? 'danger' : 'success';
             modalMessage.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
         }
-        
+
         function showMainMessage(message, isError = false) {
             const type = isError ? 'danger' : 'success';
             mainMessage.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -205,8 +309,8 @@ require_once __DIR__ . '/../components/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    bootstrapModal.hide(); 
-                    showMainMessage(result.message, false); 
+                    bootstrapModal.hide();
+                    showMainMessage(result.message, false);
 
                     if (id === '0' || id === '') {
                         appendRowToTable(result.newRow);
@@ -214,7 +318,7 @@ require_once __DIR__ . '/../components/header.php';
                         updateRowInTable(result.updatedRow);
                     }
                 } else {
-                    showModalMessage(result.message, true); 
+                    showModalMessage(result.message, true);
                 }
             } catch (error) {
                 showModalMessage('Lỗi kết nối: ' + error.message, true);
@@ -236,7 +340,7 @@ require_once __DIR__ . '/../components/header.php';
                 if (result.success) {
                     showMainMessage(result.message, false);
                     document.getElementById(`row-${id}`)?.remove();
-                    if (tableBody.getElementsByTagName('tr').length === 0) { 
+                    if (tableBody.getElementsByTagName('tr').length === 0) {
                         showEmptyRow();
                     }
                 } else {
@@ -248,7 +352,7 @@ require_once __DIR__ . '/../components/header.php';
         }
 
         // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
-        function createTableRow(p) { 
+        function createTableRow(p) {
             document.getElementById('row-empty')?.remove();
 
             return `
@@ -287,12 +391,12 @@ require_once __DIR__ . '/../components/header.php';
 
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
+            return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
         btnShowCreate.addEventListener('click', openCreateModal);
-        
+
         // Đóng modal khi nhấn ra ngoài
         modalElement.addEventListener('click', (event) => {
             if (event.target == modalElement) {
@@ -303,11 +407,11 @@ require_once __DIR__ . '/../components/header.php';
         form.addEventListener('submit', handleFormSubmit);
 
         tableBody.addEventListener('click', function (event) {
-            const target = event.target.closest('button'); 
-            if (!target) return; 
+            const target = event.target.closest('button');
+            if (!target) return;
 
             const id = target.dataset.id;
-            
+
             if (target.classList.contains('btn-edit')) {
                 openUpdateModal(id);
             }

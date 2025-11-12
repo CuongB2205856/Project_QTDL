@@ -1,12 +1,119 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Quản lý Loại Phòng'; 
+$title = 'Quản lý Loại Phòng';
 $currentRoute = '/loaiphong'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header
-require_once __DIR__ . '/../components/header.php'; 
+require_once __DIR__ . '/../components/header.php';
 ?>
+<style>
+    /* Áp dụng nền xám nhạt cho body giống dashboard */
+    body {
+        background-color: #f8f9fa;
+    }
 
+    /* Tùy chỉnh Card chính chứa bảng */
+    .card {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc giống dashboard */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        /* Đổ bóng nhẹ */
+        margin-bottom: 20px;
+    }
+
+    /* Tùy chỉnh Header của Card */
+    .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        /* Đường viền dưới giống chart-card */
+        padding: 20px 25px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+        /* Màu chữ tiêu đề */
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    /* Tùy chỉnh Body của Card */
+    .card-body {
+        padding: 25px;
+    }
+
+    /* Làm đẹp nút "Thêm User" */
+    #btn-add-user {
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    #btn-add-user:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    /* Tùy chỉnh Bảng (Table) */
+    .table thead th {
+        background-color: #f8f9fa;
+        /* Nền header bảng */
+        color: #6c757d;
+        /* Màu chữ header */
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-top: none;
+        border-bottom-width: 2px;
+        padding: 15px;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+        /* Đường kẻ mờ giữa các hàng */
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        padding: 15px;
+        color: #2d3142;
+    }
+
+    /* Tùy chỉnh Modal (Form Thêm/Sửa) */
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc modal */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        /* Đổ bóng mạnh hơn cho modal */
+    }
+
+    .modal-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding: 20px 25px;
+    }
+
+    .modal-header .modal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .modal-footer {
+        padding: 20px 25px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #f0f0f0;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+</style>
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
         <h1 class="h3">Quản lý Loại Phòng</h1>
@@ -50,7 +157,8 @@ require_once __DIR__ . '/../components/header.php';
                                     <button class="btn btn-info btn-sm btn-edit" data-id="<?php echo $lp['MaLoaiPhong']; ?>">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </button>
-                                    <button class="btn btn-danger btn-sm btn-delete" data-id="<?php echo $lp['MaLoaiPhong']; ?>">
+                                    <button class="btn btn-danger btn-sm btn-delete"
+                                        data-id="<?php echo $lp['MaLoaiPhong']; ?>">
                                         <i class="bi bi-trash"></i> Xóa
                                     </button>
                                 </td>
@@ -63,20 +171,18 @@ require_once __DIR__ . '/../components/header.php';
     </div>
 </div>
 
-<div class="modal fade" id="loaiphongModal" tabindex="-1" 
-     aria-labelledby="loaiphongModalLabel" aria-hidden="true">
+<div class="modal fade" id="loaiphongModal" tabindex="-1" aria-labelledby="loaiphongModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal-title">Thêm Loại Phòng Mới</h5>
-                <button type="button" class="btn-close" 
-                        data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <form id="loaiphong-form">
                 <div class="modal-body">
                     <div id="modal-message"></div>
-                    
+
                     <input type="hidden" id="form-loaiphong-id" name="id" value="0">
 
                     <div class="mb-3">
@@ -95,13 +201,13 @@ require_once __DIR__ . '/../components/header.php';
                     <button type="submit" class="btn btn-primary">Lưu Lại</button>
                 </div>
             </form>
-            
+
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         // --- Lấy các đối tượng DOM ---
         const btnShowCreate = document.getElementById('btn-show-create-modal');
@@ -110,11 +216,11 @@ require_once __DIR__ . '/../components/header.php';
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
         const tableBody = document.getElementById('loaiphong-table-body');
-        
+
         // (QUAN TRỌNG) Khởi tạo Bootstrap Modal
         const modalElement = document.getElementById('loaiphongModal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
-        
+
         // Input ẩn lưu ID
         const formId = document.getElementById('form-loaiphong-id');
         const formTenLoai = document.getElementById('form-tenloai');
@@ -125,7 +231,7 @@ require_once __DIR__ . '/../components/header.php';
             const type = isError ? 'danger' : 'success';
             modalMessage.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
         }
-        
+
         function showMainMessage(message, isError = false) {
             const type = isError ? 'danger' : 'success';
             // Dùng alert-dismissible cho phép đóng thông báo
@@ -137,10 +243,10 @@ require_once __DIR__ . '/../components/header.php';
 
         // --- Hàm reset form và mở modal cho 'Create' ---
         function openCreateModal() {
-            form.reset(); 
-            formId.value = '0'; 
+            form.reset();
+            formId.value = '0';
             modalTitle.textContent = 'Thêm Loại Phòng Mới';
-            showModalMessage(''); 
+            showModalMessage('');
             bootstrapModal.show(); // Dùng hàm của Bootstrap
         }
 
@@ -156,7 +262,7 @@ require_once __DIR__ . '/../components/header.php';
                     formId.value = result.data.MaLoaiPhong;
                     formTenLoai.value = result.data.TenLoaiPhong;
                     formGiaThue.value = result.data.GiaThue;
-                    
+
                     modalTitle.textContent = 'Sửa Loại Phòng';
                     showModalMessage('');
                     bootstrapModal.show(); // Dùng hàm của Bootstrap
@@ -170,11 +276,11 @@ require_once __DIR__ . '/../components/header.php';
 
         // --- Hàm xử lý Submit (Cả Create và Update) ---
         async function handleFormSubmit(event) {
-            event.preventDefault(); 
-            
+            event.preventDefault();
+
             const id = formId.value;
             const formData = new FormData(form);
-            
+
             let url = (id === '0' || id === '') ? '/loaiphong/ajax_create' : `/loaiphong/ajax_update/${id}`;
 
             try {
@@ -186,7 +292,7 @@ require_once __DIR__ . '/../components/header.php';
 
                 if (result.success) {
                     showModalMessage(result.message, false);
-                    
+
                     if (id === '0' || id === '') {
                         // Create: Thêm hàng mới vào bảng và reset form
                         appendRowToTable(result.newRow);
@@ -204,7 +310,7 @@ require_once __DIR__ . '/../components/header.php';
                 showModalMessage('Lỗi kết nối: ' + error.message, true);
             }
         }
-        
+
         // --- Hàm xử lý Xóa (Delete) ---
         async function handleDelete(id) {
             if (!confirm('Bạn có chắc chắn muốn xóa loại phòng này?')) {
@@ -213,7 +319,7 @@ require_once __DIR__ . '/../components/header.php';
 
             try {
                 const response = await fetch(`/loaiphong/ajax_delete/${id}`, {
-                    method: 'POST' 
+                    method: 'POST'
                 });
                 const result = await response.json();
 
@@ -259,21 +365,21 @@ require_once __DIR__ . '/../components/header.php';
         function appendRowToTable(rowData) {
             tableBody.insertAdjacentHTML('beforeend', createTableRow(rowData));
         }
-        
+
         function updateRowInTable(rowData) {
             const row = document.getElementById(`row-${rowData.MaLoaiPhong}`);
             if (row) {
                 row.outerHTML = createTableRow(rowData);
             }
         }
-        
+
         function showEmptyRow() {
             tableBody.innerHTML = '<tr id="row-empty"><td colspan="4" class="text-center">Chưa có loại phòng nào.</td></tr>';
         }
-        
+
         function escapeHTML(str) {
-             if (str === null || str === undefined) return '';
-             return str.toString().replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
+            if (str === null || str === undefined) return '';
+            return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
 
@@ -293,12 +399,12 @@ require_once __DIR__ . '/../components/header.php';
         form.addEventListener('submit', handleFormSubmit);
 
         // 4. Xử lý cho các nút "Sửa" và "Xóa" (dùng event delegation)
-        tableBody.addEventListener('click', function(event) {
+        tableBody.addEventListener('click', function (event) {
             const target = event.target.closest('button');
             if (!target) return;
-            
+
             const id = target.dataset.id;
-            
+
             if (target.classList.contains('btn-edit')) {
                 openUpdateModal(id);
             }
@@ -312,5 +418,5 @@ require_once __DIR__ . '/../components/header.php';
 
 <?php
 // 3. GỌI FOOTER
-require_once __DIR__ . '/../components/footer.php'; 
+require_once __DIR__ . '/../components/footer.php';
 ?>

@@ -1,12 +1,119 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Quản lý Hợp đồng'; 
+$title = 'Quản lý Hợp đồng';
 $currentRoute = '/hopdong'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header
-require_once __DIR__ . '/../components/header.php'; 
+require_once __DIR__ . '/../components/header.php';
 ?>
+<style>
+    /* Áp dụng nền xám nhạt cho body giống dashboard */
+    body {
+        background-color: #f8f9fa;
+    }
 
+    /* Tùy chỉnh Card chính chứa bảng */
+    .card {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc giống dashboard */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        /* Đổ bóng nhẹ */
+        margin-bottom: 20px;
+    }
+
+    /* Tùy chỉnh Header của Card */
+    .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        /* Đường viền dưới giống chart-card */
+        padding: 20px 25px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+        /* Màu chữ tiêu đề */
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    /* Tùy chỉnh Body của Card */
+    .card-body {
+        padding: 25px;
+    }
+
+    /* Làm đẹp nút "Thêm User" */
+    #btn-add-user {
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    #btn-add-user:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    /* Tùy chỉnh Bảng (Table) */
+    .table thead th {
+        background-color: #f8f9fa;
+        /* Nền header bảng */
+        color: #6c757d;
+        /* Màu chữ header */
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-top: none;
+        border-bottom-width: 2px;
+        padding: 15px;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+        /* Đường kẻ mờ giữa các hàng */
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        padding: 15px;
+        color: #2d3142;
+    }
+
+    /* Tùy chỉnh Modal (Form Thêm/Sửa) */
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+        /* Bo góc modal */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        /* Đổ bóng mạnh hơn cho modal */
+    }
+
+    .modal-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding: 20px 25px;
+    }
+
+    .modal-header .modal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3142;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .modal-footer {
+        padding: 20px 25px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #f0f0f0;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+</style>
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
         <h1 class="h3">Quản lý Hợp đồng</h1>
@@ -41,7 +148,7 @@ require_once __DIR__ . '/../components/header.php';
                 <tbody id="hopdong-table-body">
                     <?php if (empty($hopdong_list)): ?>
                         <tr id="row-empty">
-                            <td colspan="8" class="text-center">Chưa có hợp đồng nào.</td> 
+                            <td colspan="8" class="text-center">Chưa có hợp đồng nào.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($hopdong_list as $hd): ?>
@@ -56,7 +163,8 @@ require_once __DIR__ . '/../components/header.php';
 
 <?php
 // Hàm PHP helper để render 1 dòng của bảng
-function renderHopDongRow($hd) {
+function renderHopDongRow($hd)
+{
     // Chuyển đổi ngày tháng sang d-m-Y cho dễ đọc
     $ngayBatDau = date('d-m-Y', strtotime($hd['NgayBatDau']));
     $ngayKetThuc = date('d-m-Y', strtotime($hd['NgayKetThuc']));
@@ -89,22 +197,20 @@ function renderHopDongRow($hd) {
 ?>
 
 
-<div class="modal fade" id="hopDongModal" tabindex="-1" 
-     aria-labelledby="hopDongModalLabel" aria-hidden="true">
+<div class="modal fade" id="hopDongModal" tabindex="-1" aria-labelledby="hopDongModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="hopDongModalLabel">Tạo Hợp đồng Mới</h5>
-                <button type="button" class="btn-close" 
-                        data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <form id="hopDongForm">
                 <div class="modal-body">
                     <div id="modal-message"></div>
-                    
+
                     <input type="hidden" id="MaHopDong" name="MaHopDong">
-                    
+
                     <div class="mb-3">
                         <label for="MaSV" class="form-label">Sinh viên:</label>
                         <select class="form-select" id="MaSV" name="MaSV" required>
@@ -116,12 +222,12 @@ function renderHopDongRow($hd) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="MaPhong" class="form-label">Phòng:</label>
                         <select class="form-select" id="MaPhong" name="MaPhong" required>
                             <option value="">-- Chọn phòng --</option>
-                             <?php foreach ($phong_list as $phong): ?>
+                            <?php foreach ($phong_list as $phong): ?>
                                 <option value="<?php echo htmlspecialchars($phong['MaPhong']); ?>">
                                     <?php echo 'Phòng ' . htmlspecialchars($phong['SoPhong']) . ' (Còn ' . htmlspecialchars($phong['SoChoTrong']) . ' chỗ)'; ?>
                                 </option>
@@ -129,20 +235,18 @@ function renderHopDongRow($hd) {
                         </select>
                     </div>
 
-                    
+
 
                     <div class="mb-3">
                         <label for="NgayBatDau" class="form-label">Ngày Bắt Đầu:</label>
-                        <input type="date" class="form-control" 
-                               id="NgayBatDau" name="NgayBatDau" required>
+                        <input type="date" class="form-control" id="NgayBatDau" name="NgayBatDau" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="NgayKetThuc" class="form-label">Ngày Kết Thúc:</label>
-                        <input type="date" class="form-control" 
-                               id="NgayKetThuc" name="NgayKetThuc" required>
+                        <input type="date" class="form-control" id="NgayKetThuc" name="NgayKetThuc" required>
                     </div>
-                    
+
                     <div class="mb-3" id="trangthai-group" style="display: none;">
                         <label for="TrangThai" class="form-label">Trạng Thái:</label>
                         <select class="form-select" id="TrangThai" name="TrangThai">
@@ -150,13 +254,11 @@ function renderHopDongRow($hd) {
                             <option value="Expired">Expired (Hết hạn)</option>
                         </select>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" 
-                            data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary" 
-                            id="btn-submit">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit">Lưu</button>
                 </div>
             </form>
         </div>
@@ -165,7 +267,7 @@ function renderHopDongRow($hd) {
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // --- Khai báo biến ---
         const tableBody = document.getElementById('hopdong-table-body');
         const form = document.getElementById('hopDongForm');
@@ -173,7 +275,7 @@ function renderHopDongRow($hd) {
         const mainMessage = document.getElementById('main-message');
         const modalTitle = document.getElementById('hopDongModalLabel');
         const btnAddHopDong = document.getElementById('btn-add-hopdong');
-        
+
         // Điều khiển Bootstrap Modal
         const modalElement = document.getElementById('hopDongModal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
@@ -192,17 +294,17 @@ function renderHopDongRow($hd) {
         // --- Hàm mở Modal để TẠO MỚI ---
         function openCreateModal() {
             currentAction = 'create';
-            form.reset(); 
+            form.reset();
             maHopDongInput.value = '';
-            
+
             modalTitle.textContent = 'Thêm Hợp đồng Mới';
             modalMessage.innerHTML = '';
-            
+
             // Bật lại các trường select
             maSVSelect.disabled = false;
             maPhongSelect.disabled = false;
             trangThaiGroup.style.display = 'none'; // Ẩn trạng thái khi tạo mới
-            
+
             bootstrapModal.show();
         }
 
@@ -224,7 +326,7 @@ function renderHopDongRow($hd) {
                 .then(data => {
                     if (data.success && data.hopdong) {
                         const hd = data.hopdong;
-                        
+
                         // Điền dữ liệu vào form
                         maHopDongInput.value = hd.MaHopDong;
                         maSVSelect.value = hd.MaSV;
@@ -247,11 +349,11 @@ function renderHopDongRow($hd) {
         // --- Hàm xử lý SUBMIT (Dùng cho cả Create và Update) ---
         function handleFormSubmit(event) {
             event.preventDefault();
-            
+
             // Bật lại trường bị vô hiệu hóa để FormData có thể lấy giá trị
             maSVSelect.disabled = false;
             maPhongSelect.disabled = false;
-            
+
             const formData = new FormData(form);
             const url = (currentAction === 'create') ? '/api/hopdong/create' : '/api/hopdong/update';
 
@@ -259,31 +361,31 @@ function renderHopDongRow($hd) {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    bootstrapModal.hide(); // Đóng dialog
-                    showMessage(mainMessage, data.message, 'success');
-                    
-                    // Tải lại trang để cập nhật mọi thứ (danh sách HĐ, danh sách SV, Phòng)
-                    location.reload(); 
-                    
-                } else {
-                    // Hiển thị lỗi bên TRONG modal
-                    showMessage(modalMessage, data.message || 'Đã xảy ra lỗi.', 'danger');
-                }
-            })
-            .catch(error => {
-                console.error('Submit error:', error);
-                showMessage(modalMessage, 'Lỗi kết nối. Vui lòng thử lại.', 'danger');
-            })
-            .finally(() => {
-                // Tắt lại các trường (nếu là update) để giữ nguyên trạng thái
-                if (currentAction === 'update') {
-                    maSVSelect.disabled = true;
-                    maPhongSelect.disabled = true;
-                }
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        bootstrapModal.hide(); // Đóng dialog
+                        showMessage(mainMessage, data.message, 'success');
+
+                        // Tải lại trang để cập nhật mọi thứ (danh sách HĐ, danh sách SV, Phòng)
+                        location.reload();
+
+                    } else {
+                        // Hiển thị lỗi bên TRONG modal
+                        showMessage(modalMessage, data.message || 'Đã xảy ra lỗi.', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Submit error:', error);
+                    showMessage(modalMessage, 'Lỗi kết nối. Vui lòng thử lại.', 'danger');
+                })
+                .finally(() => {
+                    // Tắt lại các trường (nếu là update) để giữ nguyên trạng thái
+                    if (currentAction === 'update') {
+                        maSVSelect.disabled = true;
+                        maPhongSelect.disabled = true;
+                    }
+                });
         }
 
         // --- Hàm XÓA (Trigger bởi nút "Xóa") ---
@@ -293,28 +395,28 @@ function renderHopDongRow($hd) {
             }
 
             fetch(`/api/hopdong/delete/${id}`, { // API đã có sẵn
-                method: 'POST' 
+                method: 'POST'
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showMessage(mainMessage, data.message, 'success');
-                    document.getElementById(`row-${id}`)?.remove();
-                    if (tableBody.getElementsByTagName('tr').length === 0) {
-                        showEmptyRow();
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(mainMessage, data.message, 'success');
+                        document.getElementById(`row-${id}`)?.remove();
+                        if (tableBody.getElementsByTagName('tr').length === 0) {
+                            showEmptyRow();
+                        }
+                    } else {
+                        showMessage(mainMessage, data.message || 'Lỗi khi xóa.', 'danger');
                     }
-                } else {
-                    showMessage(mainMessage, data.message || 'Lỗi khi xóa.', 'danger');
-                }
-            })
-            .catch(error => {
-                console.error('Delete error:', error);
-                showMessage(mainMessage, 'Lỗi kết nối. Vui lòng thử lại.', 'danger');
-            });
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    showMessage(mainMessage, 'Lỗi kết nối. Vui lòng thử lại.', 'danger');
+                });
         }
 
         // --- Các hàm tiện ích ---
-        
+
         function showMessage(element, message, type = 'success') {
             element.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
                 ${escapeHTML(message)}
@@ -325,10 +427,10 @@ function renderHopDongRow($hd) {
         function showEmptyRow() {
             tableBody.innerHTML = '<tr id="row-empty"><td colspan="8" class="text-center">Chưa có hợp đồng nào.</td></tr>';
         }
-        
-        function escapeHTML(str) { 
-             if (str === null || str === undefined) return '';
-             return str.toString().replace(/[&<>\"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return str.toString().replace(/[&<>\"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
@@ -340,12 +442,12 @@ function renderHopDongRow($hd) {
         form.addEventListener('submit', handleFormSubmit);
 
         // Các nút Sửa/Xóa (dùng event delegation)
-        tableBody.addEventListener('click', function(event) {
-            const target = event.target.closest('button'); 
+        tableBody.addEventListener('click', function (event) {
+            const target = event.target.closest('button');
             if (!target) return;
 
             const id = target.dataset.id;
-            
+
             if (target.classList.contains('btn-edit')) {
                 openUpdateModal(id);
             }
@@ -353,11 +455,11 @@ function renderHopDongRow($hd) {
                 deleteHopDong(id);
             }
         });
-        
+
     }); // Hết DOMContentLoaded
 </script>
 
 <?php
 // 3. GỌI FOOTER
-require_once __DIR__ . '/../components/footer.php'; 
+require_once __DIR__ . '/../components/footer.php';
 ?>
