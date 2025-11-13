@@ -1,0 +1,359 @@
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --success-color: #1cc88a;
+  --danger-color: #e74a3b;
+  --warning-color: #f6c23e;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 40px 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-container {
+  max-width: 520px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.register-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register-header {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  padding: 35px 30px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-header::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.register-header img {
+  max-height: 70px;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.register-header h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.register-header p {
+  margin: 8px 0 0;
+  opacity: 0.95;
+  font-size: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.register-body {
+  padding: 35px 30px;
+}
+
+.section-title {
+  color: var(--primary-color);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+}
+
+.section-title i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.text-danger {
+  color: var(--danger-color) !important;
+}
+
+.form-control,
+.form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+  background-color: #fff;
+}
+
+.input-icon-wrapper {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  color: #999;
+  z-index: 10;
+  font-size: 18px;
+}
+
+.form-control.with-icon,
+.form-select.with-icon {
+  padding-left: 48px;
+}
+
+.btn-register {
+  background: linear-gradient(135deg, var(--success-color) 0%, #17a673 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(28, 200, 138, 0.3);
+}
+
+.btn-register:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(28, 200, 138, 0.4);
+  background: linear-gradient(135deg, #17a673 0%, var(--success-color) 100%);
+}
+
+.btn-register:active {
+  transform: translateY(-1px);
+}
+
+.alert {
+  border-radius: 12px;
+  border: none;
+  padding: 15px 18px;
+  margin-bottom: 25px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-danger {
+  background-color: #ffe6e6;
+  color: #d32f2f;
+  border-left: 4px solid var(--danger-color);
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid #f0f0f0;
+  color: #666;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-link a:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  cursor: pointer;
+  color: #999;
+  z-index: 10;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: var(--primary-color);
+}
+
+.password-strength {
+  height: 5px;
+  border-radius: 3px;
+  background: #e0e0e0;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  width: 0;
+  transition: all 0.4s ease;
+  border-radius: 3px;
+}
+
+.strength-weak {
+  background: linear-gradient(90deg, var(--danger-color), #ff6b6b);
+  width: 33%;
+}
+
+.strength-medium {
+  background: linear-gradient(90deg, var(--warning-color), #ffd93d);
+  width: 66%;
+}
+
+.strength-strong {
+  background: linear-gradient(90deg, var(--success-color), #00d9a3);
+  width: 100%;
+}
+
+.password-info {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.password-info i {
+  margin-right: 5px;
+}
+
+@media (max-width: 576px) {
+  .register-container {
+    margin: 10px;
+  }
+
+  .register-body {
+    padding: 25px 20px;
+  }
+
+  .register-header {
+    padding: 25px 20px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .register-header h2 {
+    font-size: 22px;
+  }
+}
+
+/* Animation cho form inputs */
+.form-control:focus,
+.form-select:focus {
+  animation: inputFocus 0.3s ease;
+}
+
+@keyframes inputFocus {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

@@ -1,5 +1,4 @@
 <?php
-// Giả định BASE_URL đã được định nghĩa trong phạm vi toàn cục hoặc qua Controller
 $error = $data['error'] ?? '';
 $oldData = $data['old_data'] ?? [];
 
@@ -19,351 +18,7 @@ $getOld = function ($field) use ($oldData) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="shortcut icon" href="CTU_logo.ico" type="image/x-icon">
-    <style>
-        :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --success-color: #1cc88a;
-            --danger-color: #e74a3b;
-            --warning-color: #f6c23e;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 40px 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .register-container {
-            max-width: 520px;
-            width: 100%;
-            margin: 20px auto;
-        }
-
-        .register-card {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .register-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 35px 30px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .register-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .register-header img {
-            max-height: 70px;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-        }
-
-        .register-header h2 {
-            margin: 0;
-            font-size: 26px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-
-        .register-header p {
-            margin: 8px 0 0;
-            opacity: 0.95;
-            font-size: 14px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .register-body {
-            padding: 35px 30px;
-        }
-
-        .section-title {
-            color: var(--primary-color);
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        }
-
-        .section-title i {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .text-danger {
-            color: var(--danger-color) !important;
-        }
-
-        .form-control,
-        .form-select {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 13px 15px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background-color: #fafafa;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
-            background-color: #fff;
-        }
-
-        .input-icon-wrapper {
-            position: relative;
-            margin-bottom: 18px;
-        }
-
-        .input-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    color: #999;
-    z-index: 10;
-    font-size: 18px;
-}
-
-        .form-control.with-icon,
-        .form-select.with-icon {
-            padding-left: 48px;
-        }
-
-        .btn-register {
-            background: linear-gradient(135deg, var(--success-color) 0%, #17a673 100%);
-            border: none;
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(28, 200, 138, 0.3);
-        }
-
-        .btn-register:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(28, 200, 138, 0.4);
-            background: linear-gradient(135deg, #17a673 0%, var(--success-color) 100%);
-        }
-
-        .btn-register:active {
-            transform: translateY(-1px);
-        }
-
-        .alert {
-            border-radius: 12px;
-            border: none;
-            padding: 15px 18px;
-            margin-bottom: 25px;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert-danger {
-            background-color: #ffe6e6;
-            color: #d32f2f;
-            border-left: 4px solid var(--danger-color);
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid #f0f0f0;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .login-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .login-link a:hover {
-            color: var(--secondary-color);
-            text-decoration: underline;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            cursor: pointer;
-            color: #999;
-            z-index: 10;
-            font-size: 18px;
-            transition: color 0.3s ease;
-        }
-
-        .password-toggle:hover {
-            color: var(--primary-color);
-        }
-
-        .password-strength {
-            height: 5px;
-            border-radius: 3px;
-            background: #e0e0e0;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0;
-            transition: all 0.4s ease;
-            border-radius: 3px;
-        }
-
-        .strength-weak {
-            background: linear-gradient(90deg, var(--danger-color), #ff6b6b);
-            width: 33%;
-        }
-
-        .strength-medium {
-            background: linear-gradient(90deg, var(--warning-color), #ffd93d);
-            width: 66%;
-        }
-
-        .strength-strong {
-            background: linear-gradient(90deg, var(--success-color), #00d9a3);
-            width: 100%;
-        }
-
-        .password-info {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-        }
-
-        .password-info i {
-            margin-right: 5px;
-        }
-
-        @media (max-width: 576px) {
-            .register-container {
-                margin: 10px;
-            }
-
-            .register-body {
-                padding: 25px 20px;
-            }
-
-            .register-header {
-                padding: 25px 20px;
-            }
-
-            .section-title {
-                font-size: 16px;
-            }
-
-            .register-header h2 {
-                font-size: 22px;
-            }
-        }
-
-        /* Animation cho form inputs */
-        .form-control:focus,
-        .form-select:focus {
-            animation: inputFocus 0.3s ease;
-        }
-
-        @keyframes inputFocus {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.02);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/CSS/StyleRegister.css">
 </head>
 
 <body>
@@ -371,9 +26,9 @@ $getOld = function ($field) use ($oldData) {
         <div class="register-container">
             <div class="register-card">
                 <div class="register-header">
-                    <img src="/image/CTU_logo.png" alt="Logo CTU">
+                    <img src="/image/CTU_logo.png" alt="Logo" style="max-height: 80px; margin-right: 10px;">
                     <h2>Đăng ký Tài khoản</h2>
-                    <p>Hệ thống Quản Lý Ký Túc Xá - Dành cho Sinh Viên</p>
+                    <p>Hệ thống Quản Lý Ký Túc Xá</p>
                 </div>
 
                 <div class="register-body">
@@ -397,7 +52,10 @@ $getOld = function ($field) use ($oldData) {
                             </label>
                             <i class="bi bi-credit-card-2-front input-icon"></i>
                             <input type="text" class="form-control with-icon" id="masv" name="masv" required
-                                maxlength="20" value="<?= $getOld('masv') ?>" placeholder="Ví dụ: B1900000">
+                                maxlength="20" value="<?= $getOld('masv') ?>" placeholder="Nhập Mã Số Sinh Viên"
+                                onblur="validateMSSV(this.value)" oninput="clearMSSVError()">
+                        </div>
+                        <div id="mssv-error" style="color: red; margin-top: 5px;">
                         </div>
 
                         <div class="input-icon-wrapper">
@@ -419,6 +77,7 @@ $getOld = function ($field) use ($oldData) {
                                 </option>
                                 <option value="Nam" <?= $getOld('gioitinh') == 'Nam' ? 'selected' : '' ?>>Nam</option>
                                 <option value="Nữ" <?= $getOld('gioitinh') == 'Nữ' ? 'selected' : '' ?>>Nữ</option>
+                                <option value="Nữ" <?= $getOld('gioitinh') == 'Khác' ? 'selected' : '' ?>>Khác</option>
                             </select>
                         </div>
 
@@ -428,13 +87,11 @@ $getOld = function ($field) use ($oldData) {
                             </label>
                             <i class="bi bi-telephone input-icon"></i>
                             <input type="tel" class="form-control with-icon" id="sdt" name="sdt" maxlength="15"
-                                value="<?= $getOld('sdt') ?>" placeholder="Ví dụ: 0912345678">
+                                value="<?= $getOld('sdt') ?>" placeholder="Nhập số điện thoại"
+                                onblur="validatePhoneNumber(this.value)" oninput="clearError()">
                         </div>
-
-                        <!-- <div class="section-title mt-4">
-                            <i class="bi bi-shield-lock"></i>
-                            Bảo mật tài khoản
-                        </div> -->
+                        <div id="sdt-error" style="color: red; margin-top: 5px;">
+                        </div>
 
                         <div class="input-icon-wrapper">
                             <label for="password" class="form-label">
@@ -442,9 +99,12 @@ $getOld = function ($field) use ($oldData) {
                             </label>
                             <i class="bi bi-lock input-icon"></i>
                             <input type="password" class="form-control with-icon" id="password" name="password" required
-                                placeholder="Nhập mật khẩu" oninput="checkPasswordStrength()">
-                            <i class="bi bi-eye password-toggle" onclick="togglePassword('password', 'toggleIcon1')"
-                                id="toggleIcon1"></i>                            
+                                placeholder="Nhập mật khẩu" onblur="validatePassword(this.value)"
+                                oninput="clearPasswordError()"">
+                            <i class=" bi bi-eye password-toggle" onclick="togglePassword('password', 'toggleIcon1')"
+                                id="toggleIcon1"></i>
+                        </div>
+                        <div id="password-error" style="color: red; margin-top: 5px;">
                         </div>
 
                         <div class="input-icon-wrapper">
@@ -457,12 +117,12 @@ $getOld = function ($field) use ($oldData) {
                                 oninput="checkPasswordMatch()">
                             <i class="bi bi-eye password-toggle"
                                 onclick="togglePassword('password_confirm', 'toggleIcon2')" id="toggleIcon2"></i>
-                            <small class="text-muted d-block mt-1" id="matchText"></small>
                         </div>
+                        <small class="text-muted d-block mt-1" id="matchText"></small>
 
                         <button type="submit" class="btn btn-register w-100 mt-3">
-                            <i class="bi bi-check-circle me-2"></i>
-                            Đăng ký Tài khoản Sinh Viên
+                            <i class="bi me-2"></i>
+                            Đăng Ký
                         </button>
 
                         <div class="login-link">
@@ -479,6 +139,8 @@ $getOld = function ($field) use ($oldData) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+        // Hàm hiển thị mật khẩu
         function togglePassword(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
             const toggleIcon = document.getElementById(iconId);
@@ -493,6 +155,8 @@ $getOld = function ($field) use ($oldData) {
                 toggleIcon.classList.add('bi-eye');
             }
         }
+
+        // Hàm kiểm tra mật khẩu có trùng khớp chưa
         function checkPasswordMatch() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('password_confirm').value;
@@ -512,27 +176,149 @@ $getOld = function ($field) use ($oldData) {
             }
         }
 
-        // Validate form before submit
-        document.getElementById('registerForm').addEventListener('submit', function (e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('password_confirm').value;
 
+        // Hàm xóa thông báo lỗi mật khẩu khi người dùng click ra ngoài (onblur)
+        function clearPasswordError() {
+            const errorDiv = document.getElementById('password-error');
+            errorDiv.textContent = "";
+            errorDiv.style.color = 'red';
+        }
+
+        // Kiểm tra Mật khẩu khi người dùng click ra ngoài (onblur)
+        function validatePassword(password) {
+            const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            const errorDiv = document.getElementById('password-error');
+
+            password = password.trim();
+
+            if (password === "") {
+                errorDiv.textContent = "";
+                return;
+            }
+
+            // Thực hiện kiểm tra Regex
+            if (!complexityRegex.test(password)) {
+                // KHÔNG Hợp lệ: Liệt kê các điều kiện bị thiếu
+                let errorMsg = "Mật khẩu KHÔNG hợp lệ. Phải có:";
+
+                if (password.length < 8) {
+                    errorMsg += " Tối thiểu 8 ký tự,";
+                }
+                if (!/(?=.*[a-z])/.test(password)) {
+                    errorMsg += " Chữ thường,";
+                }
+                if (!/(?=.*[A-Z])/.test(password)) {
+                    errorMsg += " Chữ hoa,";
+                }
+                if (!/(?=.*\d)/.test(password)) {
+                    errorMsg += " Số,";
+                }
+                if (!/(?=.*[\W_])/.test(password)) {
+                    errorMsg += " Ký tự đặc biệt.";
+                }
+
+                errorDiv.textContent = errorMsg.replace(/,$/, '.');
+                errorDiv.style.color = 'red';
+            }
+        }
+
+        // Hàm xóa thông báo lỗi MSSV khi người dùng click ra ngoài (onblur)
+        function clearMSSVError() {
+            const errorDiv = document.getElementById('mssv-error');
+            errorDiv.textContent = "";
+            errorDiv.style.color = 'red';
+        }
+
+        // Hàm kiểm tra MSSV khi người dùng click ra ngoài (onblur)
+        function validateMSSV(mssv) {
+            const regex = /^B\d{7}$/;
+            const errorDiv = document.getElementById('mssv-error');
+
+            mssv = mssv.trim();
+
+            if (mssv === "") {
+                errorDiv.textContent = "";
+                return;
+            }
+
+            // Thực hiện kiểm tra Regex
+            if (!regex.test(mssv)) {
+                // KHÔNG Hợp lệ
+                errorDiv.textContent = "MSSV KHÔNG hợp lệ.";
+                errorDiv.style.color = 'red';
+            }
+        }
+
+        // Hàm kiểm tra số điện thoại khi người dùng click ra ngoài (onblur)
+        function validatePhoneNumber(sdt) {
+            const regex = /^(0|\+84|84)\d{9}$/;
+            const errorDiv = document.getElementById('sdt-error');
+            sdt = sdt.trim();
+
+            // 2. Kiểm tra chuỗi rỗng
+            if (sdt === "") {
+                // Nếu rỗng, xóa thông báo lỗi (ví dụ: khi click vào rồi click ra ngay)
+                errorDiv.textContent = "";
+                errorDiv.style.color = 'red';
+                return;
+            }
+
+            // Thực hiện kiểm tra Regex
+            if (!regex.test(sdt)) {
+                // KHÔNG Hợp lệ: Hiển thị thông báo lỗi
+                errorDiv.textContent = "Số điện thoại KHÔNG hợp lệ";
+                errorDiv.style.color = 'red'; // Màu đỏ cho lỗi
+            }
+        }
+
+        // Hàm xóa thông báo lỗi số điện thoại khi người dùng click ra ngoài (onblur)
+        function clearError() {
+            const errorDiv = document.getElementById('sdt-error');
+            errorDiv.textContent = "";
+            errorDiv.style.color = 'red';
+        }
+
+        // Hàm kiểm tra trước khi submit
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            // LẤY GIÁ TRỊ VÀ REGEXES
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('password_confirm').value.trim();
+            const mssv = document.getElementById('masv').value.trim();
+            const sdt = document.getElementById('sdt').value.trim();
+
+            const PasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            const MSSVRegex = /^B\d{7}$/;
+            const PhoneRegex = /^(0|\+84|84)\d{9}$/;
+
+            // --- BẮT ĐẦU KIỂM TRA ĐỊNH DẠNG ---
+
+            // 1. Kiểm tra MSSV (Nếu không rỗng thì phải hợp lệ)
+            if (!MSSVRegex.test(mssv)) {
+                e.preventDefault();
+                alert('Mã số sinh viên không hợp lệ!');
+                return false;
+            }
+
+            // 2. Kiểm tra Khớp Mật khẩu
             if (password !== confirmPassword) {
                 e.preventDefault();
                 alert('Mật khẩu xác nhận không khớp!');
                 return false;
             }
 
-            if (password.length < 6) {
+            // 3. Kiểm tra Độ phức tạp Mật khẩu
+            if (!PasswordRegex.test(password)) {
                 e.preventDefault();
-                alert('Mật khẩu phải có ít nhất 6 ký tự!');
+                alert('Mật khẩu quá yếu!');
                 return false;
             }
-        });
 
-        // Auto-focus first input
-        window.addEventListener('load', function () {
-            document.getElementById('masv').focus();
+            // 4. Kiểm tra Số điện thoại (Chỉ kiểm tra nếu có nhập)
+            if (sdt !== "" && !PhoneRegex.test(sdt)) {
+                e.preventDefault();
+                alert('Số điện thoại không hợp lệ!');
+                return false;
+            }
         });
     </script>
 
