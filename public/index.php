@@ -43,14 +43,66 @@ $router = new Bramus\Router\Router();
 // BƯỚC 3: ĐỊNH NGHĨA CÁC ROUTES
 // =================================================================
 
-// Route mặc định (Trang chủ)
-$router->get('/', function () {
-    echo "<h1>Trang Chủ QLKTX</h1><p>Vui lòng đăng nhập hoặc xem các module CRUD.</p>";
+use App\Controllers\AuthController;
+
+$router->get('/', function() {
+    $baseURL = defined('BASE_URL') ? BASE_URL : '';
+
+    // Session đã được khởi động ở đầu file index.php
+    
+    if (isset($_SESSION['user_id'])) {
+        // Đã đăng nhập -> Chuyển hướng theo Role
+        $role = $_SESSION['role'];
+        $maLienKet = $_SESSION['ma_lien_ket'];
+
+        if ($role === 'QuanLy') {
+            header('Location: ' . $baseURL . '/dashboard');
+            exit;
+        } elseif ($role === 'SinhVien' && !empty($maLienKet)) {
+            header('Location: ' . $baseURL . '/student/profile/' . $maLienKet);
+            exit;
+        }
+        
+    }
+    
+    // Chưa đăng nhập (hoặc không rõ role) -> Chuyển về trang login
+    header('Location: ' . $baseURL . '/login');
+    exit;
 });
-$router->get('/dashboard', function () use ($pdoInstance) {
-    $controller = new App\Controllers\DashboardController($pdoInstance);
-    $controller->index();
+// Tuyến đường Đăng nhập
+$router->get('/login', function() use ($pdoInstance) {
+    (new AuthController($pdoInstance))->showLogin();
 });
+$router->post('/login', function() use ($pdoInstance) {
+    (new AuthController($pdoInstance))->handleLogin();
+});
+
+// Tuyến đường Đăng ký
+$router->get('/register', function() use ($pdoInstance) {
+    (new AuthController($pdoInstance))->showRegister();
+});
+$router->post('/register', function() use ($pdoInstance) {
+    (new AuthController($pdoInstance))->handleRegister();
+});
+
+// Tuyến đường Đăng xuất
+$router->get('/logout', function() use ($pdoInstance) {
+    (new AuthController($pdoInstance))->logout();
+});
+
+// Tuyến đường chuyển hướng sau đăng nhập:
+// Role QuanLy
+$router->get('/dashboard', function() use ($pdoInstance) {
+    (new App\Controllers\DashboardController($pdoInstance))->index();
+});
+
+// Role SinhVien (chuyển hướng kèm Mã SV)
+// SỬA ĐÚNG:
+// Role SinhVien (chuyển hướng kèm Mã SV)
+$router->get('/student/profile/(\w+)', function($maLienKet) use ($pdoInstance) {
+    (new App\Controllers\StudentPanelController($pdoInstance))->index($maLienKet);
+});
+
 // ********** TẤT CẢ CÁC ROUTES ĐỀU SỬ DỤNG NAMESPACE **********
 
 // === QUẢN LÝ PHÒNG (CRUD - AJAX) ===
@@ -228,13 +280,6 @@ $router->post('/sinhvien/ajax_reset_password/([\w\-]+)', function ($maSV) use ($
 $router->set404(function () {
     header('HTTP/1.1 404 Not Found');
     echo "<h1>404 - Không tìm thấy trang!</h1><p>Vui lòng kiểm tra lại URL.</p>";
-});
-// === BẢNG ĐIỀU KHIỂN SINH VIÊN (STUDENT PANEL) ===
-
-// 1. TRANG PROFILE CHÍNH (GET)
-$router->get('/student/profile', function () use ($pdoInstance) {
-    $controller = new App\Controllers\StudentPanelController($pdoInstance);
-    $controller->index();
 });
 
 // 2. XỬ LÝ ĐỔI MẬT KHẨU (POST - AJAX)

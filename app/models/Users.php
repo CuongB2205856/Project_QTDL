@@ -135,5 +135,33 @@ class Users
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
     // Các hàm CRUD và Xác thực (login(), register(), findByUsername(),...) sẽ được thêm sau
+    public function findByUsername(string $username)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM Users WHERE Username = :username");
+        $stmt->execute(['username' => $username]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * MỚI: Xử lý logic đăng nhập
+     * @return array Chứa 'success' và 'user' (nếu thành công) hoặc 'message' (nếu thất bại)
+     */
+    public function attemptLogin(string $username, string $password)
+    {
+        $user = $this->findByUsername($username);
+
+        if (!$user) {
+            return ['success' => false, 'message' => 'Tên đăng nhập không tồn tại.'];
+        }
+
+        // Kiểm tra mật khẩu
+        if (password_verify($password, $user['Password'])) {
+            // Đăng nhập thành công, loại bỏ mật khẩu hash trước khi trả về
+            unset($user['Password']);
+            return ['success' => true, 'user' => $user];
+        } else {
+            return ['success' => false, 'message' => 'Mật khẩu không chính xác.'];
+        }
+    }
 }
 ?>

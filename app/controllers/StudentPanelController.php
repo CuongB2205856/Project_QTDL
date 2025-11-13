@@ -11,7 +11,7 @@ class StudentPanelController extends Controller {
     
     private $svModel;
     private $userModel;
-    private $maSV_test; // BIẾN TẠM THỜI ĐỂ TEST
+    // private $maSV_test; // BIẾN TẠM THỜI ĐỂ TEST - ĐÃ XÓA
 
     public function __construct(\PDO $pdo) {
         parent::__construct(); 
@@ -21,7 +21,7 @@ class StudentPanelController extends Controller {
         // ==========================================================
         // GÁN CỨNG MÃ SV ĐỂ TEST (theo yêu cầu "không cần chứng thực")
         // Khi làm đăng nhập, bạn thay thế bằng $_SESSION['masv']
-        $this->maSV_test = 'SV001'; 
+        // $this->maSV_test = 'SV001'; // <-- ĐÃ XÓA DÒNG NÀY
         // ==========================================================
 
         if (session_status() === PHP_SESSION_NONE) {
@@ -37,13 +37,14 @@ class StudentPanelController extends Controller {
     }
 
     // *** 1. HIỂN THỊ TRANG PROFILE ***
-    public function index() {
-        // Lấy MaSV (Tạm thời gán cứng)
-        $maSV = $this->maSV_test;
+    // SỬA: Thêm tham số $maSV
+    public function index($maSV) {
         
+        // $maSV = $this->maSV_test; // <-- ĐÃ XÓA DÒNG NÀY
+
         if (!$maSV) {
              // (Sau này) Chuyển hướng về trang đăng nhập
-             die("Bạn chưa đăng nhập!");
+             die("Bạn chưa đăng nhập hoặc MaSV không hợp lệ!");
         }
 
         $data = [];
@@ -63,8 +64,9 @@ class StudentPanelController extends Controller {
 
     // *** 2. (AJAX) XỬ LÝ ĐỔI MẬT KHẨU ***
     public function ajax_change_password() {
-        // Lấy MaSV (Tạm thời gán cứng)
-        $maSV = $this->maSV_test; 
+        
+        // SỬA: Lấy MaSV từ SESSION, không dùng biến test
+        $maSV = $_SESSION['ma_lien_ket'] ?? null; 
 
         if (!$maSV) {
             $this->json_response(['success' => false, 'message' => 'Phiên làm việc hết hạn.']);
@@ -80,6 +82,7 @@ class StudentPanelController extends Controller {
         }
 
         try {
+            // Dùng MaSV từ session để đổi mật khẩu
             $result = $this->userModel->changePassword($maSV, $old_pass, $new_pass);
             $this->json_response($result);
 
