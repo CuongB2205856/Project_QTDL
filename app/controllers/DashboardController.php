@@ -1,8 +1,6 @@
 <?php
-// app/controllers/DashboardController.php
+
 namespace App\Controllers;
-// Nhúng Controller cơ sở
-require_once __DIR__ . '/Controller.php';
 
 // Nhúng các Models cần thiết
 use App\Models\SinhVien;
@@ -20,37 +18,30 @@ class DashboardController extends Controller
     {
         parent::__construct();
 
-        // 2. SỬA LỖI: Bỏ comment và khởi tạo 3 model
         $this->svModel = new SinhVien($pdo);
         $this->phongModel = new Phong($pdo);
-
-        // Giả định $hdModel là HoaDon (dựa theo 'use' ở đầu file)
         $this->hdModel = new HoaDon($pdo);
 
-        // ... (Phần session và kiểm tra quyền giữ nguyên) ...
-        // --- BỘ LỌC BẢO VỆ ---
+        // Kiểm tra session và quyền truy cập
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // 1. Phải đăng nhập
+        // Phải đăng nhập
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . BASE_URL . '/login');
             exit;
         }
 
-        // 2. Phải là 'QuanLy'
+        // Phải là 'QuanLy'
         if ($_SESSION['role'] !== 'QuanLy') {
             header('HTTP/1.1 404 Not Found'); // Gửi header 404
             $this->loadView('errors/404'); // Hiển thị trang 404
             exit; // Dừng lại
         }
-
-        // --- KẾT THÚC BỘ LỌC ---
     }
-    /**
-     * Hiển thị trang dashboard chính
-     */
+
+    // Hiển thị trang dashboard chính
     public function index()
     {
         $data = [];

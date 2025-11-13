@@ -1,56 +1,60 @@
 <?php
-// app/controllers/SinhVienController.php
+
 namespace App\Controllers;
-// Nhúng Controller cơ sở
-require_once __DIR__ . '/Controller.php';
 
+// Nhúng các Models cần thiết
 use App\Models\SinhVien;
-use App\Models\Users; // Thêm model Users
+use App\Models\Users;
 
-class SinhVienController extends Controller {
+class SinhVienController extends Controller
+{
     private $model;
-    private $userModel; // Thêm biến cho model Users
+    private $userModel;
 
-    public function __construct(\PDO $pdo) {
-        parent::__construct(); 
+    public function __construct(\PDO $pdo)
+    {
+        parent::__construct();
         $this->model = new SinhVien($pdo);
-        $this->userModel = new Users($pdo); // Khởi tạo
-        
-        // --- BỘ LỌC BẢO VỆ ---
+        $this->userModel = new Users($pdo);
+
+        // Kiểm tra session và quyền truy cập
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // 1. Phải đăng nhập
+        // Phải đăng nhập
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . BASE_URL . '/login');
             exit;
         }
 
-        // 2. Phải là 'QuanLy'
+        // Phải là 'QuanLy'
         if ($_SESSION['role'] !== 'QuanLy') {
-            header('HTTP/1.1 404 Not Found'); // Gửi header 404
-            $this->loadView('errors/404'); // Hiển thị trang 404
-            exit; // Dừng lại
+            header('HTTP/1.1 404 Not Found');
+            $this->loadView('errors/404');
+            exit;
         }
     }
 
-    // Trả về header JSON (Giống PhongController)
-    private function json_response($data) {
+    // Trả về header JSON 
+    private function json_response($data)
+    {
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
     }
 
-    // *** 1. HIỂN THỊ TRANG INDEX ***
-    public function index() {
+    // Hiển thị danh sách sinh viên
+    public function index()
+    {
         $data = [];
-        $data['sinhvien_list'] = $this->model->all(); 
+        $data['sinhvien_list'] = $this->model->all();
         $this->loadView('SinhVien/index', $data);
     }
 
-    // *** 2. (AJAX) LẤY CHI TIẾT 1 SV ĐỂ SỬA ***
-    public function ajax_get_details($maSV) {
+    // Lấy chi tiết sinh viên
+    public function ajax_get_details($maSV)
+    {
         $data = $this->model->findById($maSV);
         if ($data) {
             $this->json_response(['success' => true, 'data' => $data]);
@@ -59,8 +63,9 @@ class SinhVienController extends Controller {
         }
     }
 
-    // *** 3. (AJAX) LẤY CHI TIẾT PHÒNG Ở ***
-    public function ajax_get_room_details($maSV) {
+    // Lấy chi tiết phòng ở
+    public function ajax_get_room_details($maSV)
+    {
         $data = $this->model->findDetails($maSV);
         if ($data) {
             $this->json_response(['success' => true, 'data' => $data]);
@@ -69,15 +74,15 @@ class SinhVienController extends Controller {
         }
     }
 
-    // *** 4. (AJAX) XỬ LÝ CẬP NHẬT ***
-    public function ajax_update($maSV) {
-         try {
+    // Xử lý cập nhật sinh viên
+    public function ajax_update($maSV)
+    {
+        try {
             $result = $this->model->update($maSV, $_POST);
             if ($result) {
-                // Lấy lại thông tin đã cập nhật (chỉ thông tin SV)
                 $updatedRow = $this->model->findById($maSV);
                 $this->json_response([
-                    'success' => true, 
+                    'success' => true,
                     'message' => 'Cập nhật thành công!',
                     'updatedRowData' => $updatedRow // Gửi dữ liệu đã sửa về JS
                 ]);
@@ -89,37 +94,36 @@ class SinhVienController extends Controller {
         }
     }
 
-    // *** 5. (AJAX) XỬ LÝ XÓA ***
+    // Xử lý xóa sinh viên
     public function ajax_delete($maSV)
     {
         try {
-            // (Giống PhongController)
             $this->model->delete($maSV);
             $this->json_response(['success' => true, 'message' => 'Xóa sinh viên thành công!']);
         } catch (\PDOException $e) {
             // Xử lý lỗi khóa ngoại (nếu SV có Hợp đồng)
             if ($e->getCode() == 23000) {
                 $this->json_response([
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'Không thể xóa sinh viên (đã có hợp đồng). Bạn cần xóa hợp đồng trước.'
                 ]);
             } else {
-                 $this->json_response([
-                    'success' => false, 
+                $this->json_response([
+                    'success' => false,
                     'message' => 'Lỗi CSDL: ' . $e->getMessage()
                 ]);
             }
         }
     }
 
-    // *** 6. (AJAX) RESET MẬT KHẨU ***
+    // Reset mật khẩu sinh viên
     public function ajax_reset_password($maSV)
     {
         try {
-            // Đặt lại MK mặc định, ví dụ '123456'
+            // Đặt lại MK mặc định
             $defaultPassword = '123456';
             $result = $this->userModel->resetPassword($maSV, $defaultPassword);
-            
+
             if ($result) {
                 $this->json_response(['success' => true, 'message' => 'Đặt lại mật khẩu thành công (MK mặc định là 123456).']);
             } else {

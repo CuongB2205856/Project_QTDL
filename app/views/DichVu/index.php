@@ -7,14 +7,17 @@ $currentRoute = '/dichvu'; // Quan trọng: để active link sidebar
 require_once __DIR__ . '/../components/header.php';
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
-    <div>
-        <h1 class="h3">Quản Lý Dịch Vụ</h1>
-    </div>
-    <div>
-        <button id="btn-show-create-modal" class="btn btn-primary">
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="bi me-2">Quản Lý Dịch Vụ</h2>         
+        </div>
+        <div>
+            <button id="btn-show-create-modal" class="btn btn-primary">
             <i class="bi bi-plus-lg"></i> Thêm Dịch Vụ Mới
         </button>
+        </div>
     </div>
 </div>
 

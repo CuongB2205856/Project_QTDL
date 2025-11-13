@@ -1,6 +1,6 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Dashboard - Trang Chủ';
+$title = 'Trang Chủ';
 $currentRoute = '/dashboard'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
@@ -277,14 +277,7 @@ require_once __DIR__ . '/../components/header.php';
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h2><i class="bi bi-speedometer2 me-2"></i>Dashboard</h2>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">
-                        <i class="bi bi-house-door me-1"></i>Trang chủ
-                    </li>
-                </ol>
-            </nav>
+            <h2><i class="bi bi-speedometer2 me-2"></i>Dashboard</h2>            
         </div>
         <div>
             <button class="btn btn-primary">

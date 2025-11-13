@@ -13,7 +13,7 @@ class AuthController extends Controller
     private $userModel;
     private $sinhVienModel;
     private $pdo; // Cần giữ PDO instance để quản lý transaction
-    
+
     /**
      * SỬA LỖI: Thêm thuộc tính $baseURL để sử dụng an toàn
      */
@@ -38,18 +38,15 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Helper: Chuyển hướng dựa trên Role
-     */
+    //Helper: Chuyển hướng dựa trên Role
     private function redirectBasedOnRole($role, $maLienKet)
     {
-        // SỬA LỖI: Sử dụng $this->baseURL đã được gán an toàn
+        //Role cho người quản trị
         if ($role === 'QuanLy') {
-            // ADMIN
             header('Location: ' . $this->baseURL . '/dashboard');
             exit;
         } elseif ($role === 'SinhVien' && !empty($maLienKet)) {
-            // SINH VIÊN (Kèm Mã SV)
+            // Role cho sinh viên
             header('Location: ' . $this->baseURL . '/student/profile/' . $maLienKet);
             exit;
         } else {
@@ -59,30 +56,21 @@ class AuthController extends Controller
         }
     }
 
-    // ====================================================================
-    // Đăng nhập
-    // ====================================================================
-
-    /**
-     * Hiển thị form đăng nhập (GET /login)
-     */
+    // Kiểm tra xem người dùng đã đăng nhập chưa
     public function showLogin()
     {
         // Nếu đã đăng nhập, chuyển hướng ngay lập tức
         if (isset($_SESSION['user_id'])) {
             $this->redirectBasedOnRole($_SESSION['role'], $_SESSION['ma_lien_ket']);
         }
-        // Giả định view nằm ở app/views/auth/login.php
+        // Chuyển hướng đến form đang nhập
         $this->loadView('auth/login');
     }
-
-    /**
-     * Xử lý đăng nhập (POST /login)
-     */
+    // Xử lý đăng nhập
     public function handleLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-             // SỬA LỖI: Sử dụng $this->baseURL
+            // SỬA LỖI: Sử dụng $this->baseURL
             header('Location: ' . $this->baseURL . '/login');
             exit;
         }
@@ -113,27 +101,16 @@ class AuthController extends Controller
             $this->loadView('auth/login', ['error' => $result['message']]);
         }
     }
-
-    // ====================================================================
-    // Đăng ký Sinh Viên
-    // ====================================================================
-
-    /**
-     * Hiển thị form đăng ký (GET /register)
-     */
+    // Hiển thị form đăng ký
     public function showRegister()
     {
         $this->loadView('auth/register');
     }
-
-    /**
-     * Xử lý đăng ký cho Sinh Viên (POST /register)
-     * Ghi vào 2 bảng: SinhVien và Users (sử dụng transaction)
-     */
+    // Xử lý đăng ký cho Sinh Viên
     public function handleRegister()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-             // SỬA LỖI: Sử dụng $this->baseURL
+            // SỬA LỖI: Sử dụng $this->baseURL
             header('Location: ' . $this->baseURL . '/register');
             exit;
         }
@@ -191,7 +168,7 @@ class AuthController extends Controller
 
             // Đăng ký thành công, tự động đăng nhập và chuyển hướng
             $_SESSION['user_id'] = $userId;
-            $_SESSION['username'] = $data['masv']; 
+            $_SESSION['username'] = $data['masv'];
             $_SESSION['role'] = 'SinhVien';
             $_SESSION['ma_lien_ket'] = $data['masv'];
 
@@ -202,7 +179,7 @@ class AuthController extends Controller
             $this->pdo->rollBack();
 
             if ($e->getCode() == 23000) {
-                 $message = $e->getMessage();
+                $message = $e->getMessage();
                 if (strpos($message, 'PRIMARY') || strpos($message, 'MaLienKet') || strpos($message, 'Username')) {
                     $error = 'Lỗi: Mã Sinh Viên này đã tồn tại hoặc đã được đăng ký.';
                 } else {
@@ -220,13 +197,7 @@ class AuthController extends Controller
         }
     }
 
-    // ====================================================================
-    // Đăng xuất
-    // ====================================================================
-
-    /**
-     * Xử lý đăng xuất (GET /logout)
-     */
+    // Xử lý đăng xuất
     public function logout()
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -247,8 +218,6 @@ class AuthController extends Controller
             );
         }
         session_destroy();
-
-        // SỬA LỖI: Sử dụng $this->baseURL
         header('Location: ' . $this->baseURL . '/login');
         exit;
     }

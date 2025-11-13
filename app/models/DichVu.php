@@ -1,5 +1,4 @@
 <?php
-// models/DichVu.php
 
 namespace App\Models; 
 class DichVu
@@ -30,7 +29,7 @@ class DichVu
         return $this->db->query("SELECT * FROM DichVu ORDER BY TenDichVu ASC")->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    // *** THÊM MỚI: READ (Find): TÌM 1 DỊCH VỤ THEO ID ***
+    // 
     public function find($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM DichVu WHERE MaDV = :id");

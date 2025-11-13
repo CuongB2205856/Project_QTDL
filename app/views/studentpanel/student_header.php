@@ -1,6 +1,30 @@
 <?php
+$baseURL = defined('BASE_URL') ? BASE_URL : ''; 
+
+// ==========================================================
+// LOGIC ĐỂ XÁC ĐỊNH ĐÚNG TRANG CHỦ
+// =ia
+$homeURL = $baseURL . '/login'; // Mặc định là trang login nếu chưa đăng nhập
 // app/views/studentpanel/student_header.php
 $title = $title ?? 'Bảng Điều Khiển Sinh Viên'; 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Kiểm tra xem đã đăng nhập chưa
+if (isset($_SESSION['user_id'])) {
+    $role = $_SESSION['role'] ?? null;
+    $maLienKet = $_SESSION['ma_lien_ket'] ?? null;
+
+    if ($role === 'QuanLy') {
+        // Nếu là Quản lý, trang chủ là /dashboard
+        $homeURL = $baseURL . '/dashboard';
+    } elseif ($role === 'SinhVien' && !empty($maLienKet)) {
+        // Nếu là Sinh viên, trang chủ là profile
+        $homeURL = $baseURL . '/student/profile/' . $maLienKet;
+    }
+    // Nếu có role khác mà không xác định, nó sẽ giữ nguyên là /login
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -200,7 +224,7 @@ $title = $title ?? 'Bảng Điều Khiển Sinh Viên';
 
 <nav class="navbar navbar-dark fixed-top shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="/student/profile">
+        <a class="navbar-brand d-flex align-items-center" href="<?= $homeURL ?>">
             <img src="/image/CTU_logo.png" alt="Logo" 
                  style="max-height: 35px; margin-right: 10px;">
             <span>Bảng Điều Khiển Sinh Viên</span>

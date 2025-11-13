@@ -36,7 +36,7 @@ class Users
     public function all()
     {
         // Sử dụng tên cột UserID, Username, Role
-        $stmt = $this->db->query('SELECT UserID, Username, Role FROM Users');
+        $stmt = $this->db->query('SELECT UserID, Username, Role, MaLienKet FROM Users');
         return $stmt->fetchAll();
     }
 

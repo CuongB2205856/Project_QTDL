@@ -1,21 +1,21 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Quản lý Users';
+$title = 'Quản lý Người Dùng';
 $currentRoute = '/users'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
 require_once __DIR__ . '/../components/header.php';
 ?>
-<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
-    <div>
-        <h1 class="h3">Quản lý Người Dùng</h1>
-        <nav aria-label="breadcrumb">
-        </nav>
-    </div>
-    <div>
-        <button id="btn-add-user" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Thêm User
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="bi me-2">Quản Lý Người Dùng</h2>         
+        </div>
+        <div>
+            <button id="btn-add-user" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Thêm Người Dùng Mới
         </button>
+        </div>
     </div>
 </div>
 
@@ -48,7 +48,7 @@ require_once __DIR__ . '/../components/header.php';
                                 <td><?php echo $user['UserID']; ?></td>
                                 <td><?php echo htmlspecialchars($user['Username']); ?></td>
                                 <td><?php echo htmlspecialchars($user['Role']); ?></td>
-                                <td><?php echo htmlspecialchars($user['MaLienKet'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars($user['MaLienKet'] ?? $user['Role']); ?></td>
                                 <td>
                                     <button class="btn btn-info btn-sm btn-edit" data-id="<?php echo $user['UserID']; ?>">
                                         <i class="bi bi-pencil-square"></i> Sửa

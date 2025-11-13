@@ -97,23 +97,15 @@
             <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" 
                role="button" data-bs-toggle="dropdown" 
                aria-expanded="false">
-                <i class="bi bi-person-circle"></i> Chào, Admin
+                <i class="bi bi-person-circle"></i> Xin Chào, <?php echo htmlspecialchars($_SESSION['username']) ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" 
                 aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#">Thông tin</a></li>
-                <li><a class="dropdown-item" href="#">Cài đặt</a></li>
-                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
             </ul>
         </div>
     </div>
 </nav>
-
-<?php
-// Giả sử Controller của bạn set biến này
-// $currentRoute = '/dashboard'; 
-?>
 
 <nav class="sidebar d-none d-lg-block">
     <ul class="nav nav-pills flex-column mb-auto">

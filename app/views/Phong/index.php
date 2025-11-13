@@ -1,20 +1,21 @@
 <?php
 // 1. Set các biến cho header
-$title = 'Quản Lý Phòng';
+$title = 'Quản lý Phòng';
 $currentRoute = '/phong'; // Quan trọng: để active link sidebar
 
 // 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
 require_once __DIR__ . '/../components/header.php';
 ?>
-<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
-    <div>
-        <h1 class="h3">Quản Lý Phòng</h1>
-
-    </div>
-    <div>
-        <button id="btn-show-create-modal" class="btn btn-primary">
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="bi me-2">Quản Lý Phòng</h2>         
+        </div>
+        <div>
+            <button id="btn-show-create-modal" class="btn btn-primary">
             <i class="bi bi-plus-lg"></i> Thêm Phòng Mới
         </button>
+        </div>
     </div>
 </div>
 
