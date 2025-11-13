@@ -1,5 +1,4 @@
 <?php
-// models/LoaiPhong.php
 
 namespace App\Models;
 class LoaiPhong
@@ -8,14 +7,14 @@ class LoaiPhong
     public $TenLoaiPhong;
     public $GiaThue;
 
-    protected $db; // Đối tượng PDO
+    protected $db;
 
     public function __construct(\PDO $pdo)
     {
         $this->db = $pdo;
     }
 
-    // CREATE: Thêm loại phòng mới
+    // Hàm thêm mới loại phòng
     public function create(array $data)
     {
         $stmt = $this->db->prepare("INSERT INTO LoaiPhong (TenLoaiPhong, GiaThue) 
@@ -27,11 +26,14 @@ class LoaiPhong
         // Trả về ID của dòng vừa thêm
         return $this->db->lastInsertId();
     }
-    // READ: Cần thêm hàm all() để hiển thị danh sách
+
+    // Hàm lấy danh sách loại phòng
     public function all()
     {
-        return $this->db->query("SELECT * FROM LoaiPhong ORDER BY MaLoaiPhong ASC")->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->db->query("SELECT * FROM LoaiPhong ORDER BY MaLoaiPhong")->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    // Hàm lấy chi tiết loại phòng
     public function find($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM LoaiPhong WHERE MaLoaiPhong = :id");
@@ -39,7 +41,7 @@ class LoaiPhong
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    // *** THÊM MỚI: UPDATE: CẬP NHẬT LOẠI PHÒNG ***
+    // Hàm cập nhật thông tin loại phòng
     public function update($id, array $data)
     {
         $stmt = $this->db->prepare("UPDATE LoaiPhong 
@@ -52,7 +54,7 @@ class LoaiPhong
         ]);
     }
 
-    // *** THÊM MỚI: DELETE: XÓA LOẠI PHÒNG ***
+    // Hàm xóa loại phòng
     public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM LoaiPhong WHERE MaLoaiPhong = :id");

@@ -1,5 +1,5 @@
 <?php
-// models/SinhVien.php
+
 namespace App\Models;
 
 class SinhVien
@@ -15,7 +15,7 @@ class SinhVien
     {
         $this->db = $pdo;
     }
-    // READ: Lấy tất cả SV (kèm thông tin phòng và placeholder Tình trạng)
+    // Hàm lấy danh sách sinh viên
     public function all()
     {
         $stmt = $this->db->query("
@@ -35,18 +35,20 @@ class SinhVien
             LEFT JOIN HopDong hd ON sv.MaSV = hd.MaSV AND hd.NgayKetThuc >= CURDATE()
             LEFT JOIN Phong p ON hd.MaPhong = p.MaPhong
             ORDER BY 
-                sv.HoTen
+                sv.MaSV
         ");
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-    // READ: Tìm SV theo Mã SV (cần thiết để kiểm tra)
+
+    // Hàm tìm sinh viên theo ID
     public function findById($maSV)
     {
         $stmt = $this->db->prepare("SELECT * FROM SinhVien WHERE MaSV = :masv");
         $stmt->execute(['masv' => $maSV]);
         return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
     }
-    // READ: Lấy chi tiết phòng SV đang ở (cho modal chi tiết)
+
+    // Hàm lấy chi tiết sinh viên
     public function findDetails($maSV)
     {
         $stmt = $this->db->prepare("
@@ -66,7 +68,8 @@ class SinhVien
         $stmt->execute(['masv' => $maSV]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
-    // CREATE: Thêm sinh viên mới
+
+    // Hàm thêm mới sinh viên
     public function create(array $data)
     {
         $stmt = $this->db->prepare("INSERT INTO SinhVien (MaSV, HoTen, GioiTinh, SoDienThoai) 
@@ -78,6 +81,8 @@ class SinhVien
             'sdt' => $data['sdt'] ?? null
         ]);
     }
+
+    // Hàm cập nhật thông tin sinh viên
     public function update($maSV, array $data)
     {
         $stmt = $this->db->prepare("
@@ -93,19 +98,21 @@ class SinhVien
         ]);
     }
 
-    /**
-     * DELETE: Xóa SV
-     */
+    // Hàm xóa sinh viên
     public function delete($maSV)
     {
         $stmt = $this->db->prepare("DELETE FROM SinhVien WHERE MaSV = :masv");
         return $stmt->execute(['masv' => $maSV]);
     }
+
+    // Hàm đếm số lượng sinh viên
     public function count()
     {
         $stmt = $this->db->query("SELECT COUNT(MaSV) as total FROM SinhVien");
         return $stmt->fetchColumn();
     }
+
+    // Hàm lấy dữ liệu cho Dashboard
     public function getStudentDashboardDetails($maSV)
     {
         $stmt = $this->db->prepare("
@@ -124,11 +131,8 @@ class SinhVien
             LEFT JOIN HopDong hd ON sv.MaSV = hd.MaSV AND hd.NgayKetThuc >= CURDATE()
             LEFT JOIN Phong p ON hd.MaPhong = p.MaPhong
             LEFT JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
-            
-            -- SỬA LỖI JOIN TẠI ĐÂY --
             LEFT JOIN SuDungDichVu sddv ON hd.MaHD = sddv.MaHD
             LEFT JOIN HoaDon h ON sddv.MaSDDV = h.MaSDDV AND h.TrangThaiThanhToan = 'Chưa thanh toán'
-            -- KẾT THÚC SỬA LỖI --
             
             WHERE 
                 sv.MaSV = :masv
@@ -141,6 +145,8 @@ class SinhVien
         $stmt->execute(['masv' => $maSV]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
+
+    // Hàm lấy danh sách sinh viên chưa có HĐ
     public function allWithoutContract()
     {
         $stmt = $this->db->query("
@@ -148,15 +154,12 @@ class SinhVien
             WHERE MaSV NOT IN (
                 SELECT MaSV FROM HopDong WHERE NgayKetThuc >= CURDATE()
             )
-            ORDER BY HoTen
+            ORDER BY MaSV
         ");
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * MỚI: Kiểm tra 1 SV cụ thể có hợp đồng CÒN HẠN hay không
-     * (Để validate khi POST form)
-     */
+    // Hàm kiểm tra HĐ còn hạn
     public function checkActiveContract($maSV)
     {
         $stmt = $this->db->prepare("

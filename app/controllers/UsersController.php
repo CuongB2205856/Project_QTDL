@@ -207,6 +207,43 @@ class UsersController extends Controller
             $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
         }
     }
-    
+    public function ajax_admin_change_password()
+    {
+        // Lấy thông tin từ SESSION
+        $username = $_SESSION['username'] ?? null;
+        if (!isset($username)) {
+            $this->json_response(['success' => false, 'message' => 'Phiên làm việc hết hạn. Vui lòng đăng nhập lại.']);
+            return;
+        }
+
+        // Lấy dữ liệu từ POST
+        $old_pass = $_POST['old_pass'] ?? '';
+        $new_pass = $_POST['new_pass'] ?? '';
+        $confirm_pass = $_POST['confirm_new_pass'] ?? '';
+
+        // Kiểm tra dữ liệu đầu vào
+        if (empty($old_pass) || empty($new_pass) || empty($confirm_pass)) {
+            $this->json_response(['success' => false, 'message' => 'Vui lòng nhập đầy đủ các trường.']);
+            return;
+        }
+
+        if (strlen($new_pass) < 6) {
+             $this->json_response(['success' => false, 'message' => 'Mật khẩu mới phải có ít nhất 6 ký tự.']);
+            return;
+        }
+
+        if ($new_pass !== $confirm_pass) {
+            $this->json_response(['success' => false, 'message' => 'Mật khẩu mới không khớp.']);
+            return;
+        }
+
+        try {
+            $result = $this->model->changePassword($username, $old_pass, $new_pass);
+            $this->json_response($result); // Trả về kết quả JSON (success: true/false)
+
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi CSDL: ' . $e->getMessage()]);
+        }
+    }
 }
 ?>

@@ -89,6 +89,12 @@ $router->get('/logout', function () use ($pdoInstance) {
     (new AuthController($pdoInstance))->logout();
 });
 
+// Tuyến đường đổi mật khẩu admin
+$router->post('/users/ajax_admin_change_password', function () use ($pdoInstance) {
+    $controller = new App\Controllers\UsersController($pdoInstance);
+    $controller->ajax_admin_change_password();
+});
+
 // Tuyến đường chuyển hướng sau đăng nhập:
 
 // Role QuanLy

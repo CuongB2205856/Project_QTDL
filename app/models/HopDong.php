@@ -1,7 +1,6 @@
 <?php
-// models/HopDong.php
 
-namespace App\Models; 
+namespace App\Models;
 class HopDong
 {
     public $MaHD;
@@ -9,19 +8,17 @@ class HopDong
     public $MaPhong;
     public $NgayBatDau;
     public $NgayKetThuc;
-    
-    protected $db; 
+
+    protected $db;
 
     public function __construct(\PDO $pdo)
     {
         $this->db = $pdo;
     }
 
-    // CREATE: Tạo hợp đồng mới
-    // --- SỬA LẠI HÀM CREATE (Thêm NgayLap) ---
+    // Hàm thêm hợp đồng
     public function create(array $data)
     {
-        // Giả sử DB của bạn có cột NgayLap
         $stmt = $this->db->prepare("INSERT INTO HopDong (MaSV, MaPhong, NgayBatDau, NgayKetThuc) 
                                  VALUES (:masv, :maphong, :ngaybd, :ngaykt)");
         return $stmt->execute([
@@ -31,7 +28,10 @@ class HopDong
             'ngaykt' => $data['ngaykt']
         ]);
     }
-    public function countCurrentOccupants($maPhong) {
+
+    // Hàm lấy số lượng hiện tại
+    public function countCurrentOccupants($maPhong)
+    {
         $stmt = $this->db->prepare("
             SELECT COUNT(MaHD) 
             FROM HopDong 
@@ -40,11 +40,8 @@ class HopDong
         $stmt->execute(['maphong' => $maPhong]);
         return $stmt->fetchColumn();
     }
-    // --- THÊM CÁC HÀM MỚI BÊN DƯỚI ---
 
-    /**
-     * MỚI: Lấy tất cả hợp đồng (cho trang index)
-     */
+    // Hàm lấy tất cả hợp đồng
     public function all()
     {
         $stmt = $this->db->query("
@@ -70,9 +67,7 @@ class HopDong
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * MỚI: Lấy chi tiết 1 HĐ (cho modal Sửa)
-     */
+    // Hàm lấy chi tiết hợp đồng
     public function findDetails($id)
     {
         $stmt = $this->db->prepare("
@@ -95,9 +90,7 @@ class HopDong
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * MỚI: Cập nhật HĐ (chỉ ngày tháng)
-     */
+    // Hàm cập nhật hợp đồng
     public function update($id, array $data)
     {
         $stmt = $this->db->prepare("
@@ -113,9 +106,7 @@ class HopDong
         ]);
     }
 
-    /**
-     * MỚI: Xóa HĐ
-     */
+    // Hàm xóa hợp đồng
     public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM HopDong WHERE MaHD = :id");

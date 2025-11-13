@@ -1,5 +1,4 @@
 <?php
-// models/Phong.php
 
 namespace App\Models;
 class Phong
@@ -17,8 +16,7 @@ class Phong
         $this->db = $pdo;
     }
 
-    // CREATE: Thêm phòng mới
-    // CREATE: Sửa lại để trả về ID
+    // Hàm thêm mới phòng
     public function create(array $data)
     {
         $stmt = $this->db->prepare("INSERT INTO Phong (MaLoaiPhong, SoPhong, SoLuongToiDa, TinhTrangPhong) 
@@ -32,7 +30,8 @@ class Phong
         return $this->db->lastInsertId();
     }
 
-    // READ (All): Giữ nguyên, nhưng nên trả về FETCH_ASSOC cho nhất quán
+    // Hàm lấy danh sách phòng
+
     public function all()
     {
         return $this->db->query("
@@ -43,10 +42,9 @@ class Phong
         ")->fetchAll(\PDO::FETCH_ASSOC); // Đổi sang FETCH_ASSOC
     }
 
-    // *** THÊM MỚI: READ (Find): TÌM 1 PHÒNG THEO ID ***
+    // Hàm lấy chi tiết phòng
     public function find($id)
     {
-        // Cũng join để lấy TenLoaiPhong
         $stmt = $this->db->prepare("
             SELECT p.*, lp.TenLoaiPhong, lp.GiaThue
             FROM Phong p
@@ -57,7 +55,7 @@ class Phong
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    // *** THÊM MỚI: UPDATE: CẬP NHẬT PHÒNG ***
+    // Hàm cập nhật thông tin phòng
     public function update($id, array $data)
     {
         // Giả sử không cho sửa TinhTrangPhong ở đây
@@ -74,25 +72,21 @@ class Phong
         ]);
     }
 
-    // *** THÊM MỚI: DELETE: XÓA PHÒNG ***
+    // Hàm xóa phòng
     public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM Phong WHERE MaPhong = :id");
         return $stmt->execute(['id' => $id]);
     }
 
-    // *** THÊM HÀM MỚI CHO DASHBOARD ***
+    // Hàm đếm số lượng phòng
     public function count()
     {
         $stmt = $this->db->query("SELECT COUNT(MaPhong) as total FROM Phong");
         return $stmt->fetchColumn();
     }
-    // --- THÊM HÀM MỚI NÀY VÀO CUỐI FILE (TRƯỚC DẤU }) ---
 
-    /**
-     * MỚI: Lấy danh sách phòng CÒN CHỖ TRỐNG
-     * (Cho modal Thêm Hợp Đồng)
-     */
+    // Hàm lấy danh sách phòng có chỗ trống
     public function allWithVacancy()
     {
         // Đếm số HĐ còn hạn của mỗi phòng
@@ -116,7 +110,7 @@ class Phong
             ORDER BY 
                 p.SoPhong ASC
         ");
-        
+
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

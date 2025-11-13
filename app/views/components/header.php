@@ -101,7 +101,18 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" 
                 aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                
+                <li>
+                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#adminChangePasswordModal">
+                        <i class="bi bi-key-fill" style="margin-right: 5px;"></i> Đổi mật khẩu
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="bi bi-box-arrow-right" style="margin-right: 5px;"></i> Đăng xuất
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

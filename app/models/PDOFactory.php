@@ -1,9 +1,9 @@
 <?php
-// app/core/PDOFactory.php
+
 namespace App\Models; 
 class PDOFactory
 {
-    // Tạo đối tượng PDO và trả về
+    // Hàm tạo đối tượng PDO
     public function create(array $config): \PDO
     {
         [

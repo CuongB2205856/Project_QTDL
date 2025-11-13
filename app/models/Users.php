@@ -1,22 +1,23 @@
 <?php
-// models/User.php
+
 namespace App\Models;
 
 class Users
 {
-    // Thuộc tính Entity Object
     public $UserID;
     public $Username;
     public $Password;
     public $Role;
     public $MaLienKet;
 
-    protected $db; // Đối tượng PDO
+    protected $db;
 
     public function __construct(\PDO $pdo)
     {
         $this->db = $pdo;
     }
+
+    // Hàm đổi mật khẩu
     public function resetPassword($username, $newPassword)
     {
         // Luôn hash mật khẩu trước khi lưu
@@ -33,17 +34,17 @@ class Users
             'username' => $username
         ]);
     }
+
+    // Hàm lấy danh sách người dùng
     public function all()
     {
         // Sử dụng tên cột UserID, Username, Role
-        $stmt = $this->db->query('SELECT UserID, Username, Role, MaLienKet FROM Users');
+        $stmt = $this->db->query('SELECT UserID, Username, Role, MaLienKet FROM Users ORDER BY UserID');
         return $stmt->fetchAll();
     }
 
 
-    /**
-     * SỬA LẠI: Tạo người dùng mới và trả về ID
-     */
+    // Hàm thêm mới người dùng
     public function create(array $data)
     {
         // Băm mật khẩu trước khi lưu
@@ -62,9 +63,8 @@ class Users
         // Trả về ID của user vừa tạo
         return $this->db->lastInsertId();
     }
-    /**
-     * MỚI: Cập nhật thông tin User (không bao gồm mật khẩu)
-     */
+
+    // Hàm cập nhật thông tin người dùng
     public function update($id, array $data)
     {
         $sql = "UPDATE Users SET Username = :username, Role = :role, MaLienKet = :malienket WHERE UserID = :id";
@@ -77,6 +77,8 @@ class Users
             'id' => $id
         ]);
     }
+
+    // Hàm lấy chi tiết người dùng
     public function find($id)
     {
         // Không lấy mật khẩu
@@ -84,15 +86,16 @@ class Users
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
-    /**
-     * Xóa người dùng bằng ID (SỬA LẠI TÊN BẢNG VÀ CỘT)
-     */
+
+    // Hàm xóa người dùng
     public function delete($id)
     {
         $sql = "DELETE FROM Users WHERE UserID = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$id]);
     }
+
+    // Hàm đổi mật khẩu
     public function changePassword($username, $oldPassword, $newPassword)
     {
         // 1. Lấy mật khẩu hash hiện tại
@@ -128,13 +131,16 @@ class Users
             return ['success' => false, 'message' => 'Lỗi khi cập nhật mật khẩu.'];
         }
     }
+
+    // Hàm tìm kiếm mã liên kết
     public function findByMaLienKet($maLienKet)
     {
         $stmt = $this->db->prepare("SELECT Username FROM Users WHERE MaLienKet = :ma");
         $stmt->execute(['ma' => $maLienKet]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
-    // Các hàm CRUD và Xác thực (login(), register(), findByUsername(),...) sẽ được thêm sau
+
+    // Hàm tìm kiếm người dùng theo tên đăng nhập
     public function findByUsername(string $username)
     {
         $stmt = $this->db->prepare("SELECT * FROM Users WHERE Username = :username");
@@ -142,10 +148,7 @@ class Users
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * MỚI: Xử lý logic đăng nhập
-     * @return array Chứa 'success' và 'user' (nếu thành công) hoặc 'message' (nếu thất bại)
-     */
+    // Hàm đăng nhập
     public function attemptLogin(string $username, string $password)
     {
         $user = $this->findByUsername($username);
