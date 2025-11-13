@@ -128,6 +128,12 @@ class Users
             return ['success' => false, 'message' => 'Lỗi khi cập nhật mật khẩu.'];
         }
     }
+    public function findByMaLienKet($maLienKet)
+    {
+        $stmt = $this->db->prepare("SELECT Username FROM Users WHERE MaLienKet = :ma");
+        $stmt->execute(['ma' => $maLienKet]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
     // Các hàm CRUD và Xác thực (login(), register(), findByUsername(),...) sẽ được thêm sau
 }
 ?>

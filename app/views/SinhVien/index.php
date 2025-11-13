@@ -3,127 +3,29 @@
 $title = 'Quản Lý Sinh Viên';
 $currentRoute = '/sinhvien'; // Quan trọng: để active link sidebar
 
-// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
+// 2. Gọi Header
 require_once __DIR__ . '/../components/header.php';
 ?>
 <style>
-    /* Áp dụng nền xám nhạt cho body giống dashboard */
-    body {
-        background-color: #f8f9fa;
-    }
-
-    /* Tùy chỉnh Card chính chứa bảng */
-    .card {
-        border: none;
-        border-radius: 15px;
-        /* Bo góc giống dashboard */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        /* Đổ bóng nhẹ */
-        margin-bottom: 20px;
-    }
-
-    /* Tùy chỉnh Header của Card */
-    .card-header {
-        background: white;
-        border-bottom: 2px solid #f0f0f0;
-        /* Đường viền dưới giống chart-card */
-        padding: 20px 25px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #2d3142;
-        /* Màu chữ tiêu đề */
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-    }
-
-    /* Tùy chỉnh Body của Card */
-    .card-body {
-        padding: 25px;
-    }
-
-    /* Làm đẹp nút "Thêm User" */
-    #btn-add-user {
-        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-        transition: all 0.3s ease;
-        font-weight: 500;
-    }
-
-    #btn-add-user:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
-    }
-
-    /* Tùy chỉnh Bảng (Table) */
-    .table thead th {
-        background-color: #f8f9fa;
-        /* Nền header bảng */
-        color: #6c757d;
-        /* Màu chữ header */
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border-top: none;
-        border-bottom-width: 2px;
-        padding: 15px;
-    }
-
-    .table tbody tr {
-        border-bottom: 1px solid #f0f0f0;
-        /* Đường kẻ mờ giữa các hàng */
-    }
-
-    .table tbody tr:last-child {
-        border-bottom: none;
-    }
-
-    .table tbody td {
-        vertical-align: middle;
-        padding: 15px;
-        color: #2d3142;
-    }
-
-    /* Tùy chỉnh Modal (Form Thêm/Sửa) */
-    .modal-content {
-        border: none;
-        border-radius: 15px;
-        /* Bo góc modal */
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        /* Đổ bóng mạnh hơn cho modal */
-    }
-
-    .modal-header {
-        border-bottom: 2px solid #f0f0f0;
-        padding: 20px 25px;
-    }
-
-    .modal-header .modal-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #2d3142;
-    }
-
-    .modal-body {
-        padding: 25px;
-    }
-
-    .modal-footer {
-        padding: 20px 25px;
-        background-color: #f8f9fa;
-        border-top: 1px solid #f0f0f0;
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-    }
+    /* (CSS styles của bạn giữ nguyên, không cần thay đổi) */
+    body { background-color: #f8f9fa; }
+    .card { border: none; border-radius: 15px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); margin-bottom: 20px; }
+    .card-header { background: white; border-bottom: 2px solid #f0f0f0; padding: 20px 25px; font-size: 1.2rem; font-weight: 600; color: #2d3142; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+    .card-body { padding: 25px; }
+    .table thead th { background-color: #f8f9fa; color: #6c757d; text-transform: uppercase; font-size: 0.85rem; font-weight: 600; border-top: none; border-bottom-width: 2px; padding: 15px; }
+    .table tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .table tbody tr:last-child { border-bottom: none; }
+    .table tbody td { vertical-align: middle; padding: 15px; color: #2d3142; }
+    .modal-content { border: none; border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }
+    .modal-header { border-bottom: 2px solid #f0f0f0; padding: 20px 25px; }
+    .modal-header .modal-title { font-size: 1.2rem; font-weight: 600; color: #2d3142; }
+    .modal-body { padding: 25px; }
+    .modal-footer { padding: 20px 25px; background-color: #f8f9fa; border-top: 1px solid #f0f0f0; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; }
 </style>
+
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
         <h1 class="h3">Quản lý Sinh Viên</h1>
-        <nav aria-label="breadcrumb">
-        </nav>
-    </div>
-    <div>
-        <button id="btn-add-sinhvien" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Thêm Sinh Viên
-        </button>
     </div>
 </div>
 
@@ -143,7 +45,7 @@ require_once __DIR__ . '/../components/header.php';
                         <th scope="col">Giới Tính</th>
                         <th scope="col">Số Điện Thoại</th>
                         <th scope="col">Phòng Hiện Tại</th>
-                        <th scope="col">Hành động</th>
+                        <th scope="col" style="min-width: 220px;">Hành động</th>
                     </tr>
                 </thead>
                 <tbody id="sinhvien-table-body">
@@ -168,6 +70,11 @@ require_once __DIR__ . '/../components/header.php';
                                         data-id="<?php echo htmlspecialchars($sv['MaSV']); ?>">
                                         <i class="bi bi-trash"></i> Xóa
                                     </button>
+                                    <button class="btn btn-warning btn-sm btn-reset-pass"
+                                        data-id="<?php echo htmlspecialchars($sv['MaSV']); ?>"
+                                        data-username="<?php echo htmlspecialchars($sv['HoTen']); // Dùng HoTen để confirm ?>">
+                                        <i class="bi bi-key"></i> Reset MK
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -178,12 +85,11 @@ require_once __DIR__ . '/../components/header.php';
     </div>
 </div>
 
-
 <div class="modal fade" id="sinhVienModal" tabindex="-1" aria-labelledby="sinhVienModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="sinhVienModalLabel">Thêm Sinh Viên Mới</h5>
+                <h5 class="modal-title" id="sinhVienModalLabel">Cập nhật Thông tin Sinh Viên</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -191,16 +97,19 @@ require_once __DIR__ . '/../components/header.php';
                 <div class="modal-body">
                     <div id="modal-message"></div>
 
-                    <input type="hidden" name="MaSV" id="MaSV">
+                    <div class="mb-3">
+                        <label for="MaSV" class="form-label">Mã Sinh Viên:</label>
+                        <input type="text" class="form-control" id="MaSV" name="masv" readonly>
+                    </div>
 
                     <div class="mb-3">
                         <label for="HoTen" class="form-label">Họ Tên:</label>
-                        <input type="text" class="form-control" id="HoTen" name="HoTen" required>
+                        <input type="text" class="form-control" id="HoTen" name="hoten" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="GioiTinh" class="form-label">Giới Tính:</label>
-                        <select class="form-select" id="GioiTinh" name="GioiTinh" required>
+                        <select class="form-select" id="GioiTinh" name="gioitinh" required>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                             <option value="Khác">Khác</option>
@@ -208,35 +117,19 @@ require_once __DIR__ . '/../components/header.php';
                     </div>
 
                     <div class="mb-3">
-                        <label for="DiaChi" class="form-label">Địa Chỉ:</label>
-                        <input type="text" class="form-control" id="DiaChi" name="DiaChi" required>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="SoDienThoai" class="form-label">Số Điện Thoại:</label>
-                        <input type="tel" class="form-control" id="SoDienThoai" name="SoDienThoai">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="Email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="Email" name="Email">
-                    </div>
-                    <div class="mb-3" id="wrap-password">
-                        <label for="Password" class="form-label">Mật khẩu:</label>
-                        <input type="password" class="form-control" id="Password" name="Password">
-                        <div class="form-text">Chỉ cần nhập khi tạo mới. Mật khẩu mặc định sẽ được tạo.</div>
+                        <input type="tel" class="form-control" id="SoDienThoai" name="sdt">
                     </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary" id="btn-submit">Lưu thay đổi</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit">Lưu Cập Nhật</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -246,78 +139,65 @@ require_once __DIR__ . '/../components/header.php';
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
         const modalTitle = document.getElementById('sinhVienModalLabel');
-        const btnAddSinhVien = document.getElementById('btn-add-sinhvien');
-
-        // *ĐIỀU KHIỂN BOOTSTRAP MODAL*
-        // Thay thế cho code (getElementById) và (.style.display) của bạn
+        
         const modalElement = document.getElementById('sinhVienModal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
 
-        let currentAction = 'create'; // 'create' hoặc 'update'
+        const maSVInput = document.getElementById('MaSV');
+        const hoTenInput = document.getElementById('HoTen');
+        const gioiTinhInput = document.getElementById('GioiTinh');
+        const soDienThoaiInput = document.getElementById('SoDienThoai');
 
-        // --- Hàm xử lý ---
-
-        // Hàm mở Modal để TẠO MỚI (Trigger bởi nút "Thêm Sinh Viên")
-        function openCreateModal() {
-            currentAction = 'create';
-            form.reset();
-            document.getElementById('MaSV').value = '';
-            document.getElementById('MaSV').readOnly = false; // Cho phép nhập MaSV khi tạo
-            modalTitle.textContent = 'Thêm Sinh Viên Mới';
-            modalMessage.innerHTML = '';
-
-            // === THÊM 2 DÒNG NÀY ===
-            document.getElementById('wrap-password').style.display = 'block'; // Hiện trường pass
-            document.getElementById('Password').required = true; // Bắt buộc nhập pass
-            // ======================
-
-            bootstrapModal.show();
-        }
-
-        // SỬA HÀM NÀY
+        // --- Hàm mở Modal để CẬP NHẬT (Đã sửa) ---
         function openUpdateModal(id) {
-            currentAction = 'update';
             form.reset();
             modalMessage.innerHTML = '';
             modalTitle.textContent = 'Cập nhật Thông tin Sinh Viên';
 
-            // === THÊM 2 DÒNG NÀY ===
-            document.getElementById('wrap-password').style.display = 'none'; // Ẩn trường pass
-            document.getElementById('Password').required = false; // Không bắt buộc
-            // ======================
+            // ==========================================================
+            // SỬA LỖI TẠI ĐÂY
+            // URL phải là /get/ (giống các module khác)
+            // không phải /ajax_get_details/
+            const fetchUrl = `/sinhvien/get/${id}`;
+            // ==========================================================
 
-            fetch(`/api/sinhvien/get/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    // SỬA DÒNG NÀY (từ data.sinhvien thành data.data)
-                    // Hoặc sửa ở Controller (tôi sẽ chọn sửa ở Controller, xem Bước 3)
-                    if (data.success && data.sinhvien) {
-                        const sv = data.sinhvien;
+            fetch(fetchUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        // Nếu server trả về 404 hoặc 500, ném lỗi để .catch() bắt
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success && result.data) { 
+                        const sv = result.data;
 
-                        document.getElementById('MaSV').value = sv.MaSV;
-                        document.getElementById('MaSV').readOnly = true; // Không cho sửa MaSV
-                        document.getElementById('HoTen').value = sv.HoTen;
-                        document.getElementById('GioiTinh').value = sv.GioiTinh;
-                        document.getElementById('DiaChi').value = sv.DiaChi;
-                        document.getElementById('SoDienThoai').value = sv.SoDienThoai;
-                        document.getElementById('Email').value = sv.Email;
+                        maSVInput.value = sv.MaSV;
+                        hoTenInput.value = sv.HoTen;
+                        gioiTinhInput.value = sv.GioiTinh;
+                        soDienThoaiInput.value = sv.SoDienThoai;
 
                         bootstrapModal.show();
                     } else {
-                        showMessage(mainMessage, data.message || 'Không tìm thấy sinh viên.', 'danger');
+                        // Lỗi logic (ví dụ: success: false)
+                        showMessage(mainMessage, result.message || 'Không tìm thấy sinh viên.', 'danger');
                     }
                 })
                 .catch(error => {
+                    // Lỗi fetch (404, 500, network error)
                     console.error('Fetch error:', error);
-                    showMessage(mainMessage, 'Lỗi khi tải dữ liệu. Vui lòng thử lại.', 'danger');
+                    // Đây là thông báo lỗi bạn đã thấy:
+                    showMessage(mainMessage, 'Lỗi khi tải dữ liệu. Vui lòng thử lại.', 'danger'); 
                 });
         }
 
-        // Hàm xử lý SUBMIT (Dùng cho cả Create và Update)
+        // --- Hàm xử lý SUBMIT (Chỉ Cập nhật) ---
         function handleFormSubmit(event) {
             event.preventDefault();
             const formData = new FormData(form);
-            const url = (currentAction === 'create') ? '/api/sinhvien/create' : '/api/sinhvien/update';
+            const id = maSVInput.value;
+            const url = `/sinhvien/ajax_update/${id}`; 
 
             fetch(url, {
                 method: 'POST',
@@ -326,19 +206,11 @@ require_once __DIR__ . '/../components/header.php';
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Dùng hàm của Bootstrap để ĐÓNG dialog
                         bootstrapModal.hide();
                         showMessage(mainMessage, data.message, 'success');
-
-                        // Cập nhật lại bảng
-                        if (currentAction === 'create') {
-                            appendSinhVienToTable(data.sinhvien);
-                        } else {
-                            updateSinhVienInTable(data.sinhvien);
-                        }
+                        updateSinhVienInTable(data.updatedRowData); 
                     } else {
-                        // Hiển thị lỗi bên TRONG modal
-                        showMessage(modalMessage, data.message || 'Đã xảy ra lỗi. Vui lòng kiểm tra lại.', 'danger');
+                        showMessage(modalMessage, data.message || 'Đã xảy ra lỗi.', 'danger');
                     }
                 })
                 .catch(error => {
@@ -347,24 +219,20 @@ require_once __DIR__ . '/../components/header.php';
                 });
         }
 
-        // Hàm XÓA (Trigger bởi nút "Xóa")
+        // --- Hàm XÓA ---
         function deleteSinhVien(id) {
             if (!confirm(`Bạn có chắc chắn muốn xóa sinh viên mã ${id}?`)) {
                 return;
             }
 
-            fetch(`/api/sinhvien/delete/${id}`, {
-                method: 'POST' // Hoặc 'DELETE' tùy vào router của bạn
+            fetch(`/sinhvien/ajax_delete/${id}`, {
+                method: 'POST' 
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         showMessage(mainMessage, data.message, 'success');
-                        const row = document.getElementById(`row-${id}`);
-                        if (row) {
-                            row.remove();
-                        }
-                        // Kiểm tra nếu bảng rỗng
+                        document.getElementById(`row-${id}`)?.remove();
                         if (tableBody.getElementsByTagName('tr').length === 0) {
                             showEmptyRow();
                         }
@@ -378,48 +246,65 @@ require_once __DIR__ . '/../components/header.php';
                 });
         }
 
-
-        // --- Hàm hiển thị & Cập nhật Giao diện (Giữ nguyên) ---
-
-        function showMessage(element, message, type = 'success') {
-            element.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
+        // --- Hàm Reset Mật khẩu ---
+        async function handleResetPassword(id, username) {
+            if (!confirm(`Bạn có chắc chắn muốn reset mật khẩu cho '${username}'? (Mật khẩu mới sẽ là '123456')`)) {
+                return;
+            }
+            try {
+                const response = await fetch(`/sinhvien/ajax_reset_password/${id}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                showMessage(mainMessage, result.message, !result.success);
+            } catch (error) {
+                showMessage(mainMessage, 'Lỗi kết nối: ' + error.message, true);
+            }
         }
 
-        function appendSinhVienToTable(sv) {
-            // Xóa dòng "chưa có" nếu nó tồn tại
-            const emptyRow = document.getElementById('row-empty');
-            if (emptyRow) {
-                emptyRow.remove();
-            }
+        // --- Hàm hiển thị & Cập nhật Giao diện ---
 
-            tableBody.insertAdjacentHTML('beforeend', createTableRow(sv));
+        function showMessage(element, message, type = 'success') {
+             const typeClass = (type === 'danger' || type === false) ? 'danger' : 'success';
+             element.innerHTML = `<div class="alert alert-${typeClass} alert-dismissible fade show" role="alert">
+                ${escapeHTML(message)}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
         }
 
         function updateSinhVienInTable(sv) {
             const row = document.getElementById(`row-${sv.MaSV}`);
             if (row) {
-                row.innerHTML = createTableRow(sv, false); // Chỉ cập nhật nội dung bên trong
+                row.innerHTML = createTableRow(sv, false); 
             }
         }
 
         function createTableRow(sv, includeRowTag = true) {
             const soPhong = sv.SoPhong ? escapeHTML(sv.SoPhong) : 'Chưa có';
+            const maSV = escapeHTML(sv.MaSV);
+            const hoTen = escapeHTML(sv.HoTen);
+
             const content = `
-                <td>${escapeHTML(sv.MaSV)}</td>
-                <td>${escapeHTML(sv.HoTen)}</td>
+                <td>${maSV}</td>
+                <td>${hoTen}</td>
                 <td>${escapeHTML(sv.GioiTinh)}</td>
                 <td>${escapeHTML(sv.SoDienThoai)}</td>
                 <td>${soPhong}</td>
                 <td>
-                    <button class="btn btn-info btn-sm btn-edit" data-id="${escapeHTML(sv.MaSV)}">
+                    <button class="btn btn-info btn-sm btn-edit" data-id="${maSV}">
                         <i class="bi bi-pencil-square"></i> Sửa
                     </button>
-                    <button class="btn btn-danger btn-sm btn-delete" data-id="${escapeHTML(sv.MaSV)}">
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="${maSV}">
                         <i class="bi bi-trash"></i> Xóa
+                    </button>
+                    <button class="btn btn-warning btn-sm btn-reset-pass" 
+                            data-id="${maSV}" 
+                            data-username="${hoTen}">
+                        <i class="bi bi-key"></i> Reset MK
                     </button>
                 </td>
             `;
-            return includeRowTag ? `<tr id="row-${escapeHTML(sv.MaSV)}">${content}</tr>` : content;
+            return includeRowTag ? `<tr id="row-${maSV}">${content}</tr>` : content;
         }
 
         function showEmptyRow() {
@@ -428,23 +313,15 @@ require_once __DIR__ . '/../components/header.php';
 
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>\"']/g, function (m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m];
-            });
+            return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
-
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
 
-        // Nút Thêm Sinh Viên
-        btnAddSinhVien.addEventListener('click', openCreateModal);
-
-        // Submit Form
         form.addEventListener('submit', handleFormSubmit);
 
-        // Các nút Sửa/Xóa (dùng event delegation)
         tableBody.addEventListener('click', function (event) {
-            const target = event.target.closest('button'); // Tìm nút gần nhất
+            const target = event.target.closest('button');
             if (!target) return;
 
             const id = target.dataset.id;
@@ -455,13 +332,16 @@ require_once __DIR__ . '/../components/header.php';
             if (target.classList.contains('btn-delete')) {
                 deleteSinhVien(id);
             }
+            if (target.classList.contains('btn-reset-pass')) {
+                const username = target.dataset.username;
+                handleResetPassword(id, username);
+            }
         });
 
     }); // Hết DOMContentLoaded
 </script>
 
 <?php
-// 3. GỌI FOOTER (Đây là dòng quan trọng nhất bạn đã quên)
-// Nó sẽ đóng <main>, <footer>, và tải BOOTSTRAP JS
+// 3. GỌI FOOTER
 require_once __DIR__ . '/../components/footer.php';
 ?>

@@ -14,7 +14,6 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="icon" href="/CTU_logo.ico" type="image/x-icon">
-
     <style>
         /* Đẩy nội dung xuống dưới header (chiều cao 56px) */
         body {
