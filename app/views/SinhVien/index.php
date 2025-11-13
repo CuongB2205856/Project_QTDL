@@ -6,22 +6,6 @@ $currentRoute = '/sinhvien'; // Quan trọng: để active link sidebar
 // 2. Gọi Header
 require_once __DIR__ . '/../components/header.php';
 ?>
-<style>
-    /* (CSS styles của bạn giữ nguyên, không cần thay đổi) */
-    body { background-color: #f8f9fa; }
-    .card { border: none; border-radius: 15px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); margin-bottom: 20px; }
-    .card-header { background: white; border-bottom: 2px solid #f0f0f0; padding: 20px 25px; font-size: 1.2rem; font-weight: 600; color: #2d3142; border-top-left-radius: 15px; border-top-right-radius: 15px; }
-    .card-body { padding: 25px; }
-    .table thead th { background-color: #f8f9fa; color: #6c757d; text-transform: uppercase; font-size: 0.85rem; font-weight: 600; border-top: none; border-bottom-width: 2px; padding: 15px; }
-    .table tbody tr { border-bottom: 1px solid #f0f0f0; }
-    .table tbody tr:last-child { border-bottom: none; }
-    .table tbody td { vertical-align: middle; padding: 15px; color: #2d3142; }
-    .modal-content { border: none; border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }
-    .modal-header { border-bottom: 2px solid #f0f0f0; padding: 20px 25px; }
-    .modal-header .modal-title { font-size: 1.2rem; font-weight: 600; color: #2d3142; }
-    .modal-body { padding: 25px; }
-    .modal-footer { padding: 20px 25px; background-color: #f8f9fa; border-top: 1px solid #f0f0f0; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; }
-</style>
 
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
     <div>
@@ -139,7 +123,7 @@ require_once __DIR__ . '/../components/header.php';
         const modalMessage = document.getElementById('modal-message');
         const mainMessage = document.getElementById('main-message');
         const modalTitle = document.getElementById('sinhVienModalLabel');
-        
+
         const modalElement = document.getElementById('sinhVienModal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
 
@@ -170,7 +154,7 @@ require_once __DIR__ . '/../components/header.php';
                     return response.json();
                 })
                 .then(result => {
-                    if (result.success && result.data) { 
+                    if (result.success && result.data) {
                         const sv = result.data;
 
                         maSVInput.value = sv.MaSV;
@@ -188,7 +172,7 @@ require_once __DIR__ . '/../components/header.php';
                     // Lỗi fetch (404, 500, network error)
                     console.error('Fetch error:', error);
                     // Đây là thông báo lỗi bạn đã thấy:
-                    showMessage(mainMessage, 'Lỗi khi tải dữ liệu. Vui lòng thử lại.', 'danger'); 
+                    showMessage(mainMessage, 'Lỗi khi tải dữ liệu. Vui lòng thử lại.', 'danger');
                 });
         }
 
@@ -197,7 +181,7 @@ require_once __DIR__ . '/../components/header.php';
             event.preventDefault();
             const formData = new FormData(form);
             const id = maSVInput.value;
-            const url = `/sinhvien/ajax_update/${id}`; 
+            const url = `/sinhvien/ajax_update/${id}`;
 
             fetch(url, {
                 method: 'POST',
@@ -208,7 +192,7 @@ require_once __DIR__ . '/../components/header.php';
                     if (data.success) {
                         bootstrapModal.hide();
                         showMessage(mainMessage, data.message, 'success');
-                        updateSinhVienInTable(data.updatedRowData); 
+                        updateSinhVienInTable(data.updatedRowData);
                     } else {
                         showMessage(modalMessage, data.message || 'Đã xảy ra lỗi.', 'danger');
                     }
@@ -226,7 +210,7 @@ require_once __DIR__ . '/../components/header.php';
             }
 
             fetch(`/sinhvien/ajax_delete/${id}`, {
-                method: 'POST' 
+                method: 'POST'
             })
                 .then(response => response.json())
                 .then(data => {
@@ -265,8 +249,8 @@ require_once __DIR__ . '/../components/header.php';
         // --- Hàm hiển thị & Cập nhật Giao diện ---
 
         function showMessage(element, message, type = 'success') {
-             const typeClass = (type === 'danger' || type === false) ? 'danger' : 'success';
-             element.innerHTML = `<div class="alert alert-${typeClass} alert-dismissible fade show" role="alert">
+            const typeClass = (type === 'danger' || type === false) ? 'danger' : 'success';
+            element.innerHTML = `<div class="alert alert-${typeClass} alert-dismissible fade show" role="alert">
                 ${escapeHTML(message)}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>`;
@@ -275,7 +259,7 @@ require_once __DIR__ . '/../components/header.php';
         function updateSinhVienInTable(sv) {
             const row = document.getElementById(`row-${sv.MaSV}`);
             if (row) {
-                row.innerHTML = createTableRow(sv, false); 
+                row.innerHTML = createTableRow(sv, false);
             }
         }
 

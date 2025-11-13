@@ -63,26 +63,24 @@ require_once __DIR__ . '/../components/header.php';
     </div>
 </div>
 
-<div class="modal fade" id="dichvuModal" tabindex="-1" 
-     aria-labelledby="dichvuModalLabel" aria-hidden="true">
+<div class="modal fade" id="dichvuModal" tabindex="-1" aria-labelledby="dichvuModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal-title">Thêm Dịch Vụ Mới</h5>
-                <button type="button" class="btn-close" 
-                        data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <form id="dichvu-form">
                 <div class="modal-body">
                     <div id="modal-message"></div>
-                    
+
                     <input type="hidden" id="form-dichvu-id" name="id" value="0">
 
                     <div class="mb-3">
                         <label for="form-tendv" class="form-label">Tên Dịch Vụ:</label>
                         <input type="text" class="form-control" id="form-tendv" name="tendv" required
-                               placeholder="Ví dụ: Điện (VND/kWh) hoặc Gửi xe (VND/tháng)">
+                            placeholder="Ví dụ: Điện (VND/kWh) hoặc Gửi xe (VND/tháng)">
                     </div>
 
                     <div class="mb-3">
@@ -92,12 +90,11 @@ require_once __DIR__ . '/../components/header.php';
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" 
-                            data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     <button type="submit" class="btn btn-primary">Lưu Lại</button>
                 </div>
             </form>
-            
+
         </div>
     </div>
 </div>
@@ -124,10 +121,18 @@ require_once __DIR__ . '/../components/header.php';
 
         // --- Hàm hiển thị thông báo (Bootstrap Alert) ---
         function showModalMessage(message, isError = false) {
+            // SỬA LẠI TẠI ĐÂY:
+            if (!message) {
+                // Nếu message rỗng, thì xóa trắng nội dung của modal-message
+                modalMessage.innerHTML = '';
+                return; // Dừng hàm
+            }
+
+            // Chỉ tạo alert khi có nội dung message
             const type = isError ? 'danger' : 'success';
             modalMessage.innerHTML = `<div class="alert alert-${type}">${escapeHTML(message)}</div>`;
         }
-        
+
         function showMainMessage(message, isError = false) {
             const type = isError ? 'danger' : 'success';
             // Dùng alert-dismissible cho phép đóng thông báo
@@ -272,12 +277,12 @@ require_once __DIR__ . '/../components/header.php';
 
         function escapeHTML(str) {
             if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'}[m]));
+            return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
         // --- GÁN SỰ KIỆN (Event Listeners) ---
         btnShowCreate.addEventListener('click', openCreateModal);
-        
+
         // Đóng modal khi nhấn ra ngoài
         modalElement.addEventListener('click', (event) => {
             if (event.target == modalElement) {
@@ -290,9 +295,9 @@ require_once __DIR__ . '/../components/header.php';
         tableBody.addEventListener('click', function (event) {
             const target = event.target.closest('button');
             if (!target) return;
-            
+
             const id = target.dataset.id;
-            
+
             if (target.classList.contains('btn-edit')) {
                 openUpdateModal(id);
             }
