@@ -17,18 +17,22 @@ class StudentPanelController extends Controller {
         parent::__construct(); 
         $this->svModel = new SinhVien($pdo);
         $this->userModel = new Users($pdo);
-        
-        // ==========================================================
-        // GÁN CỨNG MÃ SV ĐỂ TEST (theo yêu cầu "không cần chứng thực")
-        // Khi làm đăng nhập, bạn thay thế bằng $_SESSION['masv']
-        // $this->maSV_test = 'SV001'; // <-- ĐÃ XÓA DÒNG NÀY
-        // ==========================================================
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        // 1. Phải đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASE_URL . '/login');
+            exit;
         }
-    }
 
+        // 2. SỬA LẠI: Phải là 'SinhVien'
+        // Nếu không phải, GỬI LỖI 404
+        if ($_SESSION['role'] !== 'SinhVien') {
+            header('HTTP/1.1 404 Not Found'); // Gửi header 404
+            $this->loadView('errors/404'); // Hiển thị trang 404
+            exit; // Dừng lại
+        }
+        // --- KẾT THÚC BỘ LỌC ---
+    }
     // Trả về header JSON
     private function json_response($data) {
         header('Content-Type: application/json');
@@ -38,34 +42,26 @@ class StudentPanelController extends Controller {
 
     // *** 1. HIỂN THỊ TRANG PROFILE ***
     // SỬA: Thêm tham số $maSV
-    public function index($maSV) {
+    public function index($maSV) { 
         
-        // $maSV = $this->maSV_test; // <-- ĐÃ XÓA DÒNG NÀY
-
-        if (!$maSV) {
-             // (Sau này) Chuyển hướng về trang đăng nhập
-             die("Bạn chưa đăng nhập hoặc MaSV không hợp lệ!");
+        // 3. SỬA LẠI: Kiểm tra quyền sở hữu
+        // MaSV trên URL phải khớp với người đang đăng nhập
+        if ($maSV !== $_SESSION['ma_lien_ket']) {
+             header('HTTP/1.1 404 Not Found'); // Gửi header 404
+             $this->loadView('errors/404'); // Hiển thị trang 404
+             exit;
         }
-
+        
         $data = [];
-        // Lấy tất cả thông tin
         $data['details'] = $this->svModel->getStudentDashboardDetails($maSV);
-        $data['maSV'] = $maSV;
-
-        $this_view = 'StudentPanel/index';
-        
-        if (!$data['details']) {
-            // Xử lý trường hợp không tìm thấy SV
-            die("Không tìm thấy thông tin sinh viên: " . htmlspecialchars($maSV));
-        }
-
-        $this->loadView($this_view, $data);
+        // ... (phần còn lại của hàm giữ nguyên) ...
+        $this->loadView('StudentPanel/index', $data);
     }
 
-    // *** 2. (AJAX) XỬ LÝ ĐỔI MẬT KHẨU ***
+    // SỬA LẠI hàm ajax_change_password()
     public function ajax_change_password() {
         
-        // SỬA: Lấy MaSV từ SESSION, không dùng biến test
+        // Phải lấy MaSV từ SESSION, không dùng biến test
         $maSV = $_SESSION['ma_lien_ket'] ?? null; 
 
         if (!$maSV) {

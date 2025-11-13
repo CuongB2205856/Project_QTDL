@@ -11,8 +11,22 @@ class DichVuController extends Controller {
     public function __construct(\PDO $pdo) {
         parent::__construct();
         $this->model = new DichVu($pdo);
+        // --- BỘ LỌC BẢO VỆ ---
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
+
+        // 1. Phải đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASE_URL . '/login');
+            exit;
+        }
+
+        // 2. Phải là 'QuanLy'
+        if ($_SESSION['role'] !== 'QuanLy') {
+            header('HTTP/1.1 404 Not Found'); // Gửi header 404
+            $this->loadView('errors/404'); // Hiển thị trang 404
+            exit; // Dừng lại
         }
     }
 

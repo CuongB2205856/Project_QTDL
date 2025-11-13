@@ -12,8 +12,22 @@ class LoaiPhongController extends Controller {
         parent::__construct(); 
         $this->model = new LoaiPhong($pdo);
         // Đảm bảo session đã khởi động để dùng cho thông báo (nếu cần)
+        // --- BỘ LỌC BẢO VỆ ---
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
+
+        // 1. Phải đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASE_URL . '/login');
+            exit;
+        }
+
+        // 2. Phải là 'QuanLy'
+        if ($_SESSION['role'] !== 'QuanLy') {
+            header('HTTP/1.1 404 Not Found'); // Gửi header 404
+            $this->loadView('errors/404'); // Hiển thị trang 404
+            exit; // Dừng lại
         }
     }
 

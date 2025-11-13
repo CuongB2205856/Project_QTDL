@@ -279,7 +279,8 @@ $router->post('/sinhvien/ajax_reset_password/([\w\-]+)', function ($maSV) use ($
 // 4. Xử lý 404
 $router->set404(function () {
     header('HTTP/1.1 404 Not Found');
-    echo "<h1>404 - Không tìm thấy trang!</h1><p>Vui lòng kiểm tra lại URL.</p>";
+    // Đường dẫn này phải trỏ đúng vào file notfound.php
+    require_once __DIR__ . '/../app/views/errors/404.php';
 });
 
 // 2. XỬ LÝ ĐỔI MẬT KHẨU (POST - AJAX)
