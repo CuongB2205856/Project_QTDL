@@ -1,16 +1,14 @@
 <?php
-// 1. Set các biến cho header
 $title = 'Quản lý Sinh Viên';
-$currentRoute = '/sinhvien'; // Quan trọng: để active link sidebar
+$currentRoute = '/sinhvien';
 
-// 2. Gọi Header
 require_once __DIR__ . '/../components/header.php';
 ?>
 
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h2 class="bi me-2">Quản lý Sinh Viên</h2>         
+            <h2 class="bi me-2">Quản lý Sinh Viên</h2>
         </div>
     </div>
 </div>
@@ -119,7 +117,7 @@ require_once __DIR__ . '/../components/header.php';
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- Khai báo biến ---
+        // Khai báo biến
         const tableBody = document.getElementById('sinhvien-table-body');
         const form = document.getElementById('sinhVienForm');
         const modalMessage = document.getElementById('modal-message');
@@ -134,18 +132,12 @@ require_once __DIR__ . '/../components/header.php';
         const gioiTinhInput = document.getElementById('GioiTinh');
         const soDienThoaiInput = document.getElementById('SoDienThoai');
 
-        // --- Hàm mở Modal để CẬP NHẬT (Đã sửa) ---
+        // Hàm mở Modal để CẬP NHẬT
         function openUpdateModal(id) {
             form.reset();
             modalMessage.innerHTML = '';
             modalTitle.textContent = 'Cập nhật Thông tin Sinh Viên';
-
-            // ==========================================================
-            // SỬA LỖI TẠI ĐÂY
-            // URL phải là /get/ (giống các module khác)
-            // không phải /ajax_get_details/
             const fetchUrl = `/sinhvien/get/${id}`;
-            // ==========================================================
 
             fetch(fetchUrl)
                 .then(response => {
@@ -166,19 +158,16 @@ require_once __DIR__ . '/../components/header.php';
 
                         bootstrapModal.show();
                     } else {
-                        // Lỗi logic (ví dụ: success: false)
                         showMessage(mainMessage, result.message || 'Không tìm thấy sinh viên.', 'danger');
                     }
                 })
                 .catch(error => {
-                    // Lỗi fetch (404, 500, network error)
                     console.error('Fetch error:', error);
-                    // Đây là thông báo lỗi bạn đã thấy:
                     showMessage(mainMessage, 'Lỗi khi tải dữ liệu. Vui lòng thử lại.', 'danger');
                 });
         }
 
-        // --- Hàm xử lý SUBMIT (Chỉ Cập nhật) ---
+        // Hàm xử lý SUBMIT (Chỉ Cập nhật)
         function handleFormSubmit(event) {
             event.preventDefault();
             const formData = new FormData(form);
@@ -205,7 +194,7 @@ require_once __DIR__ . '/../components/header.php';
                 });
         }
 
-        // --- Hàm XÓA ---
+        // Hàm XÓA
         function deleteSinhVien(id) {
             if (!confirm(`Bạn có chắc chắn muốn xóa sinh viên mã ${id}?`)) {
                 return;
@@ -232,7 +221,7 @@ require_once __DIR__ . '/../components/header.php';
                 });
         }
 
-        // --- Hàm Reset Mật khẩu ---
+        // Hàm Reset Mật khẩu
         async function handleResetPassword(id, username) {
             if (!confirm(`Bạn có chắc chắn muốn reset mật khẩu cho '${username}'? (Mật khẩu mới sẽ là '123456')`)) {
                 return;
@@ -248,8 +237,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm hiển thị & Cập nhật Giao diện ---
-
+        // Hàm hiển thị & Cập nhật Giao diện
         function showMessage(element, message, type = 'success') {
             const typeClass = (type === 'danger' || type === false) ? 'danger' : 'success';
             element.innerHTML = `<div class="alert alert-${typeClass} alert-dismissible fade show" role="alert">
@@ -302,8 +290,7 @@ require_once __DIR__ . '/../components/header.php';
             return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
-        // --- GÁN SỰ KIỆN (Event Listeners) ---
-
+        // GÁN SỰ KIỆN (Event Listeners)
         form.addEventListener('submit', handleFormSubmit);
 
         tableBody.addEventListener('click', function (event) {
@@ -324,10 +311,9 @@ require_once __DIR__ . '/../components/header.php';
             }
         });
 
-    }); // Hết DOMContentLoaded
+    });
 </script>
 
 <?php
-// 3. GỌI FOOTER
 require_once __DIR__ . '/../components/footer.php';
 ?>

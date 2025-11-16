@@ -1,7 +1,6 @@
 <?php
-// 1. Set các biến cho header
 $title = 'Quản lý Loại Phòng';
-$currentRoute = '/loaiphong'; // Quan trọng: để active link sidebar
+$currentRoute = '/loaiphong';
 
 // 2. Gọi Header
 require_once __DIR__ . '/../components/header.php';
@@ -104,7 +103,7 @@ require_once __DIR__ . '/../components/header.php';
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // --- Lấy các đối tượng DOM ---
+        // Lấy các đối tượng DOM
         const btnShowCreate = document.getElementById('btn-show-create-modal');
         const form = document.getElementById('loaiphong-form');
         const modalTitle = document.getElementById('modal-title');
@@ -121,7 +120,7 @@ require_once __DIR__ . '/../components/header.php';
         const formTenLoai = document.getElementById('form-tenloai');
         const formGiaThue = document.getElementById('form-giathue');
 
-        // --- Hàm hiển thị thông báo (Bootstrap Alert) ---
+        // Hàm hiển thị thông báo (Bootstrap Alert)
         function showModalMessage(message, isError = false) {
             // SỬA LẠI TẠI ĐÂY:
             if (!message) {
@@ -144,7 +143,7 @@ require_once __DIR__ . '/../components/header.php';
             </div>`;
         }
 
-        // --- Hàm reset form và mở modal cho 'Create' ---
+        // Hàm reset form và mở modal cho 'Create'
         function openCreateModal() {
             form.reset();
             formId.value = '0';
@@ -153,7 +152,7 @@ require_once __DIR__ . '/../components/header.php';
             bootstrapModal.show(); // Dùng hàm của Bootstrap
         }
 
-        // --- Hàm lấy dữ liệu và mở modal cho 'Update' ---
+        // Hàm lấy dữ liệu và mở modal cho 'Update'
         async function openUpdateModal(id) {
             try {
                 const response = await fetch(`/loaiphong/get/${id}`);
@@ -177,7 +176,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm xử lý Submit (Cả Create và Update) ---
+        // Hàm xử lý Submit (Cả Create và Update)
         async function handleFormSubmit(event) {
             event.preventDefault();
 
@@ -214,7 +213,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm xử lý Xóa (Delete) ---
+        // Hàm xử lý Xóa (Delete)
         async function handleDelete(id) {
             if (!confirm('Bạn có chắc chắn muốn xóa loại phòng này?')) {
                 return;
@@ -244,7 +243,7 @@ require_once __DIR__ . '/../components/header.php';
         }
 
 
-        // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
+        // CÁC HÀM TIỆN ÍCH CHO BẢNG
         function createTableRow(rowData) {
             document.getElementById('row-empty')?.remove();
 
@@ -286,7 +285,7 @@ require_once __DIR__ . '/../components/header.php';
         }
 
 
-        // --- GÁN SỰ KIỆN (Event Listeners) ---
+        // GÁN SỰ KIỆN (Event Listeners)
 
         // 1. Mở modal 'Create' khi nhấn nút "Thêm"
         btnShowCreate.addEventListener('click', openCreateModal);
@@ -301,7 +300,7 @@ require_once __DIR__ . '/../components/header.php';
         // 3. Xử lý Submit form
         form.addEventListener('submit', handleFormSubmit);
 
-        // 4. Xử lý cho các nút "Sửa" và "Xóa" (dùng event delegation)
+        // 4. Xử lý cho các nút "Sửa" và "Xóa" 
         tableBody.addEventListener('click', function (event) {
             const target = event.target.closest('button');
             if (!target) return;
@@ -320,6 +319,5 @@ require_once __DIR__ . '/../components/header.php';
 </script>
 
 <?php
-// 3. GỌI FOOTER
 require_once __DIR__ . '/../components/footer.php';
 ?>

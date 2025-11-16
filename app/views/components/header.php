@@ -162,6 +162,12 @@
                 <i class="bi bi-plug-fill"></i> Dịch Vụ
             </a>
         </li>
+        <li class="nav-item">
+            <a href="/sudungdichvu" 
+               class="nav-link <?php echo ($currentRoute == '/sudungdichvu') ? 'active' : ''; ?>">
+                <i class="bi bi-plug-fill"></i> Sử Dụng Dịch Vụ
+            </a>
+        </li>
     </ul>
 </nav>
 

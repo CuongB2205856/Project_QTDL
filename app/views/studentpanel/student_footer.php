@@ -1,6 +1,3 @@
-<?php
-// app/views/studentpanel/student_footer.php
-?>
 </main>
 
 <footer class="bg-white border-top mt-5">

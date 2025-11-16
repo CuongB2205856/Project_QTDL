@@ -1,20 +1,17 @@
 <?php
-// 1. Set các biến cho header
 $title = 'Quản lý Phòng';
-$currentRoute = '/phong'; // Quan trọng: để active link sidebar
-
-// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
+$currentRoute = '/phong';
 require_once __DIR__ . '/../components/header.php';
 ?>
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h2 class="bi me-2">Quản Lý Phòng</h2>         
+            <h2 class="bi me-2">Quản Lý Phòng</h2>
         </div>
         <div>
             <button id="btn-show-create-modal" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Thêm Phòng Mới
-        </button>
+                <i class="bi bi-plus-lg"></i> Thêm Phòng Mới
+            </button>
         </div>
     </div>
 </div>
@@ -118,7 +115,7 @@ require_once __DIR__ . '/../components/header.php';
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // --- Lấy các đối tượng DOM ---
+        // Lấy các đối tượng DOM
         const btnShowCreate = document.getElementById('btn-show-create-modal');
         const form = document.getElementById('phong-form');
         const modalTitle = document.getElementById('modal-title');
@@ -126,7 +123,7 @@ require_once __DIR__ . '/../components/header.php';
         const mainMessage = document.getElementById('main-message');
         const tableBody = document.getElementById('phong-table-body');
 
-        // (QUAN TRỌNG) Khởi tạo Bootstrap Modal
+        // Khởi tạo Bootstrap Modal
         const modalElement = document.getElementById('phong-modal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
 
@@ -136,13 +133,12 @@ require_once __DIR__ . '/../components/header.php';
         const formSoPhong = document.getElementById('form-sophong');
         const formSlMax = document.getElementById('form-slmax');
 
-        // --- Hàm hiển thị thông báo (Bootstrap Alert) ---
+        // Hàm hiển thị thông báo
         function showModalMessage(message, isError = false) {
-            // SỬA LẠI TẠI ĐÂY:
             if (!message) {
                 // Nếu message rỗng, thì xóa trắng nội dung của modal-message
                 modalMessage.innerHTML = '';
-                return; // Dừng hàm
+                return;
             }
 
             // Chỉ tạo alert khi có nội dung message
@@ -158,7 +154,7 @@ require_once __DIR__ . '/../components/header.php';
             </div>`;
         }
 
-        // --- Hàm mở modal cho 'Create' ---
+        // Hàm mở modal cho 'Create'
         function openCreateModal() {
             form.reset();
             formId.value = '0';
@@ -167,7 +163,7 @@ require_once __DIR__ . '/../components/header.php';
             bootstrapModal.show();
         }
 
-        // --- Hàm mở modal cho 'Update' ---
+        // Hàm mở modal cho 'Update'
         async function openUpdateModal(id) {
             try {
                 const response = await fetch(`/phong/get/${id}`);
@@ -191,7 +187,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm xử lý Submit (Cả Create và Update) ---
+        // Hàm xử lý Submit (Cả Create và Update)
         async function handleFormSubmit(event) {
             event.preventDefault();
 
@@ -227,7 +223,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm xử lý Xóa (Delete) ---
+        // Hàm xử lý Xóa (Delete)
         async function handleDelete(id) {
             if (!confirm('Bạn có chắc chắn muốn xóa phòng này?')) {
                 return;
@@ -253,7 +249,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
+        // CÁC HÀM TIỆN ÍCH CHO BẢNG
         function createTableRow(p) {
             document.getElementById('row-empty')?.remove();
 
@@ -296,7 +292,7 @@ require_once __DIR__ . '/../components/header.php';
             return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
-        // --- GÁN SỰ KIỆN (Event Listeners) ---
+        // GÁN SỰ KIỆN (Event Listeners)
         btnShowCreate.addEventListener('click', openCreateModal);
 
         // Đóng modal khi nhấn ra ngoài
@@ -325,6 +321,5 @@ require_once __DIR__ . '/../components/header.php';
     });
 </script>
 <?php
-// 3. Gọi Footer (Đóng <main>, <footer>, <script>, </body>, </html>)
 require_once __DIR__ . '/../components/footer.php';
 ?>

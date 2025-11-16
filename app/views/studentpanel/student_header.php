@@ -1,12 +1,8 @@
 <?php
 $baseURL = defined('BASE_URL') ? BASE_URL : ''; 
+$homeURL = $baseURL . '/login';
+$title = $title ?? 'Bảng Điều Khiển Sinh Viên';
 
-// ==========================================================
-// LOGIC ĐỂ XÁC ĐỊNH ĐÚNG TRANG CHỦ
-// =ia
-$homeURL = $baseURL . '/login'; // Mặc định là trang login nếu chưa đăng nhập
-// app/views/studentpanel/student_header.php
-$title = $title ?? 'Bảng Điều Khiển Sinh Viên'; 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

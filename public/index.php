@@ -203,6 +203,39 @@ $router->post('/dichvu/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
     $controller->ajax_delete($id);
 });
 
+// Tuyến đường quản lý sử dụng dịch vụ
+
+// 1. Trang danh sách chính (GET)
+$router->get('/sudungdichvu', function () use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->index();
+});
+
+// 2. Lấy chi tiết để sửa (GET - AJAX)
+$router->get('/sudungdichvu/get/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_get_details($id);
+});
+
+// 3. Xử lý thêm mới (POST - AJAX)
+$router->post('/sudungdichvu/ajax_create', function () use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_create();
+});
+
+// 4. Xử lý cập nhật (POST - AJAX)
+$router->post('/sudungdichvu/ajax_update/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_update($id);
+});
+
+// 5. Xử lý xóa (POST - AJAX)
+$router->post('/sudungdichvu/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_delete($id);
+});
+
+
 // Tuyến đường quản lý hợp đồng
 
 // 1. Trang danh sách chính (GET)

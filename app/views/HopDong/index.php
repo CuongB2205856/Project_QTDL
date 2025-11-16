@@ -1,9 +1,7 @@
 <?php
-// 1. Set các biến cho header
 $title = 'Quản lý Hợp đồng';
-$currentRoute = '/hopdong'; // Quan trọng: để active link sidebar
+$currentRoute = '/hopdong';
 
-// 2. Gọi Header
 require_once __DIR__ . '/../components/header.php';
 ?>
 
@@ -57,10 +55,10 @@ require_once __DIR__ . '/../components/header.php';
 </div>
 
 <?php
+
 // Hàm PHP helper để render 1 dòng của bảng
 function renderHopDongRow($hd)
 {
-    // Chuyển đổi ngày tháng sang d-m-Y cho dễ đọc
     $ngayBatDau = date('d-m-Y', strtotime($hd['NgayBatDau']));
     $ngayKetThuc = date('d-m-Y', strtotime($hd['NgayKetThuc']));
 
@@ -163,7 +161,7 @@ function renderHopDongRow($hd)
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- Khai báo biến ---
+        // Khai báo biến
         const tableBody = document.getElementById('hopdong-table-body');
         const form = document.getElementById('hopDongForm');
         const modalMessage = document.getElementById('modal-message');
@@ -177,7 +175,7 @@ function renderHopDongRow($hd)
 
         let currentAction = 'create'; // 'create' hoặc 'update'
 
-        // --- Các trường trong Form ---
+        // Các trường trong Form
         const maHopDongInput = document.getElementById('MaHopDong');
         const maSVSelect = document.getElementById('MaSV');
         const maPhongSelect = document.getElementById('MaPhong');
@@ -186,7 +184,7 @@ function renderHopDongRow($hd)
         const trangThaiGroup = document.getElementById('trangthai-group');
         const trangThaiSelect = document.getElementById('TrangThai');
 
-        // --- Hàm mở Modal để TẠO MỚI ---
+        // Hàm mở Modal để TẠO MỚI
         function openCreateModal() {
             currentAction = 'create';
             form.reset();
@@ -203,7 +201,7 @@ function renderHopDongRow($hd)
             bootstrapModal.show();
         }
 
-        // --- Hàm mở Modal để CẬP NHẬT ---
+        // Hàm mở Modal để CẬP NHẬT
         function openUpdateModal(id) {
             currentAction = 'update';
             form.reset();
@@ -241,7 +239,7 @@ function renderHopDongRow($hd)
                 });
         }
 
-        // --- Hàm xử lý SUBMIT (Dùng cho cả Create và Update) ---
+        // Hàm xử lý SUBMIT (Dùng cho cả Create và Update)
         function handleFormSubmit(event) {
             event.preventDefault();
 
@@ -283,13 +281,13 @@ function renderHopDongRow($hd)
                 });
         }
 
-        // --- Hàm XÓA (Trigger bởi nút "Xóa") ---
+        // Hàm XÓA (Trigger bởi nút "Xóa")
         function deleteHopDong(id) {
             if (!confirm(`Bạn có chắc chắn muốn xóa hợp đồng mã ${id}?`)) {
                 return;
             }
 
-            fetch(`/api/hopdong/delete/${id}`, { // API đã có sẵn
+            fetch(`/api/hopdong/delete/${id}`, { 
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -310,7 +308,7 @@ function renderHopDongRow($hd)
                 });
         }
 
-        // --- Các hàm tiện ích ---
+        // Các hàm tiện ích
 
         function showMessage(element, message, type = 'success') {
             element.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -328,7 +326,7 @@ function renderHopDongRow($hd)
             return str.toString().replace(/[&<>\"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
-        // --- GÁN SỰ KIỆN (Event Listeners) ---
+        // GÁN SỰ KIỆN (Event Listeners)
 
         // Nút Thêm Hợp đồng
         btnAddHopDong.addEventListener('click', openCreateModal);
@@ -351,10 +349,9 @@ function renderHopDongRow($hd)
             }
         });
 
-    }); // Hết DOMContentLoaded
+    });
 </script>
 
 <?php
-// 3. GỌI FOOTER
 require_once __DIR__ . '/../components/footer.php';
 ?>

@@ -1,11 +1,7 @@
 <?php 
 // Lấy BASE_URL
 $baseURL = defined('BASE_URL') ? BASE_URL : ''; 
-
-// ==========================================================
-// LOGIC ĐỂ XÁC ĐỊNH ĐÚNG TRANG CHỦ
-// =ia
-$homeURL = $baseURL . '/login'; // Mặc định là trang login nếu chưa đăng nhập
+$homeURL = $baseURL . '/login';
 
 // Khởi động session nếu nó chưa chạy
 if (session_status() === PHP_SESSION_NONE) {
@@ -26,31 +22,39 @@ if (isset($_SESSION['user_id'])) {
     }
     // Nếu có role khác mà không xác định, nó sẽ giữ nguyên là /login
 }
-// ==========================================================
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Không tìm thấy</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body { background-color: #f8f9fa; }
-        .error-container { max-width: 500px; margin: 100px auto; padding: 30px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
-        .error-code { font-size: 72px; font-weight: bold; color: #dc3545; }
-    </style>
+    <title>404 - Không tìm thấy trang</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/CSS/StyleError.css">
 </head>
 <body>
-    <div class="container">
-        <div class="error-container">
-            <div class="error-code">404</div>
-            <h2 class="mt-3">Không tìm thấy trang</h2>
-            <p>Rất tiếc, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.</p>
-            
-            <a href="<?= $homeURL ?>" class="btn btn-primary mt-3">Quay về Trang chủ</a>
-            
-        </div>
+    <div class="decorative-elements">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
     </div>
+    
+    <div class="error-container">
+        <i class="bi bi-exclamation-triangle error-icon"></i>
+        <div class="error-code">404</div>
+        <h1 class="error-title">Không tìm thấy trang</h1>
+        <p class="error-description">
+            Rất tiếc, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển. 
+            Vui lòng kiểm tra lại đường dẫn hoặc quay về trang chủ.
+        </p>
+        <a href="<?= $homeURL ?>" class="btn-home">
+            <i class="bi bi-house-door"></i>
+            Quay về Trang chủ
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

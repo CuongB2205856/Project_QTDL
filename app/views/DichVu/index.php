@@ -1,9 +1,7 @@
 <?php
-// 1. Set các biến cho header
 $title = 'Quản lý Dịch Vụ';
-$currentRoute = '/dichvu'; // Quan trọng: để active link sidebar
+$currentRoute = '/dichvu';
 
-// 2. Gọi Header (Mở <html>, <head>, <body>, nav, sidebar, và <main>)
 require_once __DIR__ . '/../components/header.php';
 ?>
 
@@ -11,12 +9,12 @@ require_once __DIR__ . '/../components/header.php';
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h2 class="bi me-2">Quản Lý Dịch Vụ</h2>         
+            <h2 class="bi me-2">Quản Lý Dịch Vụ</h2>
         </div>
         <div>
             <button id="btn-show-create-modal" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Thêm Dịch Vụ Mới
-        </button>
+                <i class="bi bi-plus-lg"></i> Thêm Dịch Vụ Mới
+            </button>
         </div>
     </div>
 </div>
@@ -105,7 +103,7 @@ require_once __DIR__ . '/../components/header.php';
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // --- Lấy các đối tượng DOM ---
+        // Lấy các đối tượng DOM
         const btnShowCreate = document.getElementById('btn-show-create-modal');
         const form = document.getElementById('dichvu-form');
         const modalTitle = document.getElementById('modal-title');
@@ -113,7 +111,7 @@ require_once __DIR__ . '/../components/header.php';
         const mainMessage = document.getElementById('main-message');
         const tableBody = document.getElementById('dichvu-table-body');
 
-        // (QUAN TRỌNG) Khởi tạo Bootstrap Modal
+        // Khởi tạo Bootstrap Modal
         const modalElement = document.getElementById('dichvuModal');
         const bootstrapModal = new bootstrap.Modal(modalElement);
 
@@ -122,13 +120,12 @@ require_once __DIR__ . '/../components/header.php';
         const formTenDV = document.getElementById('form-tendv');
         const formDonGia = document.getElementById('form-dongia');
 
-        // --- Hàm hiển thị thông báo (Bootstrap Alert) ---
+        // Hàm hiển thị thông báo (Bootstrap Alert)
         function showModalMessage(message, isError = false) {
-            // SỬA LẠI TẠI ĐÂY:
             if (!message) {
                 // Nếu message rỗng, thì xóa trắng nội dung của modal-message
                 modalMessage.innerHTML = '';
-                return; // Dừng hàm
+                return;
             }
 
             // Chỉ tạo alert khi có nội dung message
@@ -145,16 +142,16 @@ require_once __DIR__ . '/../components/header.php';
             </div>`;
         }
 
-        // --- Hàm reset form và mở modal cho 'Create' ---
+        // Hàm reset form và mở modal cho 'Create'
         function openCreateModal() {
             form.reset();
             formId.value = '0';
             modalTitle.textContent = 'Thêm Dịch Vụ Mới';
             showModalMessage('');
-            bootstrapModal.show(); // Dùng hàm của Bootstrap
+            bootstrapModal.show();
         }
 
-        // --- Hàm lấy dữ liệu và mở modal cho 'Update' ---
+        // Hàm lấy dữ liệu và mở modal cho 'Update'
         async function openUpdateModal(id) {
             try {
                 const response = await fetch(`/dichvu/get/${id}`);
@@ -162,14 +159,13 @@ require_once __DIR__ . '/../components/header.php';
 
                 if (result.success) {
                     form.reset();
-                    // Điền dữ liệu vào form
                     formId.value = result.data.MaDV;
                     formTenDV.value = result.data.TenDichVu;
                     formDonGia.value = result.data.DonGiaDichVu;
 
                     modalTitle.textContent = 'Sửa Dịch Vụ';
                     showModalMessage('');
-                    bootstrapModal.show(); // Dùng hàm của Bootstrap
+                    bootstrapModal.show();
                 } else {
                     showMainMessage(result.message, true);
                 }
@@ -178,7 +174,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm xử lý Submit (Cả Create và Update) ---
+        // Hàm xử lý Submit (Cả Create và Update)
         async function handleFormSubmit(event) {
             event.preventDefault();
 
@@ -200,12 +196,12 @@ require_once __DIR__ . '/../components/header.php';
                     showModalMessage(result.message, false);
 
                     if (id === '0' || id === '') {
-                        // --- Xử lý THÊM MỚI (Create) ---
+                        // Xử lý THÊM MỚI (Create)
                         appendRowToTable(result.newRow);
                         form.reset();
                         formId.value = '0';
                     } else {
-                        // --- Xử lý CẬP NHẬT (Update) ---
+                        // Xử lý CẬP NHẬT (Update)
                         updateRowInTable(result.updatedRow);
                     }
                 } else {
@@ -216,7 +212,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- Hàm xử lý Xóa (Delete) ---
+        // Hàm xử lý Xóa (Delete)
         async function handleDelete(id) {
             if (!confirm('Bạn có chắc chắn muốn xóa dịch vụ này?')) {
                 return;
@@ -242,7 +238,7 @@ require_once __DIR__ . '/../components/header.php';
             }
         }
 
-        // --- CÁC HÀM TIỆN ÍCH CHO BẢNG ---
+        // CÁC HÀM TIỆN ÍCH CHO BẢNG
         function createTableRow(dv) { // dv = rowData (dichvu)
             document.getElementById('row-empty')?.remove();
 
@@ -283,7 +279,7 @@ require_once __DIR__ . '/../components/header.php';
             return str.toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;' }[m]));
         }
 
-        // --- GÁN SỰ KIỆN (Event Listeners) ---
+        // GÁN SỰ KIỆN (Event Listeners)
         btnShowCreate.addEventListener('click', openCreateModal);
 
         // Đóng modal khi nhấn ra ngoài
@@ -313,6 +309,5 @@ require_once __DIR__ . '/../components/header.php';
 </script>
 
 <?php
-// 3. Gọi Footer (Đóng <main>, <footer>, <script>, </body>, </html>)
 require_once __DIR__ . '/../components/footer.php';
 ?>
