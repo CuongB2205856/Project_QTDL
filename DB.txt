@@ -80,11 +80,11 @@ create table hoadon
 (
     MaHoaDon           int auto_increment
         primary key,
-    MaSDDV             int                                   not null,
-    NgayLapHoaDon      date                                  not null,
-    NgayHetHan         date                                  not null,
-    TongTienThanhToan  decimal(15)                           not null,
-    TrangThaiThanhToan varchar(20) default 'Chưa thanh toán' not null,
+    MaSDDV             int         not null,
+    NgayLapHoaDon      date        not null,
+    NgayHetHan         date        not null,
+    TongTienThanhToan  decimal(15) not null,
+    TrangThaiThanhToan varchar(10) null,
     constraint hoadon_ibfk_1
         foreign key (MaSDDV) references sudungdichvu (MaSDDV)
 );
