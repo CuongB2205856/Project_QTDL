@@ -119,21 +119,65 @@ class PhongController extends Controller
     public function ajax_delete($id)
     {
         try {
+            // Gọi model để xóa
             $this->model->delete($id);
             $this->json_response(['success' => true, 'message' => 'Xóa phòng thành công!']);
+
         } catch (\PDOException $e) {
-            // Xử lý lỗi khóa ngoại (nếu có Hợp đồng)
-            if ($e->getCode() == 23000) {
+
+            // 1. Bắt lỗi 45000 từ Trigger (Phòng đang được thuê)
+            if ($e->getCode() == '45000') {
+                $errorMessage = $e->getMessage();
+                // Tách thông báo lỗi từ Trigger
+                if (strpos($errorMessage, 'MESSAGE_TEXT') !== false) {
+                    $parts = explode("MESSAGE_TEXT = ", $errorMessage);
+                    $errorMessage = trim($parts[1] ?? 'Lỗi từ Trigger CSDL');
+                }
+                $this->json_response(['success' => false, 'message' => $errorMessage]);
+            }
+
+            // 2. Bắt lỗi 23000 (Lỗi khóa ngoại CSDL mặc định)
+            else if ($e->getCode() == 23000) {
                 $this->json_response([
                     'success' => false,
-                    'message' => 'Không thể xóa phòng (đã có sinh viên ở).'
+                    'message' => 'Lỗi CSDL: Không thể xóa (đã có Hợp đồng, Dịch vụ... liên quan).'
                 ]);
-            } else {
+            }
+
+            // 3. Các lỗi CSDL khác
+            else {
                 $this->json_response([
                     'success' => false,
                     'message' => 'Lỗi CSDL: ' . $e->getMessage()
                 ]);
             }
+        }
+    }
+    public function ajax_GetSinhVienInPhong($soPhong)
+    {
+        try {
+            if (empty($soPhong)) {
+                throw new \Exception('Vui lòng nhập số phòng.');
+            }
+
+            // Gọi hàm Model để thực thi Stored Procedure
+            $danhsach = $this->model->getSinhVienInPhong($soPhong);
+
+            if (empty($danhsach)) {
+                $this->json_response([
+                    'success' => true,
+                    'data' => [], // Trả về mảng rỗng
+                    'message' => 'Phòng này (' . $soPhong . ') không có sinh viên nào hoặc không tồn tại.'
+                ]);
+            } else {
+                $this->json_response([
+                    'success' => true,
+                    'data' => $danhsach
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
         }
     }
 }

@@ -86,6 +86,14 @@ class Phong
         return $stmt->fetchColumn();
     }
 
+    /**
+     * [THÊM HÀM NÀY] Đếm số phòng còn trống
+     */
+    public function countAvailable()
+    {
+        $stmt = $this->db->query("SELECT COUNT(MaPhong) as total FROM Phong WHERE TinhTrangPhong = 'Trống'");
+        return $stmt->fetchColumn();
+    }
     // Hàm lấy danh sách phòng có chỗ trống
     public function allWithVacancy()
     {
@@ -111,6 +119,15 @@ class Phong
                 p.SoPhong ASC
         ");
 
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    public function getSinhVienInPhong($soPhong)
+    {
+        // Tên SP 'sp_DanhSachSinhVienTheoPhong' phải khớp
+        $stmt = $this->db->prepare("CALL sp_DanhSachSinhVienTheoPhong(:sophong)");
+        $stmt->execute(['sophong' => $soPhong]);
+        
+        // Trả về tất cả các dòng
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

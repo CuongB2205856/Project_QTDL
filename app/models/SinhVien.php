@@ -170,5 +170,18 @@ class SinhVien
         $stmt->execute(['masv' => $maSV]);
         return $stmt->fetchColumn();
     }
+
+    public function getStudentStatistics()
+    {
+        $stmt = $this->db->query("
+            SELECT 
+                COUNT(MaSV) AS total,
+                SUM(CASE WHEN GioiTinh = 'Nam' THEN 1 ELSE 0 END) AS male,
+                SUM(CASE WHEN GioiTinh = 'Nữ' THEN 1 ELSE 0 END) AS female
+            FROM 
+                SinhVien
+        ");
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
 }
 ?>

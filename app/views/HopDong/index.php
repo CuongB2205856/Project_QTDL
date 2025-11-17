@@ -157,7 +157,23 @@ function renderHopDongRow($hd)
         </div>
     </div>
 </div>
-
+<div class="container mt-4 mb-4" style="max-width: 600px;">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Kiểm tra nhanh hiệu lực hợp đồng</h5>
+        </div>
+        <div class="card-body">
+            <form id="formKiemTraHopDong">
+                <div class="form-group">
+                    <label for="checkMaSV">Nhập Mã Sinh Viên:</label>
+                    <input type="text" class="form-control" id="checkMaSV" placeholder="Ví dụ: B2012345" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Kiểm tra</button>
+            </form>
+            <div id="ketQuaKiemTra" class="mt-3"></div>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -287,7 +303,7 @@ function renderHopDongRow($hd)
                 return;
             }
 
-            fetch(`/api/hopdong/delete/${id}`, { 
+            fetch(`/api/hopdong/delete/${id}`, {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -350,6 +366,50 @@ function renderHopDongRow($hd)
         });
 
     });
+    $(document).ready(function () {
+
+        // ... (Các script cũ của bạn cho việc Thêm/Sửa/Xóa Hợp đồng) ...
+
+        // Xử lý form kiểm tra nhanh
+        $('#formKiemTraHopDong').on('submit', function (e) {
+            e.preventDefault(); // Ngăn form submit theo cách truyền thống
+
+            var maSV = $('#checkMaSV').val().trim();
+            var $ketQuaDiv = $('#ketQuaKiemTra');
+
+            if (!maSV) {
+                $ketQuaDiv.html('<div class="alert alert-danger">Vui lòng nhập Mã Sinh viên.</div>');
+                return;
+            }
+
+            // Định nghĩa BASE_URL (Quan trọng: Đảm bảo biến BASE_URL có sẵn trong JS)
+            // Nếu bạn chưa có, bạn cần định nghĩa nó, ví dụ:
+            // var BASE_URL = "<?php echo BASE_URL; ?>"; 
+
+            var urlKiemTra = BASE_URL + '/hopdong/check/' + maSV;
+
+            $ketQuaDiv.html('<div class="alert alert-info">Đang kiểm tra...</div>');
+
+            // Gửi yêu cầu GET đến Controller
+            $.get(urlKiemTra)
+                .done(function (response) {
+                    if (response.success) {
+                        // response.status là 0 (Còn hạn) hoặc 1 (Hết hạn)
+                        if (response.status == 0) {
+                            $ketQuaDiv.html('<div class="alert alert-success">' + response.message + '</div>');
+                        } else {
+                            $ketQuaDiv.html('<div class="alert alert-warning">' + response.message + '</div>');
+                        }
+                    } else {
+                        $ketQuaDiv.html('<div class="alert alert-danger">' + response.message + '</div>');
+                    }
+                })
+                .fail(function () {
+                    $ketQuaDiv.html('<div class="alert alert-danger">Lỗi kết nối. Không thể kiểm tra.</div>');
+                });
+        });
+    });
+
 </script>
 
 <?php

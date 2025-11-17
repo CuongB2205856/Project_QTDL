@@ -182,5 +182,35 @@ class HopDongController extends Controller
             }
         }
     }
+    public function checkTrangThaiHopDong($maSV)
+    {
+        try {
+            if (empty($maSV)) {
+                throw new \Exception('Vui lòng nhập Mã Sinh viên.');
+            }
+
+            // Gọi phương thức model 'checkSinhVienQuaHan'
+            // (Phương thức này đã có trong HopDong.php)
+            $tinhTrang = $this->model->checkSinhVienQuaHan($maSV);
+
+            if ($tinhTrang == 0) {
+                // 0 = Còn hạn
+                $message = "Sinh viên [{$maSV}] CÒN HẠN hợp đồng.";
+            } else {
+                // 1 = Hết hạn (hoặc không có HĐ)
+                $message = "Sinh viên [{$maSV}] ĐÃ HẾT HẠN hoặc KHÔNG CÓ hợp đồng.";
+            }
+
+            // Gọi hàm json_response đã có sẵn trong file này
+            $this->json_response([
+                'success' => true,
+                'status' => $tinhTrang, // 0 hoặc 1
+                'message' => $message
+            ]);
+
+        } catch (\Exception $e) {
+            $this->json_response(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
+        }
+    }
 }
 ?>

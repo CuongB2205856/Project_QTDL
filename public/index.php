@@ -139,6 +139,10 @@ $router->post('/phong/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
     $controller->ajax_delete($id);
 });
 
+$router->get('/phong/ajax_get_sv/(\w+)', function ($soPhong) use ($pdoInstance) {
+    (new App\Controllers\PhongController($pdoInstance))->ajax_GetSinhVienInPhong($soPhong);
+});
+
 // Tuyến đường quản lý loại phòng
 
 // 1. Trang danh sách chính (GET)
@@ -203,6 +207,38 @@ $router->post('/dichvu/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
     $controller->ajax_delete($id);
 });
 
+// Tuyến đường quản lý Sử Dụng Dịch Vụ (SDDV)
+// 1. Trang danh sách chính (GET)
+$router->get('/sddv', function () use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->index();
+});
+
+// 2. Lấy chi tiết để sửa (GET - AJAX)
+$router->get('/sddv/get/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_get_details($id);
+});
+
+// 3. Xử lý thêm mới (POST - AJAX)
+// Đây là route để "chọn loại dịch vụ" và "nhập số lượng"
+$router->post('/sddv/ajax_create', function () use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_create();
+});
+
+// 4. Xử lý cập nhật (POST - AJAX)
+$router->post('/sddv/ajax_update/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_update($id);
+});
+
+// 5. Xử lý xóa (POST - AJAX)
+$router->post('/sddv/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
+    $controller = new App\Controllers\SuDungDichVuController($pdoInstance);
+    $controller->ajax_delete($id);
+});
+
 // Tuyến đường quản lý hợp đồng
 
 // 1. Trang danh sách chính (GET)
@@ -236,7 +272,9 @@ $router->post('/api/hopdong/delete/(\d+)', function ($id) use ($pdoInstance) {
 });
 
 // 6. Kiểm tra trạng thái hợp đồng của 1 sinh viên
-$router->get('/hopdong/check/(\w+)', 'App\Controllers\HopDongController@checkTrangThaiHopDong');
+$router->get('/hopdong/check/(\w+)', function ($maSV) use ($pdoInstance) {
+    (new App\Controllers\HopDongController($pdoInstance))->checkTrangThaiHopDong($maSV);
+});
 
 
 // Tuyến đường quản lý hóa đơn
