@@ -3,9 +3,9 @@
 // Cấu hình CSDL
 const DB_CONFIG = [
     'dbhost' => 'localhost',
-    'dbname' => 'QuanLyKTX',
-    'dbuser' => 'root',
-    'dbpass' => 'Cuong2004@**#'
+    'dbname' => 'Tên CSDL',
+    'dbuser' => 'Tên đăng nhập của bạn',
+    'dbpass' => 'Mật khẩu CSDL của bạn'
 ];
 
 // Cấu hình Base URL (quan trọng cho routing)
