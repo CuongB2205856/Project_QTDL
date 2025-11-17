@@ -221,7 +221,7 @@ if (isset($_SESSION['user_id'])) {
 <nav class="navbar navbar-dark fixed-top shadow-sm">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="<?= $homeURL ?>">
-            <img src="/image/CTU_logo.png" alt="Logo" 
+            <img src="<?php echo BASE_URL; ?>/assets/image/CTU_logo.png" alt="Logo" 
                  style="max-height: 35px; margin-right: 10px;">
             <span>Bảng Điều Khiển Sinh Viên</span>
         </a>

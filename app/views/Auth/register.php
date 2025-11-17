@@ -26,7 +26,7 @@ $getOld = function ($field) use ($oldData) {
         <div class="register-container">
             <div class="register-card">
                 <div class="register-header">
-                    <img src="/image/CTU_logo.png" alt="Logo" style="max-height: 80px; margin-right: 10px;">
+                    <img src="assets/image/CTU_logo.png" alt="Logo" style="max-height: 80px; margin-right: 10px;">
                     <h2>Đăng ký Tài khoản</h2>
                     <p>Hệ thống Quản Lý Ký Túc Xá</p>
                 </div>

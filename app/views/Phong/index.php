@@ -15,7 +15,22 @@ require_once __DIR__ . '/../components/header.php';
         </div>
     </div>
 </div>
+<div class="card mb-3">
+    <div class="card-header">
+        Tra cứu danh sách thành viên
+    </div>
+    <div class="card-body">
+        <form id="formTraCuuPhong" class="form-inline">
+            <div class="form-group mb-2 me-2">
+                <label for="inputSoPhong" class="sr-only">Nhập Số Phòng:</label>
+                <input type="text" class="form-control" id="inputSoPhong" required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
+        </form>
 
+        <div id="ketQuaTraCuu" class="mt-3"></div>
+    </div>
+</div>
 <div id="main-message"></div>
 
 <div class="card">
@@ -109,22 +124,6 @@ require_once __DIR__ . '/../components/header.php';
                 </div>
             </form>
         </div>
-    </div>
-</div>
-<div class="card mb-3">
-    <div class="card-header">
-        Tra cứu nhanh Sinh viên theo phòng
-    </div>
-    <div class="card-body">
-        <form id="formTraCuuPhong" class="form-inline">
-            <div class="form-group mb-2 me-2">
-                <label for="inputSoPhong" class="sr-only">Nhập Số Phòng:</label>
-                <input type="text" class="form-control" id="inputSoPhong" placeholder="Ví dụ: A101" required>
-            </div>
-            <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
-        </form>
-
-        <div id="ketQuaTraCuu" class="mt-3"></div>
     </div>
 </div>
 <script>

@@ -101,6 +101,9 @@ $router->post('/users/ajax_admin_change_password', function () use ($pdoInstance
 $router->get('/dashboard', function () use ($pdoInstance) {
     (new App\Controllers\DashboardController($pdoInstance))->index();
 });
+$router->post('/dashboard/export_report', function () use ($pdoInstance) {
+    (new App\Controllers\DashboardController($pdoInstance))->export_report();
+});
 
 // Role SinhVien (chuyển hướng kèm Mã SV)
 $router->get('/student/profile/(\w+)', function ($maLienKet) use ($pdoInstance) {

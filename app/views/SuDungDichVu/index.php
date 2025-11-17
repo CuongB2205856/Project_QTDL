@@ -11,7 +11,6 @@ require_once __DIR__ . '/../components/header.php';
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <h2 class="bi me-2">Quản lý Sử Dụng Dịch Vụ</h2>
-            <p class="text-muted">Nhập số liệu Điện, Nước, Giữ xe... cho sinh viên hàng tháng.</p>
         </div>
         <div>
             <button id="btn-show-create-modal" class="btn btn-primary">
@@ -32,7 +31,7 @@ require_once __DIR__ . '/../components/header.php';
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">STT</th>
                         <th scope="col">Sinh Viên</th>
                         <th scope="col">Phòng</th>
                         <th scope="col">Dịch Vụ</th>

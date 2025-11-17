@@ -23,7 +23,7 @@ require_once __DIR__ . '/../components/header.php';
 
 <div class="card">
     <div class="card-header">
-        Danh Sách Dịch Vụ Hiện Có
+        Danh Sách Dịch Vụ
     </div>
     <div class="card-body">
         <div class="table-responsive">

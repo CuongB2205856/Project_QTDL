@@ -17,7 +17,23 @@ require_once __DIR__ . '/../components/header.php';
         </div>
     </div>
 </div>
-
+<div class="container mt-4 mb-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Kiểm tra nhanh hiệu lực hợp đồng</h5>
+        </div>
+        <div class="card-body">
+            <form id="formKiemTraHopDong">
+                <div class="form-group">
+                    <label for="checkMaSV">Nhập Mã Sinh Viên:</label>
+                    <input type="text" class="form-control" id="checkMaSV" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Kiểm tra</button>
+            </form>
+            <div id="ketQuaKiemTra" class="mt-3"></div>
+        </div>
+    </div>
+</div>
 <div id="main-message"></div>
 
 <div class="card">
@@ -154,23 +170,6 @@ function renderHopDongRow($hd)
                     <button type="submit" class="btn btn-primary" id="btn-submit">Lưu</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-<div class="container mt-4 mb-4" style="max-width: 600px;">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Kiểm tra nhanh hiệu lực hợp đồng</h5>
-        </div>
-        <div class="card-body">
-            <form id="formKiemTraHopDong">
-                <div class="form-group">
-                    <label for="checkMaSV">Nhập Mã Sinh Viên:</label>
-                    <input type="text" class="form-control" id="checkMaSV" placeholder="Ví dụ: B2012345" required>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Kiểm tra</button>
-            </form>
-            <div id="ketQuaKiemTra" class="mt-3"></div>
         </div>
     </div>
 </div>

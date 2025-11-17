@@ -164,7 +164,7 @@
             </li>
             <li class="nav-item">
                 <a href="/hoadon" class="nav-link <?php echo ($currentRoute == '/hoadon') ? 'active' : ''; ?>">
-                    <i class="bi bi-file-earmark-text"></i> Hóa đơn
+                    <i class="bi bi-receipt"></i> Hóa đơn
                 </a>
             </li>
             <li class="nav-item">
@@ -174,7 +174,7 @@
             </li>
             <li class="nav-item">
                 <a href="/sddv" class="nav-link <?php echo ($currentRoute == '/sddv') ? 'active' : ''; ?>">
-                    <i class="bi bi-plug-fill"></i> Sử dụng dịch vụ
+                    <i class="bi bi-card-checklist"></i> Sử dụng dịch vụ
                 </a>
             </li>
         </ul>
@@ -223,8 +223,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/hoadon" class="nav-link <?php echo ($currentRoute == '/hoadon') ? 'active' : ''; ?>">
+                        <i class="bi bi-receipt"></i> Hóa đơn
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/dichvu" class="nav-link <?php echo ($currentRoute == '/dichvu') ? 'active' : ''; ?>">
                         <i class="bi bi-plug-fill"></i> Dịch Vụ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sddv" class="nav-link <?php echo ($currentRoute == '/sddv') ? 'active' : ''; ?>">
+                        <i class="bi bi-card-checklist"></i> Sử dụng dịch vụ
                     </a>
                 </li>
             </ul>

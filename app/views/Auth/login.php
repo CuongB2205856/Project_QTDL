@@ -21,7 +21,7 @@ $error = $data['error'] ?? '';
         <div class="login-container mx-auto">
             <div class="login-card">
                 <div class="login-header">
-                    <img src="/image/CTU_logo.png" alt="Logo" style="max-height: 80px; margin-right: 10px;">
+                    <img src="assets/image/CTU_logo.png" alt="Logo" style="max-height: 80px; margin-right: 10px;">
                     <h2>Đăng nhập</h2>
                     <p>Hệ thống Quản Lý Ký Túc Xá</p>
                 </div>
