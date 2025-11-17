@@ -39,7 +39,7 @@ class SuDungDichVu
             JOIN 
                 dichvu dv ON sddv.MaDV = dv.MaDV
             ORDER BY 
-                sddv.MaSDDV;
+                sddv.MaSDDV DESC;
         ";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -57,7 +57,7 @@ class SuDungDichVu
     public function create(array $data)
     {
         // Bỏ qua nếu dịch vụ đã tồn tại (dùng IGNORE)
-        $sql = "INSERT IGNORE INTO SuDungDichVu (MaHD, MaDV, SoLuongSuDung, ThangSuDungDV, NamSuDungDV)
+        $sql = "INSERT INTO SuDungDichVu (MaHD, MaDV, SoLuongSuDung, ThangSuDungDV, NamSuDungDV)
                 VALUES (:mahd, :madv, :soluong, :thang, :nam)";
         
         $stmt = $this->db->prepare($sql);

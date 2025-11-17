@@ -35,7 +35,7 @@ class SinhVien
             LEFT JOIN HopDong hd ON sv.MaSV = hd.MaSV AND hd.NgayKetThuc >= CURDATE()
             LEFT JOIN Phong p ON hd.MaPhong = p.MaPhong
             ORDER BY 
-                sv.MaSV
+                sv.MaSV DESC
         ");
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }

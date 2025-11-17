@@ -100,11 +100,11 @@ require_once __DIR__ . '/../components/header.php';
                         <select id="MaDV" name="MaDV" class="form-select" required>
                             <option value="">-- Chọn dịch vụ --</option>
                             <?php foreach ($dichvu_list_all as $dv): ?>
-                                <?php if ($dv['MaDV'] != 5): // Không cho nhập tiền phòng ở đây ?>
+                                
                                     <option value="<?php echo $dv['MaDV']; ?>">
                                         <?php echo e($dv['TenDichVu']); ?>
                                     </option>
-                                <?php endif; ?>
+                                
                             <?php endforeach; ?>
                         </select>
                     </div>

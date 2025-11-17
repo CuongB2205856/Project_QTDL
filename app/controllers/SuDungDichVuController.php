@@ -78,11 +78,6 @@ class SuDungDichVuController extends Controller
                 throw new \Exception('Vui lòng nhập đầy đủ thông tin.');
             }
 
-            // Không thêm Tiền phòng (MaDV=5) tại trang này
-            if ($data['MaDV'] == 5) {
-                throw new \Exception('Vui lòng dùng chức năng "Lập Hóa Đơn" để chốt tiền phòng.');
-            }
-
             $this->model->create($data);
 
             $this->json_response([

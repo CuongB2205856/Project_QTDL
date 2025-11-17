@@ -57,7 +57,7 @@ class HoaDon
             JOIN HopDong hd ON sddv.MaHD = hd.MaHD
             JOIN SinhVien sv ON hd.MaSV = sv.MaSV
             JOIN Phong p ON hd.MaPhong = p.MaPhong
-            ORDER BY h.MaHoaDon 
+            ORDER BY h.MaHoaDon DESC
         ";
         return $this->db->query($query)->fetchAll(\PDO::FETCH_ASSOC);
     }
