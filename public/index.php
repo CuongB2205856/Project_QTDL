@@ -203,11 +203,6 @@ $router->post('/dichvu/ajax_delete/(\d+)', function ($id) use ($pdoInstance) {
     $controller->ajax_delete($id);
 });
 
-// Tuyến đường quản lý sử dụng dịch vụ
-
-
-
-
 // Tuyến đường quản lý hợp đồng
 
 // 1. Trang danh sách chính (GET)
@@ -238,6 +233,31 @@ $router->get('/api/hopdong/get/(\d+)', function ($id) use ($pdoInstance) {
 $router->post('/api/hopdong/delete/(\d+)', function ($id) use ($pdoInstance) {
     $controller = new \App\Controllers\HopDongController($pdoInstance);
     $controller->delete($id);
+});
+
+// 6. Kiểm tra trạng thái hợp đồng của 1 sinh viên
+$router->get('/hopdong/check/(\w+)', 'App\Controllers\HopDongController@checkTrangThaiHopDong');
+
+
+// Tuyến đường quản lý hóa đơn
+$router->get('/hoadon', function() use ($pdoInstance) {
+    (new App\Controllers\HoaDonController($pdoInstance))->index();
+});
+
+$router->post('/hoadon/ajax_create', function() use ($pdoInstance) {
+    (new App\Controllers\HoaDonController($pdoInstance))->ajax_create();
+});
+
+$router->post('/hoadon/ajax_delete/(\d+)', function($id) use ($pdoInstance) {
+    (new App\Controllers\HoaDonController($pdoInstance))->ajax_delete($id);
+});
+
+$router->post('/hoadon/ajax_update_status/(\d+)', function($id) use ($pdoInstance) {
+    (new App\Controllers\HoaDonController($pdoInstance))->ajax_update_status($id);
+});
+
+$router->get('/hoadon/get/(\d+)', function($id) use ($pdoInstance) {
+    (new App\Controllers\HoaDonController($pdoInstance))->ajax_get_details($id);
 });
 
 // Tuyến đường quản lý sinh viên
