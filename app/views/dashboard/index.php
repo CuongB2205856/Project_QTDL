@@ -156,10 +156,10 @@ require_once __DIR__ . '/../components/footer.php';
         const selectThang = $('#exportThang');
         const selectNam = $('#exportNam');
 
-        // 3. Tự động điền 12 tháng vào select
         // Lấy tháng hiện tại từ PHP
         const currentMonth = <?php echo $currentMonth; ?>;
-        for (let i = 1; i <= 12; i++) {
+        // 3. Tự động điền từ tháng 1 đến tháng hiện tại vào select
+        for (let i = 1; i <= currentMonth; i++) {
             selectThang.append(new Option('Tháng ' + i, i));
         }
         selectThang.val(currentMonth); // Chọn tháng hiện tại
