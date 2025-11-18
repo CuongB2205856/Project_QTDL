@@ -1,12 +1,8 @@
 # Project_QTDL
 Đồ án học phần Quản trị dữ liệu
-<<<<<<< HEAD
-Học kỳ 1, Năm học 2025-2026
-=======
 
 Học kỳ 1, Năm học 2025-2026
 
->>>>>>> 1c7c8c6249197572ba8971a583138c1dc1a72568
 **Tên dự án**: Ứng dụng Quản Lý Ký Túc Xá
 
 **MSSV1**: B2205856
